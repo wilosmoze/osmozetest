@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ShoppingBag } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
@@ -35,27 +36,27 @@ export function Header() {
           )}
           style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06)" }}
         >
-          <a
-            href="#top"
-            className="font-display text-lg font-bold tracking-tight text-white"
+          <Link
+            href="/"
+            className="font-display text-lg font-bold tracking-tight text-white transition-opacity hover:opacity-80"
           >
             {themeConfig.brand.name}
-          </a>
+          </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
             {[
-              { label: "Burgers", href: "#burgers" },
-              { label: "Sauces", href: "#sauces" },
-              { label: "Desserts", href: "#desserts" },
-              { label: "Delivery", href: "#delivery" },
+              { label: "Burgers", href: "/#burgers" },
+              { label: "Sauces", href: "/#sauces" },
+              { label: "Desserts", href: "/#desserts" },
+              { label: "Delivery", href: "/#delivery" },
             ].map((l) => (
-              <a
+              <Link
                 key={l.href}
                 href={l.href}
                 className="text-sm text-zinc-400 transition-colors hover:text-white"
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
