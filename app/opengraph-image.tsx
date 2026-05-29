@@ -8,9 +8,11 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default function OpenGraphImage() {
-  // Strip trailing period (we render it as the accent separator).
-  const brandClean = themeConfig.brand.name.replace(/[.]$/, "").toUpperCase();
-  // Adaptive title size so long brand names (e.g. "BUN & BASS") still fit.
+  // Use shortName for the big title (fits the 1200px canvas at large font).
+  // The full canonical name lives in metadata/title tags.
+  const brandClean = themeConfig.brand.shortName
+    .replace(/[.]$/, "")
+    .toUpperCase();
   const titleSize = brandClean.length > 7 ? 150 : 220;
 
   return new ImageResponse(

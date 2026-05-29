@@ -4,7 +4,7 @@ import { themeConfig } from "@/config/theme.config";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: `${themeConfig.brand.name} — ${themeConfig.brand.tagline}`,
-    short_name: themeConfig.brand.name.replace(".", ""),
+    short_name: themeConfig.brand.shortName,
     description: themeConfig.brand.description,
     start_url: "/",
     display: "standalone",

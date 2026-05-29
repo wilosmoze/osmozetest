@@ -12,13 +12,13 @@ export type DeliveryZone = {
 
 export const themeConfig = {
   brand: {
-    name: "Bun & Bass.",
-    shortName: "BunBass",
-    tagline: "Premium burgers. Heavy bass.",
+    name: "bun&bass burgers",
+    shortName: "bun&bass",
+    tagline: "Good food · Good vibes · Good bass.",
     description:
-      "Premium closed-bun burgers, hand-crafted in Rawai. Built for the bass culture — house-made buns, house-made sauces, delivered to your door.",
-    logoText: "Bun & Bass.",
-    logoImage: "",
+      "Premium closed-bun burgers, hand-crafted in Rawai. Good food, good vibes, good bass — house-made buns, house-made sauces, delivered to your door.",
+    logoText: "bun&bass burgers",
+    logoImage: "/images/hero-logo.png",
     favicon: "/favicon.ico",
   },
 

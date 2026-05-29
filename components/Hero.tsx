@@ -88,20 +88,20 @@ export function Hero() {
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] border border-white/10"
+                className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-zinc-950"
               >
                 <img
-                  src="/images/burger-hero.jpg"
-                  alt="Signature closed-bun burger"
-                  className="h-full w-full object-cover"
+                  src={themeConfig.brand.logoImage || "/images/hero-logo.png"}
+                  alt={`${themeConfig.brand.name} — vinyl logo`}
+                  className="h-full w-full object-contain"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-transparent" />
 
+                {/* Delivery badge — bottom-right to avoid the logo's top arrow */}
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8 }}
-                  className="absolute left-5 top-5 flex items-center gap-2 rounded-full border border-white/15 bg-zinc-950/60 px-3 py-1.5 text-xs backdrop-blur-md"
+                  className="absolute bottom-5 right-5 flex items-center gap-2 rounded-full border border-white/15 bg-zinc-950/70 px-3 py-1.5 text-xs backdrop-blur-md"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse-dot" />
                   <span className="font-mono tabular-nums">
