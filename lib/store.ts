@@ -10,15 +10,17 @@ export type CartLine = { item: MenuItem; quantity: number };
 type CartState = {
   lines: CartLine[];
   drawerOpen: boolean;
+  deliveryZoneId: string;
   add: (item: MenuItem, qty?: number) => void;
   remove: (id: string) => void;
   setQty: (id: string, qty: number) => void;
   clear: () => void;
   openDrawer: () => void;
   closeDrawer: () => void;
+  setDeliveryZone: (zoneId: string) => void;
   subtotal: () => number;
-  deliveryFee: (km?: number) => number;
-  total: (km?: number) => number;
+  deliveryFee: () => number;
+  total: () => number;
   count: () => number;
 };
 
@@ -27,6 +29,7 @@ export const useCart = create<CartState>()(
     (set, get) => ({
       lines: [],
       drawerOpen: false,
+      deliveryZoneId: themeConfig.delivery.defaultZoneId,
 
       add: (item, qty = 1) =>
         set((s) => {
@@ -36,8 +39,6 @@ export const useCart = create<CartState>()(
               lines: s.lines.map((l) =>
                 l.item.id === item.id ? { ...l, quantity: l.quantity + qty } : l,
               ),
-              // Le panier NE s'ouvre PLUS automatiquement. Feedback discret
-              // via FloatingCartBar + animation du compteur Header.
             };
           }
           return { lines: [...s.lines, { item, quantity: qty }] };
@@ -60,20 +61,19 @@ export const useCart = create<CartState>()(
       openDrawer: () => set({ drawerOpen: true }),
       closeDrawer: () => set({ drawerOpen: false }),
 
+      setDeliveryZone: (zoneId) => set({ deliveryZoneId: zoneId }),
+
       subtotal: () =>
         get().lines.reduce((acc, l) => acc + l.item.price * l.quantity, 0),
 
-      deliveryFee: (km = 4) => {
-        const { mode, flatFee, freeAbove, zones } = themeConfig.delivery;
-        const sub = get().subtotal();
-        if (sub >= freeAbove) return 0;
-        if (mode === "free") return 0;
-        if (mode === "flat") return flatFee;
-        const zone = zones.find((z) => km <= z.maxKm);
-        return zone ? zone.fee : zones[zones.length - 1].fee;
+      deliveryFee: () => {
+        const zone = themeConfig.delivery.zones.find(
+          (z) => z.id === get().deliveryZoneId,
+        );
+        return zone ? zone.fee : 0;
       },
 
-      total: (km) => get().subtotal() + get().deliveryFee(km),
+      total: () => get().subtotal() + get().deliveryFee(),
       count: () => get().lines.reduce((acc, l) => acc + l.quantity, 0),
     }),
     { name: "braise-cart" },

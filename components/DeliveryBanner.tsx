@@ -1,15 +1,11 @@
 import { Scooter, Clock, MapPin } from "@phosphor-icons/react/dist/ssr";
 import { themeConfig } from "@/config/theme.config";
+import { formatPrice } from "@/lib/utils";
 
 export function DeliveryBanner() {
   const { delivery } = themeConfig;
-
-  const feeLabel =
-    delivery.mode === "free"
-      ? "Always free"
-      : delivery.mode === "flat"
-        ? `${delivery.flatFee.toFixed(2)} €`
-        : `from ${delivery.zones[0].fee.toFixed(2)} €`;
+  const rawai = delivery.zones.find((z) => z.id === "rawai");
+  const outside = delivery.zones.find((z) => z.id === "outside");
 
   return (
     <section id="delivery" className="py-12 md:py-16">
@@ -28,36 +24,36 @@ export function DeliveryBanner() {
             <div>
               <span className="chip">Delivery service</span>
               <h3 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tighter md:text-5xl">
-                We come to you. <br />
+                Free across Rawai. <br />
                 <span className="text-accent italic">Always.</span>
               </h3>
               <p className="mt-4 max-w-[52ch] text-zinc-400">
-                Our dark kitchen has no dining room. We deliver straight to your
-                door, hot and pristine, in under {delivery.estimatedMinutes.max}{" "}
+                Our dark kitchen is based in Rawai and we deliver
+                throughout the whole area at no cost. Outside Rawai? A flat{" "}
+                {outside ? formatPrice(outside.fee) : ""} fee covers the extra
+                ride. Arrives hot in under {delivery.estimatedMinutes.max}{" "}
                 minutes. {delivery.cutoffMessage}.
               </p>
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3">
               <DeliveryStat
+                icon={<MapPin size={22} weight="duotone" />}
+                label="Rawai"
+                value="Free"
+                hint={rawai?.description}
+                emphasized
+              />
+              <DeliveryStat
                 icon={<Scooter size={22} weight="duotone" />}
-                label="Delivery"
-                value={feeLabel}
-                hint={
-                  delivery.mode === "by-distance"
-                    ? `Free above ${delivery.freeAbove} €`
-                    : undefined
-                }
+                label="Outside Rawai"
+                value={outside ? formatPrice(outside.fee) : ""}
+                hint="Flat fee, nearby areas"
               />
               <DeliveryStat
                 icon={<Clock size={22} weight="duotone" />}
                 label="Avg. time"
                 value={`${delivery.estimatedMinutes.min}–${delivery.estimatedMinutes.max} min`}
-              />
-              <DeliveryStat
-                icon={<MapPin size={22} weight="duotone" />}
-                label="Zone"
-                value={`${delivery.zones[delivery.zones.length - 1].maxKm} km max`}
               />
             </div>
           </div>
@@ -72,19 +68,35 @@ function DeliveryStat({
   label,
   value,
   hint,
+  emphasized,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   hint?: string;
+  emphasized?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
-      <div className="flex items-center gap-2 text-zinc-400">
+    <div
+      className={`rounded-2xl border p-5 transition-colors ${
+        emphasized
+          ? "border-accent/30 bg-accent/[0.06]"
+          : "border-white/[0.06] bg-white/[0.02]"
+      }`}
+    >
+      <div
+        className={`flex items-center gap-2 ${
+          emphasized ? "text-accent" : "text-zinc-400"
+        }`}
+      >
         {icon}
         <span className="text-xs uppercase tracking-wider">{label}</span>
       </div>
-      <div className="mt-3 font-display text-2xl font-semibold tracking-tight">
+      <div
+        className={`mt-3 font-display text-2xl font-semibold tracking-tight ${
+          emphasized ? "text-accent" : ""
+        }`}
+      >
         {value}
       </div>
       {hint && <div className="mt-1 text-xs text-zinc-500">{hint}</div>}

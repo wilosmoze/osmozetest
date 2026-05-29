@@ -34,7 +34,14 @@ export function CheckoutForm() {
   const [form, setForm] = useState<FormState>(empty);
   const [errors, setErrors] = useState<Partial<FormState>>({});
   const [showHelp, setShowHelp] = useState(false);
-  const { lines, subtotal, deliveryFee, total } = useCart();
+  const {
+    lines,
+    subtotal,
+    deliveryFee,
+    total,
+    deliveryZoneId,
+    setDeliveryZone,
+  } = useCart();
 
   if (lines.length === 0) {
     return (
@@ -212,6 +219,45 @@ export function CheckoutForm() {
             onChange={(v) => update("notes", v)}
             multiline
           />
+
+          {/* ---------- ZONE TOGGLE ---------- */}
+          <div className="md:col-span-2 flex flex-col gap-2">
+            <span className="text-xs uppercase tracking-wider text-zinc-500">
+              Delivery zone
+            </span>
+            <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-1.5">
+              {themeConfig.delivery.zones.map((zone) => {
+                const active = deliveryZoneId === zone.id;
+                return (
+                  <button
+                    key={zone.id}
+                    type="button"
+                    onClick={() => setDeliveryZone(zone.id)}
+                    className={`relative rounded-xl px-4 py-3 text-left transition-all ${
+                      active
+                        ? "bg-accent text-zinc-950"
+                        : "text-zinc-400 hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    <div className="flex items-baseline justify-between gap-2">
+                      <span className="text-sm font-medium">{zone.name}</span>
+                      <span className="font-mono text-xs tabular-nums">
+                        {zone.fee === 0 ? "Free" : `+${formatPrice(zone.fee)}`}
+                      </span>
+                    </div>
+                    <div
+                      className={`mt-0.5 text-[11px] ${
+                        active ? "text-zinc-800" : "text-zinc-500"
+                      }`}
+                    >
+                      {zone.description}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          {/* ---------- /ZONE TOGGLE ---------- */}
         </form>
 
         <div className="mt-10 border-t border-white/[0.06] pt-8">

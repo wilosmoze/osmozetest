@@ -3,14 +3,19 @@
 //  Colors, brand, delivery, contacts, social.
 // ============================================================
 
-export type DeliveryMode = "free" | "flat" | "by-distance";
+export type DeliveryZone = {
+  id: string;
+  name: string;
+  fee: number;
+  description: string;
+};
 
 export const themeConfig = {
   brand: {
     name: "BRAISE.",
     tagline: "Flame-grilled burgers. Delivery only.",
     description:
-      "The ghost kitchen reinventing the premium burger. Cooked over open flame, delivered to your door in under 30 minutes.",
+      "The Rawai ghost kitchen reinventing the premium burger. Cooked over open flame, delivered to your door in under 30 minutes.",
     logoText: "BRAISE.",
     logoImage: "",
     favicon: "/favicon.ico",
@@ -36,40 +41,48 @@ export const themeConfig = {
   },
 
   delivery: {
-    mode: "by-distance" as DeliveryMode,
-    flatFee: 3.9,
-    freeAbove: 45,
+    // Rawai → gratuit. Hors Rawai → 20 ฿.
     zones: [
-      { maxKm: 3, fee: 0 },
-      { maxKm: 6, fee: 2.9 },
-      { maxKm: 10, fee: 4.9 },
-    ],
+      {
+        id: "rawai",
+        name: "Rawai",
+        fee: 0,
+        description: "Free delivery across all of Rawai",
+      },
+      {
+        id: "outside",
+        name: "Outside Rawai",
+        fee: 20,
+        description: "+20 ฿ flat fee for nearby areas",
+      },
+    ] as DeliveryZone[],
+    defaultZoneId: "rawai",
     estimatedMinutes: { min: 25, max: 35 },
     cutoffMessage: "Open 6:30 PM to 11:00 PM — 7 days a week",
   },
 
   social: {
     instagram: {
-      handle: "@braise.kitchen",
-      url: "https://instagram.com/braise.kitchen",
+      handle: "@braise.rawai",
+      url: "https://instagram.com/braise.rawai",
       ctaTitle: "Follow the journey & share your burger",
       ctaBody:
         "Behind-the-scenes from the lab, new drops first, and customer support that actually replies. We read every comment.",
     },
-    tiktok: { handle: "@braise.kitchen", url: "https://tiktok.com/@braise.kitchen" },
+    tiktok: { handle: "@braise.rawai", url: "https://tiktok.com/@braise.rawai" },
     contactEmail: "hello@braise.kitchen",
-    contactPhone: "+33 7 82 47 19 28",
+    contactPhone: "+66 0 00 00 00 00",
   },
 
   payment: {
     stripePublicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY ?? "",
-    currency: "EUR",
-    currencySymbol: "€",
+    currency: "THB",
+    currencySymbol: "฿",
     locale: "en-GB",
   },
 
   hero: {
-    eyebrow: "Dark kitchen — Delivery only",
+    eyebrow: "Dark kitchen — Rawai only",
     headline: ["The burger,", "at its sharpest", "intensity."],
     subline:
       "Six flame-grilled creations, six house sauces, three brioche desserts. Delivered in 30 minutes, never served in-house.",
@@ -78,7 +91,7 @@ export const themeConfig = {
     reassurances: [
       { label: "30 min", sub: "max delivery" },
       { label: "100%", sub: "house-made" },
-      { label: "Black Angus", sub: "French beef" },
+      { label: "Free", sub: "in Rawai" },
     ],
   },
 

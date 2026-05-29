@@ -6,8 +6,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const formatPrice = (n: number) =>
-  new Intl.NumberFormat(themeConfig.payment.locale, {
+/**
+ * Format price.
+ *  - THB → "590 ฿" (no decimals, space, symbol after — common Thai retail format)
+ *  - Other → standard Intl currency format
+ */
+export const formatPrice = (n: number) => {
+  if (themeConfig.payment.currency === "THB") {
+    return `${Math.round(n).toLocaleString("en-US")} ${themeConfig.payment.currencySymbol}`;
+  }
+  return new Intl.NumberFormat(themeConfig.payment.locale, {
     style: "currency",
     currency: themeConfig.payment.currency,
   }).format(n);
+};

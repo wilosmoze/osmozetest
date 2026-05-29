@@ -11,7 +11,6 @@ import {
 } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
-import { themeConfig } from "@/config/theme.config";
 
 export function CartDrawer() {
   const router = useRouter();
@@ -22,8 +21,6 @@ export function CartDrawer() {
   const fee = deliveryFee();
   const sum = total();
   const empty = lines.length === 0;
-  const remaining = Math.max(0, themeConfig.delivery.freeAbove - sub);
-  const progress = Math.min(100, (sub / themeConfig.delivery.freeAbove) * 100);
 
   return (
     <AnimatePresence>
@@ -63,21 +60,11 @@ export function CartDrawer() {
               </button>
             </div>
 
-            {!empty && remaining > 0 && (
-              <div className="border-b border-white/[0.06] px-6 py-4">
-                <div className="flex items-center justify-between text-xs text-zinc-400">
-                  <span>Free delivery</span>
-                  <span className="font-mono tabular-nums">
-                    +{formatPrice(remaining)}
-                  </span>
-                </div>
-                <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/[0.05]">
-                  <motion.div
-                    className="h-full bg-accent"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progress}%` }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  />
+            {!empty && fee === 0 && (
+              <div className="border-b border-white/[0.06] px-6 py-3">
+                <div className="flex items-center justify-center gap-2 text-xs text-emerald-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  Free delivery across Rawai
                 </div>
               </div>
             )}

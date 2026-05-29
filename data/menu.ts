@@ -2,7 +2,7 @@ export type MenuItem = {
   id: string;
   name: string;
   description: string;
-  price: number;
+  price: number;          // En THB (฿)
   image: string;
   category: "burger" | "sauce" | "dessert";
   tag?: string;
@@ -12,13 +12,13 @@ export type MenuItem = {
 const seed = (s: string) => `https://picsum.photos/seed/${s}/800/900`;
 
 export const menu: MenuItem[] = [
-  // BURGERS
+  // ---------- BURGERS (450–650 ฿) ----------
   {
     id: "b-patron",
     name: "Le Patron",
     description:
       "Black Angus 180g, 18-month aged cheddar, port-glazed onions, rocket, truffle mayo.",
-    price: 17.5,
+    price: 580,
     image: seed("burger-patron-braise"),
     category: "burger",
     tag: "Signature",
@@ -29,7 +29,7 @@ export const menu: MenuItem[] = [
     name: "Le Brasero",
     description:
       "Double Angus, melted cheddar, beech-smoked bacon, crispy onions, house bourbon BBQ.",
-    price: 18.9,
+    price: 620,
     image: seed("burger-brasero"),
     category: "burger",
     tag: "Best-seller",
@@ -40,7 +40,7 @@ export const menu: MenuItem[] = [
     name: "L'Italien",
     description:
       "Beef, buffalo mozzarella, confit tomato, fresh basil, house pesto on brioche.",
-    price: 16.5,
+    price: 490,
     image: seed("burger-italien"),
     category: "burger",
     ingredients: ["Buffalo mozzarella", "Pesto", "Basil"],
@@ -50,7 +50,7 @@ export const menu: MenuItem[] = [
     name: "Le Bleu",
     description:
       "Beef, Fourme d'Ambert blue cheese, wine-poached pear, caramelised walnuts, lamb's lettuce, honey-mustard mayo.",
-    price: 16.9,
+    price: 510,
     image: seed("burger-bleu-fourme"),
     category: "burger",
     ingredients: ["Blue cheese", "Pear", "Walnut"],
@@ -60,7 +60,7 @@ export const menu: MenuItem[] = [
     name: "Le Volcan",
     description:
       "Beef, spicy cheddar, fresh jalapeños, red onion, smoked chipotle sauce.",
-    price: 15.9,
+    price: 450,
     image: seed("burger-volcan-spicy"),
     category: "burger",
     tag: "Spicy",
@@ -71,18 +71,18 @@ export const menu: MenuItem[] = [
     name: "Le Forestier",
     description:
       "Beef, garlic-sautéed mushrooms, 24-month Comté, caramelised onions, wholegrain mustard.",
-    price: 16.5,
+    price: 490,
     image: seed("burger-forestier-mushroom"),
     category: "burger",
     ingredients: ["Aged Comté", "Mushroom", "Garlic"],
   },
 
-  // SAUCES
+  // ---------- SAUCES (60–80 ฿) ----------
   {
     id: "s-truffe",
     name: "Truffle & Parmesan",
     description: "Silky mayo, black truffle shavings, grated 24-month Parmigiano.",
-    price: 2.5,
+    price: 80,
     image: seed("sauce-truffe-noir"),
     category: "sauce",
   },
@@ -90,7 +90,7 @@ export const menu: MenuItem[] = [
     id: "s-chipotle",
     name: "Smoked Chipotle",
     description: "Chipotle, smoked paprika, acacia honey, hint of lime.",
-    price: 1.9,
+    price: 60,
     image: seed("sauce-chipotle-fumee"),
     category: "sauce",
   },
@@ -98,7 +98,7 @@ export const menu: MenuItem[] = [
     id: "s-bbq",
     name: "Bourbon BBQ",
     description: "Smoked tomato, caramelised bourbon, molasses, roasted onion.",
-    price: 1.9,
+    price: 60,
     image: seed("sauce-bbq-bourbon"),
     category: "sauce",
   },
@@ -106,7 +106,7 @@ export const menu: MenuItem[] = [
     id: "s-yuzu",
     name: "Yuzu Mayo",
     description: "Japanese mayo, fresh yuzu, toasted sesame.",
-    price: 2.2,
+    price: 70,
     image: seed("sauce-yuzu-mayo"),
     category: "sauce",
     tag: "New",
@@ -115,7 +115,7 @@ export const menu: MenuItem[] = [
     id: "s-miel",
     name: "Honey Mustard",
     description: "Wholegrain mustard, chestnut honey, cider vinegar.",
-    price: 1.9,
+    price: 60,
     image: seed("sauce-miel-moutarde"),
     category: "sauce",
   },
@@ -123,19 +123,19 @@ export const menu: MenuItem[] = [
     id: "s-ail",
     name: "Black Garlic",
     description: "60-day fermented black garlic, mayo, chopped chives.",
-    price: 2.5,
+    price: 80,
     image: seed("sauce-ail-noir"),
     category: "sauce",
     tag: "Rare",
   },
 
-  // DESSERTS
+  // ---------- DESSERTS (230–290 ฿) ----------
   {
     id: "d-cookie",
     name: "Burnt Cookie",
     description:
       "Toasted brioche, Madagascar vanilla ice cream, cookie chunks, salted butter caramel.",
-    price: 8.5,
+    price: 250,
     image: seed("dessert-cookie-brule"),
     category: "dessert",
   },
@@ -144,7 +144,7 @@ export const menu: MenuItem[] = [
     name: "Chocolate Volcano",
     description:
       "Cocoa brioche, 70% ganache, flame-torched marshmallow, praline shards.",
-    price: 8.9,
+    price: 290,
     image: seed("dessert-chocolat-volcan"),
     category: "dessert",
     tag: "Torched to order",
@@ -154,7 +154,7 @@ export const menu: MenuItem[] = [
     name: "Red Berry",
     description:
       "Soft brioche, vanilla mascarpone, red berry compote, pistachio crumble.",
-    price: 7.9,
+    price: 230,
     image: seed("dessert-fruit-rouge"),
     category: "dessert",
   },
