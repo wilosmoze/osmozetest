@@ -1,0 +1,25 @@
+export function Marquee() {
+  const items = [
+    "Cuit à la braise",
+    "Black Angus français",
+    "Pain brioché maison",
+    "Livraison < 30 min",
+    "Sauces fait-maison",
+    "Service 18h30 → 23h00",
+  ];
+  return (
+    <div className="border-y border-white/[0.05] bg-surface/40 py-4 overflow-hidden">
+      <div className="flex animate-marquee gap-12 whitespace-nowrap">
+        {[...items, ...items, ...items].map((s, i) => (
+          <span
+            key={i}
+            className="font-display text-xl tracking-tight text-zinc-500"
+          >
+            {s}{" "}
+            <span className="ml-12 inline-block h-1 w-1 rounded-full bg-accent align-middle" />
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
