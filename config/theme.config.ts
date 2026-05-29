@@ -63,15 +63,15 @@ export const themeConfig = {
 
   social: {
     instagram: {
-      handle: "@bunbass__burgers",
-      url: "https://instagram.com/bunbass__burgers",
+      handle: "@bunNbass__burgers",
+      url: "https://instagram.com/bunNbass__burgers",
       ctaTitle: "Follow the wave & share your burger",
       ctaBody:
         "Behind-the-scenes from the kitchen, new drops first, and DMs that actually reply. We read every comment.",
     },
     tiktok: {
-      handle: "@bunbass__burgers",
-      url: "https://tiktok.com/@bunbass__burgers",
+      handle: "@bunNbass__burgers",
+      url: "https://tiktok.com/@bunNbass__burgers",
     },
     contactEmail: "bunNbassburgers@gmail.com",
     contactPhone: "", // Line ID will be added later
