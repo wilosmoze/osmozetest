@@ -12,6 +12,8 @@ import {
   XCircle,
   Clock,
   ArrowRight,
+  MapPin,
+  NavigationArrow,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import type { Order, OrderStatus } from "@/lib/orders";
@@ -229,7 +231,6 @@ function OrderRow({ order }: { order: Order }) {
           </div>
           <div className="mt-0.5 truncate text-sm text-zinc-400">
             {order.customer.firstName} {order.customer.lastName} ·{" "}
-            <span className="text-zinc-500">{order.customer.city}</span> ·{" "}
             <span className="font-mono tabular-nums">{formatPrice(order.total)}</span>
           </div>
         </div>
@@ -260,10 +261,25 @@ function OrderRow({ order }: { order: Order }) {
                 <a href={`tel:${order.customer.phone}`} className="block font-mono text-sm text-accent hover:underline">
                   {order.customer.phone}
                 </a>
-                <div className="mt-3 text-sm text-zinc-400">
-                  {order.customer.address}<br />
-                  {order.customer.zip} {order.customer.city}
+
+                <div className="mt-4 space-y-2">
+                  <a
+                    href={order.customer.locationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex w-full items-center justify-between gap-2 rounded-2xl border border-accent/40 bg-accent/[0.08] px-4 py-3 text-sm text-accent transition-all hover:bg-accent hover:text-zinc-950 active:translate-y-[1px]"
+                  >
+                    <span className="flex items-center gap-2">
+                      <NavigationArrow size={16} weight="fill" />
+                      Naviguer (Google Maps)
+                    </span>
+                    <MapPin size={16} weight="duotone" />
+                  </a>
+                  <div className="break-all rounded-lg border border-white/[0.04] bg-zinc-950/40 p-2.5 font-mono text-[10px] text-zinc-500">
+                    {order.customer.locationUrl}
+                  </div>
                 </div>
+
                 {order.customer.notes && (
                   <div className="mt-3 rounded-lg border border-white/[0.06] bg-zinc-950/40 p-3 text-xs text-zinc-400">
                     <span className="text-zinc-500">Note livreur :</span> {order.customer.notes}

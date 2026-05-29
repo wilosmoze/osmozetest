@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ShieldCheck } from "@phosphor-icons/react";
+import { ShieldCheck, MapPin, ArrowSquareOut, Info } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { themeConfig } from "@/config/theme.config";
@@ -13,9 +13,7 @@ type FormState = {
   firstName: string;
   lastName: string;
   phone: string;
-  address: string;
-  city: string;
-  zip: string;
+  locationUrl: string;
   notes: string;
 };
 
@@ -23,16 +21,19 @@ const empty: FormState = {
   firstName: "",
   lastName: "",
   phone: "",
-  address: "",
-  city: "",
-  zip: "",
+  locationUrl: "",
   notes: "",
 };
+
+// Validation : doit ressembler à un lien Google Maps (court ou long)
+const GMAPS_REGEX =
+  /^https?:\/\/(?:[\w.-]+\.)?(?:google\.[a-z.]+\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)/i;
 
 export function CheckoutForm() {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(empty);
   const [errors, setErrors] = useState<Partial<FormState>>({});
+  const [showHelp, setShowHelp] = useState(false);
   const { lines, subtotal, deliveryFee, total } = useCart();
 
   if (lines.length === 0) {
@@ -61,12 +62,19 @@ export function CheckoutForm() {
     if (!form.firstName) e.firstName = "Prénom requis";
     if (!form.lastName) e.lastName = "Nom requis";
     if (!/^[\d\s+()-]{8,}$/.test(form.phone)) e.phone = "Téléphone invalide";
-    if (!form.address) e.address = "Adresse requise";
-    if (!form.city) e.city = "Ville requise";
-    if (!/^\d{5}$/.test(form.zip)) e.zip = "Code postal invalide";
+    if (!form.locationUrl.trim()) {
+      e.locationUrl = "Lien Google Maps requis";
+    } else if (!GMAPS_REGEX.test(form.locationUrl.trim())) {
+      e.locationUrl =
+        "Ce lien ne ressemble pas à une URL Google Maps. Vérifiez et recollez.";
+    }
     setErrors(e);
     return Object.keys(e).length === 0;
   };
+
+  const locationOk =
+    form.locationUrl.trim().length > 0 &&
+    GMAPS_REGEX.test(form.locationUrl.trim());
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
@@ -97,26 +105,109 @@ export function CheckoutForm() {
             error={errors.phone}
             inputMode="tel"
           />
+
+          {/* ---------- BLOC LIEN GOOGLE MAPS ---------- */}
+          <div className="md:col-span-2 flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-2 text-xs uppercase tracking-wider text-zinc-500">
+                <MapPin size={14} weight="duotone" />
+                Lien Google Maps de votre adresse
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowHelp((v) => !v)}
+                className="inline-flex items-center gap-1 text-xs text-zinc-500 transition-colors hover:text-accent"
+              >
+                <Info size={13} weight="duotone" />
+                {showHelp ? "Masquer l'aide" : "Comment faire ?"}
+              </button>
+            </div>
+
+            {showHelp && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 text-xs text-zinc-400"
+              >
+                <p className="text-zinc-300 font-medium mb-2">
+                  Sur mobile (le plus simple) :
+                </p>
+                <ol className="space-y-1.5 list-decimal list-inside marker:text-accent">
+                  <li>Ouvrez l'app Google Maps</li>
+                  <li>
+                    Touchez l'icône <span className="text-zinc-300">"Mon emplacement"</span>{" "}
+                    en bas à droite (ou maintenez votre doigt sur l'adresse exacte)
+                  </li>
+                  <li>
+                    Touchez le bouton <span className="text-zinc-300">Partager</span>{" "}
+                    → <span className="text-zinc-300">Copier le lien</span>
+                  </li>
+                  <li>Collez le lien ci-dessous</li>
+                </ol>
+                <a
+                  href="https://www.google.com/maps"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
+                >
+                  Ouvrir Google Maps dans un nouvel onglet
+                  <ArrowSquareOut size={12} weight="bold" />
+                </a>
+              </motion.div>
+            )}
+
+            <div className="relative">
+              <input
+                value={form.locationUrl}
+                onChange={(e) => update("locationUrl", e.target.value)}
+                placeholder="https://maps.app.goo.gl/..."
+                className={`w-full rounded-2xl border bg-white/[0.02] px-4 py-3.5 pr-12 text-sm placeholder:text-zinc-600 transition-colors focus:outline-none focus:border-accent/60 ${
+                  errors.locationUrl
+                    ? "border-red-500/60"
+                    : locationOk
+                      ? "border-emerald-500/40"
+                      : "border-white/[0.08]"
+                }`}
+              />
+              {locationOk && (
+                <motion.div
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-400"
+                >
+                  <MapPin size={18} weight="fill" />
+                </motion.div>
+              )}
+            </div>
+
+            {errors.locationUrl && (
+              <span className="text-xs text-red-400">{errors.locationUrl}</span>
+            )}
+            {locationOk && !errors.locationUrl && (
+              <span className="flex items-center gap-1.5 text-xs text-emerald-400">
+                Lien Maps valide — votre livreur s'y rendra exactement.
+              </span>
+            )}
+
+            {locationOk && (
+              <a
+                href={form.locationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-400 transition-colors hover:border-accent/40 hover:text-white"
+              >
+                Prévisualiser sur Google Maps
+                <ArrowSquareOut size={12} weight="bold" />
+              </a>
+            )}
+          </div>
+          {/* ---------- /BLOC LIEN GOOGLE MAPS ---------- */}
+
           <Field
             className="md:col-span-2"
-            label="Adresse de livraison"
-            placeholder="N° et rue"
-            value={form.address}
-            onChange={(v) => update("address", v)}
-            error={errors.address}
-          />
-          <Field
-            label="Code postal"
-            value={form.zip}
-            onChange={(v) => update("zip", v)}
-            error={errors.zip}
-            inputMode="numeric"
-          />
-          <Field label="Ville" value={form.city} onChange={(v) => update("city", v)} error={errors.city} />
-          <Field
-            className="md:col-span-2"
-            label="Notes de livraison (optionnel)"
-            placeholder="Digicode, étage, instructions au livreur..."
+            label="Détails de livraison (digicode, étage, instructions)"
+            placeholder="Bâtiment B, 3e étage gauche, code 4521A"
             value={form.notes}
             onChange={(v) => update("notes", v)}
             multiline

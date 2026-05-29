@@ -17,8 +17,12 @@ export async function POST(req: Request) {
   if (!body.lines?.length) {
     return NextResponse.json({ error: "Panier vide" }, { status: 400 });
   }
-  if (!body.customer?.address || !body.customer?.phone) {
+  if (!body.customer?.locationUrl || !body.customer?.phone) {
     return NextResponse.json({ error: "Informations client manquantes" }, { status: 400 });
+  }
+  const gmapsRegex = /^https?:\/\/(?:[\w.-]+\.)?(?:google\.[a-z.]+\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)/i;
+  if (!gmapsRegex.test(body.customer.locationUrl.trim())) {
+    return NextResponse.json({ error: "Lien Google Maps invalide" }, { status: 400 });
   }
 
   const subtotal = body.lines.reduce((s, l) => s + l.price * l.quantity, 0);

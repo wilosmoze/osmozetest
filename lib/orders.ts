@@ -25,10 +25,8 @@ export type OrderCustomer = {
   firstName: string;
   lastName: string;
   phone: string;
-  address: string;
-  city: string;
-  zip: string;
-  notes?: string;
+  locationUrl: string;   // Lien Google Maps partagé par le client
+  notes?: string;        // Digicode, étage, instructions livreur
 };
 
 export type Order = {
