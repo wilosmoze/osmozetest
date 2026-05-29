@@ -49,10 +49,10 @@ export function CartDrawer() {
             <div className="flex items-center justify-between border-b border-white/[0.06] px-6 py-5">
               <div>
                 <div className="font-display text-lg font-semibold tracking-tight">
-                  Votre commande
+                  Your order
                 </div>
                 <div className="mt-0.5 text-xs text-zinc-500">
-                  {lines.length} article{lines.length > 1 ? "s" : ""}
+                  {lines.length} item{lines.length > 1 ? "s" : ""}
                 </div>
               </div>
               <button
@@ -66,7 +66,7 @@ export function CartDrawer() {
             {!empty && remaining > 0 && (
               <div className="border-b border-white/[0.06] px-6 py-4">
                 <div className="flex items-center justify-between text-xs text-zinc-400">
-                  <span>Livraison offerte</span>
+                  <span>Free delivery</span>
                   <span className="font-mono tabular-nums">
                     +{formatPrice(remaining)}
                   </span>
@@ -120,7 +120,7 @@ export function CartDrawer() {
                             <button
                               onClick={() => remove(l.item.id)}
                               className="text-zinc-500 transition-colors hover:text-red-400"
-                              aria-label="Retirer"
+                              aria-label="Remove"
                             >
                               <Trash size={16} weight="duotone" />
                             </button>
@@ -158,10 +158,10 @@ export function CartDrawer() {
 
             {!empty && (
               <div className="border-t border-white/[0.06] px-6 py-5">
-                <Row label="Sous-total" value={formatPrice(sub)} />
+                <Row label="Subtotal" value={formatPrice(sub)} />
                 <Row
-                  label="Livraison"
-                  value={fee === 0 ? "Offerte" : formatPrice(fee)}
+                  label="Delivery"
+                  value={fee === 0 ? "Free" : formatPrice(fee)}
                   emphasized={fee === 0}
                 />
                 <div className="my-3 h-px bg-white/[0.06]" />
@@ -173,7 +173,7 @@ export function CartDrawer() {
                   }}
                   className="mt-5 flex w-full items-center justify-between rounded-full bg-accent px-5 py-4 text-sm font-medium text-zinc-950 transition-all hover:brightness-110 active:translate-y-[1px]"
                 >
-                  <span>Finaliser ma commande</span>
+                  <span>Validate order</span>
                   <ArrowRight size={18} weight="bold" />
                 </button>
               </div>
@@ -217,13 +217,13 @@ function EmptyCart({ onContinue }: { onContinue: () => void }) {
     <div className="flex h-full flex-col items-center justify-center px-8 text-center">
       <div className="h-16 w-16 rounded-full border border-white/[0.06] bg-white/[0.02]" />
       <div className="mt-6 font-display text-xl font-semibold tracking-tight">
-        Panier vide
+        Empty cart
       </div>
       <p className="mt-2 max-w-[28ch] text-sm text-zinc-500">
-        Vos burgers vous attendent dans la carte.
+        Your burgers are waiting on the menu.
       </p>
       <button onClick={onContinue} className="btn-ghost mt-6">
-        Découvrir la carte
+        Browse the menu
       </button>
     </div>
   );

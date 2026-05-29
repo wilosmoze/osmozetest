@@ -37,13 +37,13 @@ export function HeroOrbital() {
               </span>
 
               <h1 className="mt-5 font-display text-[clamp(2.25rem,6vw,4.5rem)] font-bold leading-[0.95] tracking-tighter">
-                Du feu de braise{" "}
-                <span className="italic text-accent">à votre porte.</span>
+                From the flame{" "}
+                <span className="italic text-accent">to your door.</span>
               </h1>
 
               <p className="mt-5 max-w-[44ch] text-sm text-zinc-400 md:text-base">
-                Cliquez sur chaque étape pour explorer notre processus —
-                de la sélection du bœuf à la livraison chaude.
+                Click on each step to explore our process — from beef sourcing
+                to piping-hot delivery.
               </p>
             </motion.div>
           </div>
@@ -62,7 +62,7 @@ export function HeroOrbital() {
                 <ArrowRight size={16} strokeWidth={2.4} />
               </a>
               <a href="#delivery" className="btn-ghost">
-                Voir nos zones de livraison
+                See delivery zones
               </a>
             </motion.div>
           </div>

@@ -36,13 +36,13 @@ export function Footer() {
 
           <div className="md:col-span-3">
             <div className="text-xs uppercase tracking-wider text-zinc-500">
-              Carte
+              Menu
             </div>
             <ul className="mt-4 space-y-2 text-sm">
               <li><a href="#burgers" className="hover:text-accent">Burgers</a></li>
               <li><a href="#sauces" className="hover:text-accent">Sauces</a></li>
               <li><a href="#desserts" className="hover:text-accent">Desserts</a></li>
-              <li><a href="#delivery" className="hover:text-accent">Livraison</a></li>
+              <li><a href="#delivery" className="hover:text-accent">Delivery</a></li>
             </ul>
           </div>
 
@@ -69,7 +69,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/[0.04] pt-6 text-xs text-zinc-600 md:flex-row md:items-center">
           <span>© {new Date().getFullYear()} {brand.name} — Dark Kitchen</span>
-          <span>Mentions légales · CGV · Confidentialité</span>
+          <span>Legal · Terms · Privacy</span>
         </div>
       </div>
     </footer>

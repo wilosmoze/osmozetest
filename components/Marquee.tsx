@@ -1,11 +1,11 @@
 export function Marquee() {
   const items = [
-    "Cuit à la braise",
-    "Black Angus français",
-    "Pain brioché maison",
-    "Livraison < 30 min",
-    "Sauces fait-maison",
-    "Service 18h30 → 23h00",
+    "Flame-grilled",
+    "French Black Angus",
+    "House brioche bun",
+    "Delivery under 30 min",
+    "House-made sauces",
+    "Open 6:30 PM → 11:00 PM",
   ];
   return (
     <div className="border-y border-white/[0.05] bg-surface/40 py-4 overflow-hidden">

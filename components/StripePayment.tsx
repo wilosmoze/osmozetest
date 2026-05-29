@@ -33,13 +33,13 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
   const launch = useCallback(async () => {
     setError(null);
     if (!onValidate()) {
-      setError("Vérifiez vos informations de livraison.");
+      setError("Check your delivery details.");
       return;
     }
     setLoading(true);
 
     try {
-      // Mode démo : pas de clé Stripe configurée → simulation de paiement
+      // Demo mode: no Stripe key configured → simulate payment
       if (!stripePromise) {
         await new Promise((r) => setTimeout(r, 1200));
         const orderId = `BR-DEMO-${Date.now().toString(36).toUpperCase()}`;
@@ -56,12 +56,12 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? "Impossible de créer la session");
+        throw new Error(data.error ?? "Failed to create checkout session");
       }
 
       const { clientSecret } = (await res.json()) as { clientSecret: string };
       const stripe = await stripePromise;
-      if (!stripe || !containerRef.current) throw new Error("Stripe non chargé");
+      if (!stripe || !containerRef.current) throw new Error("Stripe failed to load");
 
       checkoutRef.current = await stripe.initEmbeddedCheckout({ clientSecret });
       checkoutRef.current.mount(containerRef.current);
@@ -85,8 +85,8 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
         <LockKey size={16} weight="duotone" />
         <span>
           {stripePromise
-            ? "Paiement sécurisé par Stripe — chiffré bout-en-bout"
-            : "Mode démo (aucune carte requise)"}
+            ? "Secure payment by Stripe — end-to-end encrypted"
+            : "Demo mode (no card required)"}
         </span>
       </div>
 
@@ -103,7 +103,7 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
               className="block h-4 w-4 rounded-full border-2 border-zinc-950 border-t-transparent"
             />
           ) : (
-            `Payer ${formatPrice(amount)}`
+            `Pay ${formatPrice(amount)}`
           )}
         </button>
       )}

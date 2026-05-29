@@ -36,10 +36,11 @@ export const useCart = create<CartState>()(
               lines: s.lines.map((l) =>
                 l.item.id === item.id ? { ...l, quantity: l.quantity + qty } : l,
               ),
-              drawerOpen: true,
+              // Le panier NE s'ouvre PLUS automatiquement. Feedback discret
+              // via FloatingCartBar + animation du compteur Header.
             };
           }
-          return { lines: [...s.lines, { item, quantity: qty }], drawerOpen: true };
+          return { lines: [...s.lines, { item, quantity: qty }] };
         }),
 
       remove: (id) =>

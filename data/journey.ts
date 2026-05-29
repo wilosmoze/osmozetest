@@ -3,11 +3,11 @@ import { Beef, Wheat, Flame, Layers, Bike } from "lucide-react";
 export const journeyTimeline = [
   {
     id: 1,
-    title: "Sélection",
-    date: "Origine",
+    title: "Sourcing",
+    date: "Origin",
     content:
-      "Bœuf Black Angus français, sélectionné chez nos éleveurs partenaires de l'Aubrac. Maturation 21 jours minimum.",
-    category: "Matière première",
+      "French Black Angus beef, sourced from our partner farmers in the Aubrac region. Minimum 21-day dry-aged.",
+    category: "Raw material",
     icon: Beef,
     relatedIds: [2, 3],
     status: "completed" as const,
@@ -15,11 +15,11 @@ export const journeyTimeline = [
   },
   {
     id: 2,
-    title: "Le Pain",
-    date: "Quotidien",
+    title: "The Bun",
+    date: "Daily",
     content:
-      "Brioche briochée pétrie chaque matin par notre boulanger partenaire. Levain naturel, 24h de pousse.",
-    category: "Boulangerie",
+      "Brioche kneaded every morning by our partner baker. Natural sourdough, 24-hour proof.",
+    category: "Bakery",
     icon: Wheat,
     relatedIds: [1, 3],
     status: "completed" as const,
@@ -27,11 +27,11 @@ export const journeyTimeline = [
   },
   {
     id: 3,
-    title: "La Braise",
-    date: "Cuisson",
+    title: "The Flame",
+    date: "Cooking",
     content:
-      "Steak flammé minute à 280°C sur notre braisière en fonte. Croûte caramélisée, cœur saignant.",
-    category: "Cuisson",
+      "Patty seared to order at 280°C on our cast-iron grill. Caramelised crust, pink centre.",
+    category: "Cooking",
     icon: Flame,
     relatedIds: [1, 2, 4],
     status: "in-progress" as const,
@@ -39,11 +39,11 @@ export const journeyTimeline = [
   },
   {
     id: 4,
-    title: "Assemblage",
-    date: "Composition",
+    title: "Assembly",
+    date: "Build",
     content:
-      "Sauces maison, garniture fraîche, montage soigné, emballage isotherme pour préserver la chaleur.",
-    category: "Atelier",
+      "House sauces, fresh toppings, careful build, insulated packaging to lock in the heat.",
+    category: "Workshop",
     icon: Layers,
     relatedIds: [3, 5],
     status: "in-progress" as const,
@@ -51,11 +51,11 @@ export const journeyTimeline = [
   },
   {
     id: 5,
-    title: "Livraison",
+    title: "Delivery",
     date: "30 min max",
     content:
-      "Coursier dédié, sac isotherme grand format, arrivée chaude à votre porte. Suivi temps réel.",
-    category: "Logistique",
+      "Dedicated courier, large insulated bag, arrives hot at your door. Live tracking.",
+    category: "Logistics",
     icon: Bike,
     relatedIds: [4],
     status: "pending" as const,

@@ -6,6 +6,7 @@ import { DeliveryBanner } from "@/components/DeliveryBanner";
 import { SocialBlock } from "@/components/SocialBlock";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
+import { FloatingCartBar } from "@/components/FloatingCartBar";
 import { menu } from "@/data/menu";
 
 export default function HomePage() {
@@ -20,29 +21,30 @@ export default function HomePage() {
       <Marquee />
       <MenuSection
         id="burgers"
-        eyebrow="01 — La carte signature"
-        title="Six burgers, six tempéraments."
+        eyebrow="01 — Signature menu"
+        title="Six burgers, six temperaments."
         items={burgers}
         variant="hero"
       />
       <DeliveryBanner />
       <MenuSection
         id="sauces"
-        eyebrow="02 — Sauces maison"
-        title="Six sauces. Choisissez votre alliée."
+        eyebrow="02 — House sauces"
+        title="Six sauces. Pick your ally."
         items={sauces}
         variant="compact"
       />
       <MenuSection
         id="desserts"
-        eyebrow="03 — Desserts brioche"
-        title="Trois finales. Une seule règle : la gourmandise."
+        eyebrow="03 — Brioche desserts"
+        title="Three finales. One rule: indulgence."
         items={desserts}
         variant="hero"
       />
       <SocialBlock />
       <Footer />
       <CartDrawer />
+      <FloatingCartBar />
     </main>
   );
 }

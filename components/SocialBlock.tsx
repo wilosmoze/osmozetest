@@ -30,8 +30,8 @@ export function SocialBlock({
             <div className="md:col-span-7">
               <span className="chip">
                 {variant === "post-purchase"
-                  ? "En attendant votre livreur"
-                  : "Communauté & SAV"}
+                  ? "While you wait for your courier"
+                  : "Community & support"}
               </span>
               <h2 className="mt-5 font-display text-3xl font-bold leading-[0.95] tracking-tighter md:text-5xl">
                 {instagram.ctaTitle}

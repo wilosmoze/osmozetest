@@ -47,7 +47,7 @@ export function Header() {
               { label: "Burgers", href: "#burgers" },
               { label: "Sauces", href: "#sauces" },
               { label: "Desserts", href: "#desserts" },
-              { label: "Livraison", href: "#delivery" },
+              { label: "Delivery", href: "#delivery" },
             ].map((l) => (
               <a
                 key={l.href}

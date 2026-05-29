@@ -54,9 +54,9 @@ export function OrderTracker({ orderId }: { orderId: string }) {
     return (
       <section className="container-app py-20 text-center">
         <h1 className="font-display text-4xl font-bold tracking-tighter">
-          Commande introuvable
+          Order not found
         </h1>
-        <p className="mt-3 text-zinc-400">Cette commande n'existe pas ou a expiré.</p>
+        <p className="mt-3 text-zinc-400">This order doesn't exist or has expired.</p>
       </section>
     );
   }
@@ -65,17 +65,17 @@ export function OrderTracker({ orderId }: { orderId: string }) {
     <section className="container-app">
       <header className="mb-12 text-center md:mb-16">
         <span className="chip">
-          Commande #{orderId}
+          Order #{orderId}
           {(isDemo || order?.paymentStatus === "paid") && (
-            <span className="ml-2 text-emerald-400">paiement validé</span>
+            <span className="ml-2 text-emerald-400">payment confirmed</span>
           )}
         </span>
         <h1 className="mt-5 font-display text-4xl font-bold tracking-tighter md:text-6xl">
-          {order?.status === "delivered" ? "Bon appétit." : "Merci."}
+          {order?.status === "delivered" ? "Enjoy your meal." : "Thank you."}
         </h1>
         <p className="mx-auto mt-4 max-w-[52ch] text-zinc-400">
-          Suivez votre commande en temps réel. Vous n'avez rien à faire — la
-          page se met à jour automatiquement.
+          Track your order in real time. Nothing to do — the page updates
+          automatically.
         </p>
       </header>
 
@@ -147,14 +147,14 @@ export function OrderTracker({ orderId }: { orderId: string }) {
         <div className="flex items-center gap-3">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse-dot" />
           <span className="text-xs uppercase tracking-wider text-zinc-400">
-            Statut en direct
+            Live status
           </span>
         </div>
         <div className="mt-3 font-display text-2xl font-semibold tracking-tight">
-          {steps[currentIndex]?.title ?? "En attente de confirmation"}
+          {steps[currentIndex]?.title ?? "Awaiting confirmation"}
         </div>
         <p className="mt-2 text-zinc-400">
-          {steps[currentIndex]?.description ?? "Nous validons votre paiement."}
+          {steps[currentIndex]?.description ?? "We're confirming your payment."}
         </p>
       </motion.div>
     </section>

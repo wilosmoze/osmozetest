@@ -40,13 +40,13 @@ export function CheckoutForm() {
     return (
       <div className="rounded-3xl border border-white/[0.06] bg-surface p-12 text-center">
         <h2 className="font-display text-2xl font-semibold">
-          Votre panier est vide
+          Your cart is empty
         </h2>
         <p className="mt-2 text-zinc-400">
-          Ajoutez quelques burgers avant de passer commande.
+          Add a few burgers before checking out.
         </p>
         <button onClick={() => router.push("/")} className="btn-ghost mt-6">
-          Retour à la carte
+          Back to the menu
         </button>
       </div>
     );
@@ -59,14 +59,14 @@ export function CheckoutForm() {
 
   const validate = () => {
     const e: Partial<FormState> = {};
-    if (!form.firstName) e.firstName = "Prénom requis";
-    if (!form.lastName) e.lastName = "Nom requis";
-    if (!/^[\d\s+()-]{8,}$/.test(form.phone)) e.phone = "Téléphone invalide";
+    if (!form.firstName) e.firstName = "First name required";
+    if (!form.lastName) e.lastName = "Last name required";
+    if (!/^[\d\s+()-]{8,}$/.test(form.phone)) e.phone = "Invalid phone number";
     if (!form.locationUrl.trim()) {
-      e.locationUrl = "Lien Google Maps requis";
+      e.locationUrl = "Google Maps link required";
     } else if (!GMAPS_REGEX.test(form.locationUrl.trim())) {
       e.locationUrl =
-        "Ce lien ne ressemble pas à une URL Google Maps. Vérifiez et recollez.";
+        "This doesn't look like a Google Maps URL. Check and paste again.";
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -84,9 +84,9 @@ export function CheckoutForm() {
         className="lg:col-span-3"
       >
         <header className="mb-8">
-          <span className="chip">Étape finale</span>
+          <span className="chip">Final step</span>
           <h1 className="mt-4 font-display text-4xl font-bold tracking-tighter md:text-5xl">
-            Où livrons-nous ?
+            Where are we delivering?
           </h1>
         </header>
 
@@ -94,11 +94,11 @@ export function CheckoutForm() {
           onSubmit={(e) => e.preventDefault()}
           className="grid grid-cols-1 gap-5 md:grid-cols-2"
         >
-          <Field label="Prénom" value={form.firstName} onChange={(v) => update("firstName", v)} error={errors.firstName} />
-          <Field label="Nom" value={form.lastName} onChange={(v) => update("lastName", v)} error={errors.lastName} />
+          <Field label="First name" value={form.firstName} onChange={(v) => update("firstName", v)} error={errors.firstName} />
+          <Field label="Last name" value={form.lastName} onChange={(v) => update("lastName", v)} error={errors.lastName} />
           <Field
             className="md:col-span-2"
-            label="Téléphone"
+            label="Phone"
             placeholder="+33 6 XX XX XX XX"
             value={form.phone}
             onChange={(v) => update("phone", v)}
@@ -111,7 +111,7 @@ export function CheckoutForm() {
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-xs uppercase tracking-wider text-zinc-500">
                 <MapPin size={14} weight="duotone" />
-                Lien Google Maps de votre adresse
+                Google Maps link to your address
               </span>
               <button
                 type="button"
@@ -119,7 +119,7 @@ export function CheckoutForm() {
                 className="inline-flex items-center gap-1 text-xs text-zinc-500 transition-colors hover:text-accent"
               >
                 <Info size={13} weight="duotone" />
-                {showHelp ? "Masquer l'aide" : "Comment faire ?"}
+                {showHelp ? "Hide help" : "How does it work?"}
               </button>
             </div>
 
@@ -131,19 +131,19 @@ export function CheckoutForm() {
                 className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 text-xs text-zinc-400"
               >
                 <p className="text-zinc-300 font-medium mb-2">
-                  Sur mobile (le plus simple) :
+                  On mobile (the easiest way):
                 </p>
                 <ol className="space-y-1.5 list-decimal list-inside marker:text-accent">
-                  <li>Ouvrez l'app Google Maps</li>
+                  <li>Open the Google Maps app</li>
                   <li>
-                    Touchez l'icône <span className="text-zinc-300">"Mon emplacement"</span>{" "}
-                    en bas à droite (ou maintenez votre doigt sur l'adresse exacte)
+                    Tap the <span className="text-zinc-300">"My location"</span>{" "}
+                    icon (bottom right) or long-press your exact address
                   </li>
                   <li>
-                    Touchez le bouton <span className="text-zinc-300">Partager</span>{" "}
-                    → <span className="text-zinc-300">Copier le lien</span>
+                    Tap <span className="text-zinc-300">Share</span>{" "}
+                    → <span className="text-zinc-300">Copy link</span>
                   </li>
-                  <li>Collez le lien ci-dessous</li>
+                  <li>Paste the link below</li>
                 </ol>
                 <a
                   href="https://www.google.com/maps"
@@ -151,7 +151,7 @@ export function CheckoutForm() {
                   rel="noopener noreferrer"
                   className="mt-3 inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
                 >
-                  Ouvrir Google Maps dans un nouvel onglet
+                  Open Google Maps in a new tab
                   <ArrowSquareOut size={12} weight="bold" />
                 </a>
               </motion.div>
@@ -186,7 +186,7 @@ export function CheckoutForm() {
             )}
             {locationOk && !errors.locationUrl && (
               <span className="flex items-center gap-1.5 text-xs text-emerald-400">
-                Lien Maps valide — votre livreur s'y rendra exactement.
+                Valid Maps link — your courier will go to the exact spot.
               </span>
             )}
 
@@ -197,17 +197,17 @@ export function CheckoutForm() {
                 rel="noopener noreferrer"
                 className="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-400 transition-colors hover:border-accent/40 hover:text-white"
               >
-                Prévisualiser sur Google Maps
+                Preview on Google Maps
                 <ArrowSquareOut size={12} weight="bold" />
               </a>
             )}
           </div>
-          {/* ---------- /BLOC LIEN GOOGLE MAPS ---------- */}
+          {/* ---------- /GOOGLE MAPS LINK BLOCK ---------- */}
 
           <Field
             className="md:col-span-2"
-            label="Détails de livraison (digicode, étage, instructions)"
-            placeholder="Bâtiment B, 3e étage gauche, code 4521A"
+            label="Delivery notes (door code, floor, instructions)"
+            placeholder="Building B, 3rd floor left, code 4521A"
             value={form.notes}
             onChange={(v) => update("notes", v)}
             multiline
@@ -233,7 +233,7 @@ export function CheckoutForm() {
       <aside className="lg:col-span-2">
         <div className="sticky top-28 rounded-3xl border border-white/[0.06] bg-surface p-6">
           <div className="font-display text-lg font-semibold tracking-tight">
-            Récapitulatif
+            Order summary
           </div>
           <ul className="mt-4 divide-y divide-white/[0.04]">
             {lines.map((l) => (
@@ -250,10 +250,10 @@ export function CheckoutForm() {
             ))}
           </ul>
           <div className="my-4 h-px bg-white/[0.06]" />
-          <Row label="Sous-total" value={formatPrice(subtotal())} />
+          <Row label="Subtotal" value={formatPrice(subtotal())} />
           <Row
-            label="Livraison"
-            value={deliveryFee() === 0 ? "Offerte" : formatPrice(deliveryFee())}
+            label="Delivery"
+            value={deliveryFee() === 0 ? "Free" : formatPrice(deliveryFee())}
             highlight={deliveryFee() === 0}
           />
           <div className="my-3 h-px bg-white/[0.06]" />
@@ -265,9 +265,9 @@ export function CheckoutForm() {
           <div className="mt-6 flex items-start gap-2 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 text-xs text-zinc-400">
             <ShieldCheck size={18} weight="duotone" className="mt-0.5 text-emerald-400" />
             <div>
-              <span className="text-white">Livraison estimée :</span>{" "}
+              <span className="text-white">Estimated delivery:</span>{" "}
               {themeConfig.delivery.estimatedMinutes.min}–
-              {themeConfig.delivery.estimatedMinutes.max} min après confirmation.
+              {themeConfig.delivery.estimatedMinutes.max} min after confirmation.
             </div>
           </div>
         </div>

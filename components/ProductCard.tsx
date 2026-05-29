@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Plus } from "@phosphor-icons/react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Check } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import type { MenuItem } from "@/data/menu";
@@ -14,6 +15,13 @@ type Props = {
 
 export function ProductCard({ item, index, variant = "hero" }: Props) {
   const add = useCart((s) => s.add);
+  const [justAdded, setJustAdded] = useState(false);
+
+  const handleAdd = () => {
+    add(item);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 1200);
+  };
 
   return (
     <motion.article
@@ -78,11 +86,41 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
         )}
 
         <button
-          onClick={() => add(item)}
-          className="mt-auto inline-flex items-center justify-between gap-2 rounded-full bg-white/[0.04] px-4 py-3 text-sm font-medium transition-all hover:bg-accent hover:text-zinc-950 active:translate-y-[1px]"
+          onClick={handleAdd}
+          disabled={justAdded}
+          className={`relative mt-auto inline-flex items-center justify-between gap-2 rounded-full px-4 py-3 text-sm font-medium transition-all active:translate-y-[1px] overflow-hidden ${
+            justAdded
+              ? "bg-emerald-500/20 text-emerald-400"
+              : "bg-white/[0.04] hover:bg-accent hover:text-zinc-950"
+          }`}
         >
-          <span>Ajouter</span>
-          <Plus size={16} weight="bold" />
+          <AnimatePresence mode="wait" initial={false}>
+            {justAdded ? (
+              <motion.span
+                key="added"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="flex w-full items-center justify-between"
+              >
+                <span>Added to cart</span>
+                <Check size={16} weight="bold" />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="add"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="flex w-full items-center justify-between"
+              >
+                <span>Add</span>
+                <Plus size={16} weight="bold" />
+              </motion.span>
+            )}
+          </AnimatePresence>
         </button>
       </div>
     </motion.article>

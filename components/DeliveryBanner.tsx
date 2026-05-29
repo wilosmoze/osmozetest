@@ -6,10 +6,10 @@ export function DeliveryBanner() {
 
   const feeLabel =
     delivery.mode === "free"
-      ? "Toujours offerte"
+      ? "Always free"
       : delivery.mode === "flat"
         ? `${delivery.flatFee.toFixed(2)} €`
-        : `dès ${delivery.zones[0].fee.toFixed(2)} €`;
+        : `from ${delivery.zones[0].fee.toFixed(2)} €`;
 
   return (
     <section id="delivery" className="py-12 md:py-16">
@@ -26,14 +26,14 @@ export function DeliveryBanner() {
 
           <div className="relative grid grid-cols-1 gap-10 md:grid-cols-2 md:items-center">
             <div>
-              <span className="chip">Service livraison</span>
+              <span className="chip">Delivery service</span>
               <h3 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tighter md:text-5xl">
-                On vient à vous. <br />
-                <span className="text-accent italic">Toujours.</span>
+                We come to you. <br />
+                <span className="text-accent italic">Always.</span>
               </h3>
               <p className="mt-4 max-w-[52ch] text-zinc-400">
-                Notre dark kitchen ne fait pas de salle. Nous livrons directement
-                à votre porte, chaud, soigné, en moins de {delivery.estimatedMinutes.max}{" "}
+                Our dark kitchen has no dining room. We deliver straight to your
+                door, hot and pristine, in under {delivery.estimatedMinutes.max}{" "}
                 minutes. {delivery.cutoffMessage}.
               </p>
             </div>
@@ -41,22 +41,22 @@ export function DeliveryBanner() {
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3">
               <DeliveryStat
                 icon={<Scooter size={22} weight="duotone" />}
-                label="Livraison"
+                label="Delivery"
                 value={feeLabel}
                 hint={
                   delivery.mode === "by-distance"
-                    ? `Offerte dès ${delivery.freeAbove} €`
+                    ? `Free above ${delivery.freeAbove} €`
                     : undefined
                 }
               />
               <DeliveryStat
                 icon={<Clock size={22} weight="duotone" />}
-                label="Délai moyen"
+                label="Avg. time"
                 value={`${delivery.estimatedMinutes.min}–${delivery.estimatedMinutes.max} min`}
               />
               <DeliveryStat
                 icon={<MapPin size={22} weight="duotone" />}
-                label="Zones"
+                label="Zone"
                 value={`${delivery.zones[delivery.zones.length - 1].maxKm} km max`}
               />
             </div>

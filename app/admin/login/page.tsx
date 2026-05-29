@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
     setLoading(false);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Erreur");
+      setError(data.error ?? "Error");
       return;
     }
     router.push("/admin");
@@ -40,12 +40,12 @@ export default function AdminLoginPage() {
           {themeConfig.brand.name}
         </div>
         <div className="mt-1 text-xs uppercase tracking-wider text-zinc-500">
-          Espace équipe
+          Team area
         </div>
 
         <label className="mt-8 block">
           <span className="text-xs uppercase tracking-wider text-zinc-500">
-            Mot de passe
+            Password
           </span>
           <div className="relative mt-2">
             <LockKey
@@ -73,7 +73,7 @@ export default function AdminLoginPage() {
           disabled={loading}
           className="mt-6 flex w-full items-center justify-between rounded-full bg-accent px-5 py-4 text-sm font-medium text-zinc-950 transition-all hover:brightness-110 active:translate-y-[1px] disabled:opacity-60"
         >
-          <span>{loading ? "Connexion…" : "Accéder au dashboard"}</span>
+          <span>{loading ? "Signing in…" : "Access dashboard"}</span>
           <ArrowRight size={18} weight="bold" />
         </button>
       </form>

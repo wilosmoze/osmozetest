@@ -1,6 +1,6 @@
 // ============================================================
-//  TOUT EST PARAMÉTRABLE DEPUIS CE FICHIER
-//  Couleurs, marque, livraison, contacts, réseaux sociaux.
+//  ALL CONTENT IS CONFIGURABLE FROM THIS FILE
+//  Colors, brand, delivery, contacts, social.
 // ============================================================
 
 export type DeliveryMode = "free" | "flat" | "by-distance";
@@ -8,9 +8,9 @@ export type DeliveryMode = "free" | "flat" | "by-distance";
 export const themeConfig = {
   brand: {
     name: "BRAISE.",
-    tagline: "Burgers flammés. Livrés exclusivement.",
+    tagline: "Flame-grilled burgers. Delivery only.",
     description:
-      "La cuisine fantôme qui réinvente le burger premium. Cuit à la braise, livré à votre porte en moins de 30 minutes.",
+      "The ghost kitchen reinventing the premium burger. Cooked over open flame, delivered to your door in under 30 minutes.",
     logoText: "BRAISE.",
     logoImage: "",
     favicon: "/favicon.ico",
@@ -45,16 +45,16 @@ export const themeConfig = {
       { maxKm: 10, fee: 4.9 },
     ],
     estimatedMinutes: { min: 25, max: 35 },
-    cutoffMessage: "Service de 18h30 à 23h00 — 7j/7",
+    cutoffMessage: "Open 6:30 PM to 11:00 PM — 7 days a week",
   },
 
   social: {
     instagram: {
       handle: "@braise.kitchen",
       url: "https://instagram.com/braise.kitchen",
-      ctaTitle: "Suivez l'aventure & partagez votre burger",
+      ctaTitle: "Follow the journey & share your burger",
       ctaBody:
-        "Coulisses du labo, nouveautés en avant-première, et un SAV qui répond. On lit chaque commentaire.",
+        "Behind-the-scenes from the lab, new drops first, and customer support that actually replies. We read every comment.",
     },
     tiktok: { handle: "@braise.kitchen", url: "https://tiktok.com/@braise.kitchen" },
     contactEmail: "hello@braise.kitchen",
@@ -65,20 +65,20 @@ export const themeConfig = {
     stripePublicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY ?? "",
     currency: "EUR",
     currencySymbol: "€",
-    locale: "fr-FR",
+    locale: "en-GB",
   },
 
   hero: {
-    eyebrow: "Dark kitchen — Livraison uniquement",
-    headline: ["Le burger,", "à sa juste", "intensité."],
+    eyebrow: "Dark kitchen — Delivery only",
+    headline: ["The burger,", "at its sharpest", "intensity."],
     subline:
-      "Six créations flammées à la braise, six sauces maison, trois desserts brioche. Livrés en 30 minutes, jamais en restaurant.",
-    cta: "Commander maintenant",
-    secondaryCta: "Voir la carte",
+      "Six flame-grilled creations, six house sauces, three brioche desserts. Delivered in 30 minutes, never served in-house.",
+    cta: "Order now",
+    secondaryCta: "View the menu",
     reassurances: [
-      { label: "30 min", sub: "livraison max" },
-      { label: "100%", sub: "fait maison" },
-      { label: "Black Angus", sub: "viande française" },
+      { label: "30 min", sub: "max delivery" },
+      { label: "100%", sub: "house-made" },
+      { label: "Black Angus", sub: "French beef" },
     ],
   },
 
@@ -86,20 +86,20 @@ export const themeConfig = {
     steps: [
       {
         id: 1,
-        title: "Commande confirmée",
-        description: "Vos burgers sont en cours de préparation à la braise.",
+        title: "Order confirmed",
+        description: "Your burgers are being grilled over the flame.",
         icon: "flame",
       },
       {
         id: 2,
-        title: "Votre commande est prête",
-        description: "Emballée chaude, en attente du livreur.",
+        title: "Your order is ready",
+        description: "Packed hot, waiting for the courier.",
         icon: "package",
       },
       {
         id: 3,
-        title: "Le livreur est en route",
-        description: "Préparez-vous, ça arrive.",
+        title: "Courier on the way",
+        description: "Get ready, it's coming.",
         icon: "scooter",
       },
     ],

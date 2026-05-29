@@ -24,12 +24,12 @@ const STATUS_META: Record<
   OrderStatus,
   { label: string; color: string; icon: Icon }
 > = {
-  pending_payment: { label: "En attente paiement", color: "text-zinc-500", icon: Clock },
-  preparing:       { label: "En préparation",      color: "text-amber-400", icon: CookingPot },
-  ready:           { label: "Prête",               color: "text-blue-400",  icon: Package },
-  delivering:      { label: "En livraison",        color: "text-accent",    icon: Motorcycle },
-  delivered:       { label: "Livrée",              color: "text-emerald-400", icon: CheckCircle },
-  cancelled:       { label: "Annulée",             color: "text-red-400",   icon: XCircle },
+  pending_payment: { label: "Awaiting payment", color: "text-zinc-500", icon: Clock },
+  preparing:       { label: "Preparing",        color: "text-amber-400", icon: CookingPot },
+  ready:           { label: "Ready",            color: "text-blue-400",  icon: Package },
+  delivering:      { label: "Out for delivery", color: "text-accent",    icon: Motorcycle },
+  delivered:       { label: "Delivered",        color: "text-emerald-400", icon: CheckCircle },
+  cancelled:       { label: "Cancelled",        color: "text-red-400",   icon: XCircle },
 };
 
 const STATUS_FLOW: OrderStatus[] = ["preparing", "ready", "delivering", "delivered"];
@@ -104,7 +104,7 @@ export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
               className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm transition-colors hover:bg-white/[0.05]"
             >
               <SignOut size={16} weight="duotone" />
-              <span>Déconnexion</span>
+              <span>Sign out</span>
             </button>
           </div>
         </div>
@@ -112,14 +112,14 @@ export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
 
       <div className="container-app py-8">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <StatCard label="Commandes actives" value={stats.active.toString()} />
-          <StatCard label="Aujourd'hui" value={`${stats.todayCount} commandes`} />
-          <StatCard label="CA jour" value={formatPrice(stats.todayRevenue)} mono />
+          <StatCard label="Active orders" value={stats.active.toString()} />
+          <StatCard label="Today" value={`${stats.todayCount} orders`} />
+          <StatCard label="Today's revenue" value={formatPrice(stats.todayRevenue)} mono />
         </div>
 
         <div className="mt-10 flex items-center justify-between">
           <h2 className="font-display text-3xl font-bold tracking-tighter md:text-4xl">
-            Commandes
+            Orders
           </h2>
           <div className="inline-flex rounded-full border border-white/10 p-1">
             {(["active", "all"] as const).map((f) => (
@@ -130,7 +130,7 @@ export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
                   filter === f ? "bg-white text-zinc-950" : "text-zinc-400 hover:text-white"
                 }`}
               >
-                {f === "active" ? "Actives" : "Toutes"}
+                {f === "active" ? "Active" : "All"}
               </button>
             ))}
           </div>
@@ -140,7 +140,7 @@ export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
           <AnimatePresence initial={false}>
             {filtered.length === 0 ? (
               <div className="py-20 text-center text-zinc-500">
-                Aucune commande pour l'instant.
+                No orders yet.
               </div>
             ) : (
               filtered.map((order) => <OrderRow key={order.id} order={order} />)
@@ -202,9 +202,9 @@ function OrderRow({ order }: { order: Order }) {
   };
 
   const nextLabel =
-    order.status === "preparing" ? "Marquer prête"
-    : order.status === "ready" ? "Confier au livreur"
-    : order.status === "delivering" ? "Marquer livrée"
+    order.status === "preparing" ? "Mark ready"
+    : order.status === "ready" ? "Hand to courier"
+    : order.status === "delivering" ? "Mark delivered"
     : null;
 
   return (
@@ -236,7 +236,7 @@ function OrderRow({ order }: { order: Order }) {
         </div>
 
         <div className="font-mono text-xs tabular-nums text-zinc-500">
-          {new Date(order.createdAt).toLocaleTimeString("fr-FR", {
+          {new Date(order.createdAt).toLocaleTimeString("en-GB", {
             hour: "2-digit",
             minute: "2-digit",
           })}
@@ -254,7 +254,7 @@ function OrderRow({ order }: { order: Order }) {
           >
             <div className="mt-5 grid grid-cols-1 gap-6 rounded-2xl bg-white/[0.02] p-5 md:grid-cols-2">
               <div>
-                <div className="text-xs uppercase tracking-wider text-zinc-500">Client</div>
+                <div className="text-xs uppercase tracking-wider text-zinc-500">Customer</div>
                 <div className="mt-2 text-sm">
                   {order.customer.firstName} {order.customer.lastName}
                 </div>
@@ -271,7 +271,7 @@ function OrderRow({ order }: { order: Order }) {
                   >
                     <span className="flex items-center gap-2">
                       <NavigationArrow size={16} weight="fill" />
-                      Naviguer (Google Maps)
+                      Navigate (Google Maps)
                     </span>
                     <MapPin size={16} weight="duotone" />
                   </a>
@@ -282,13 +282,13 @@ function OrderRow({ order }: { order: Order }) {
 
                 {order.customer.notes && (
                   <div className="mt-3 rounded-lg border border-white/[0.06] bg-zinc-950/40 p-3 text-xs text-zinc-400">
-                    <span className="text-zinc-500">Note livreur :</span> {order.customer.notes}
+                    <span className="text-zinc-500">Courier note:</span> {order.customer.notes}
                   </div>
                 )}
               </div>
 
               <div>
-                <div className="text-xs uppercase tracking-wider text-zinc-500">Articles</div>
+                <div className="text-xs uppercase tracking-wider text-zinc-500">Items</div>
                 <ul className="mt-2 space-y-1.5 text-sm">
                   {order.lines.map((l) => (
                     <li key={l.itemId} className="flex items-center justify-between">
@@ -302,9 +302,9 @@ function OrderRow({ order }: { order: Order }) {
                   ))}
                 </ul>
                 <div className="mt-3 flex justify-between border-t border-white/[0.06] pt-3 text-sm">
-                  <span className="text-zinc-500">Livraison</span>
+                  <span className="text-zinc-500">Delivery</span>
                   <span className="font-mono tabular-nums">
-                    {order.deliveryFee === 0 ? "Offerte" : formatPrice(order.deliveryFee)}
+                    {order.deliveryFee === 0 ? "Free" : formatPrice(order.deliveryFee)}
                   </span>
                 </div>
                 <div className="mt-1 flex justify-between text-sm font-medium">
@@ -350,7 +350,7 @@ function OrderRow({ order }: { order: Order }) {
                     disabled={updating}
                     className="rounded-full border border-white/[0.06] px-3 py-1 text-[11px] uppercase tracking-wider text-zinc-500 hover:border-red-500/30 hover:text-red-400"
                   >
-                    Annuler
+                    Cancel
                   </button>
                 )}
               </div>
