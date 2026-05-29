@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ShieldCheck, MapPin, ArrowSquareOut, Info } from "@phosphor-icons/react";
+import {
+  ShieldCheck,
+  MapPin,
+  ArrowSquareOut,
+  Info,
+  Crosshair,
+  CheckCircle,
+} from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { themeConfig } from "@/config/theme.config";
@@ -29,11 +36,44 @@ const empty: FormState = {
 const GMAPS_REGEX =
   /^https?:\/\/(?:[\w.-]+\.)?(?:google\.[a-z.]+\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)/i;
 
+// Rawai bounding box (Phuket). Approximate but covers all of Rawai + Naiharn.
+const RAWAI_BBOX = {
+  north: 7.795,
+  south: 7.750,
+  east: 98.360,
+  west: 98.300,
+};
+
+const isInRawai = (lat: number, lng: number) =>
+  lat >= RAWAI_BBOX.south &&
+  lat <= RAWAI_BBOX.north &&
+  lng >= RAWAI_BBOX.west &&
+  lng <= RAWAI_BBOX.east;
+
+/**
+ * Extract lat/lng from a Google Maps URL.
+ * Handles `@lat,lng`, `q=lat,lng`, `ll=lat,lng`, and `?lat,lng` patterns.
+ * Returns null for short links (maps.app.goo.gl/xxx) or unrecognised formats.
+ */
+function extractCoords(url: string): { lat: number; lng: number } | null {
+  const match = url.match(/(-?\d{1,3}\.\d{4,})[, ]+(-?\d{1,3}\.\d{4,})/);
+  if (!match) return null;
+  const lat = parseFloat(match[1]);
+  const lng = parseFloat(match[2]);
+  if (Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+  return { lat, lng };
+}
+
 export function CheckoutForm() {
   const router = useRouter();
   const [form, setForm] = useState<FormState>(empty);
   const [errors, setErrors] = useState<Partial<FormState>>({});
   const [showHelp, setShowHelp] = useState(false);
+  const [geoStatus, setGeoStatus] = useState<{
+    loading: boolean;
+    error: string | null;
+    zoneDetected: "rawai" | "outside" | null;
+  }>({ loading: false, error: null, zoneDetected: null });
   const {
     lines,
     subtotal,
@@ -42,6 +82,53 @@ export function CheckoutForm() {
     deliveryZoneId,
     setDeliveryZone,
   } = useCart();
+
+  // Auto-set zone when a URL containing parseable coords is entered
+  const updateLocationUrl = (url: string) => {
+    setForm((f) => ({ ...f, locationUrl: url }));
+    setErrors((e) => ({ ...e, locationUrl: undefined }));
+    const coords = extractCoords(url);
+    if (coords) {
+      const zone = isInRawai(coords.lat, coords.lng) ? "rawai" : "outside";
+      setDeliveryZone(zone);
+      setGeoStatus((s) => ({ ...s, zoneDetected: zone, error: null }));
+    } else {
+      setGeoStatus((s) => ({ ...s, zoneDetected: null }));
+    }
+  };
+
+  const handleUseCurrentLocation = () => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      setGeoStatus((s) => ({
+        ...s,
+        error: "Your browser doesn't support geolocation.",
+      }));
+      return;
+    }
+    setGeoStatus({ loading: true, error: null, zoneDetected: null });
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const url = `https://www.google.com/maps?q=${latitude.toFixed(6)},${longitude.toFixed(6)}`;
+        const zone = isInRawai(latitude, longitude) ? "rawai" : "outside";
+        setForm((f) => ({ ...f, locationUrl: url }));
+        setErrors((e) => ({ ...e, locationUrl: undefined }));
+        setDeliveryZone(zone);
+        setGeoStatus({ loading: false, error: null, zoneDetected: zone });
+      },
+      (err) => {
+        let msg = "Couldn't get your location.";
+        if (err.code === err.PERMISSION_DENIED) {
+          msg =
+            "Location permission denied. Enable it in your browser settings, or paste a Google Maps link instead.";
+        } else if (err.code === err.TIMEOUT) {
+          msg = "Location request timed out. Try again or paste a Maps link.";
+        }
+        setGeoStatus({ loading: false, error: msg, zoneDetected: null });
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
+    );
+  };
 
   if (lines.length === 0) {
     return (
@@ -118,7 +205,7 @@ export function CheckoutForm() {
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-xs uppercase tracking-wider text-zinc-500">
                 <MapPin size={14} weight="duotone" />
-                Google Maps link to your address
+                Your delivery location
               </span>
               <button
                 type="button"
@@ -128,6 +215,42 @@ export function CheckoutForm() {
                 <Info size={13} weight="duotone" />
                 {showHelp ? "Hide help" : "How does it work?"}
               </button>
+            </div>
+
+            {/* Big "Use my current location" button — 1-click solution */}
+            <button
+              type="button"
+              onClick={handleUseCurrentLocation}
+              disabled={geoStatus.loading}
+              className="flex w-full items-center justify-between gap-3 rounded-2xl border border-accent/30 bg-accent/[0.08] px-4 py-4 text-sm text-accent transition-all hover:bg-accent hover:text-zinc-950 active:translate-y-[1px] disabled:opacity-70"
+            >
+              <span className="flex items-center gap-3">
+                {geoStatus.loading ? (
+                  <motion.span
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 0.9,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                    className="block h-4 w-4 rounded-full border-2 border-accent border-t-transparent"
+                  />
+                ) : (
+                  <Crosshair size={18} weight="duotone" />
+                )}
+                <span className="font-medium">
+                  {geoStatus.loading
+                    ? "Locating you…"
+                    : "Use my current location"}
+                </span>
+              </span>
+              <span className="text-xs opacity-70">1 tap</span>
+            </button>
+
+            <div className="flex items-center gap-3 py-1 text-[10px] uppercase tracking-widest text-zinc-600">
+              <span className="h-px flex-1 bg-white/[0.04]" />
+              or paste a link
+              <span className="h-px flex-1 bg-white/[0.04]" />
             </div>
 
             {showHelp && (
@@ -167,7 +290,7 @@ export function CheckoutForm() {
             <div className="relative">
               <input
                 value={form.locationUrl}
-                onChange={(e) => update("locationUrl", e.target.value)}
+                onChange={(e) => updateLocationUrl(e.target.value)}
                 placeholder="https://maps.app.goo.gl/..."
                 className={`w-full rounded-2xl border bg-white/[0.02] px-4 py-3.5 pr-12 text-sm placeholder:text-zinc-600 transition-colors focus:outline-none focus:border-accent/60 ${
                   errors.locationUrl
@@ -191,10 +314,39 @@ export function CheckoutForm() {
             {errors.locationUrl && (
               <span className="text-xs text-red-400">{errors.locationUrl}</span>
             )}
-            {locationOk && !errors.locationUrl && (
+            {geoStatus.error && (
+              <span className="text-xs text-red-400">{geoStatus.error}</span>
+            )}
+            {locationOk && !errors.locationUrl && !geoStatus.zoneDetected && (
               <span className="flex items-center gap-1.5 text-xs text-emerald-400">
                 Valid Maps link — your courier will go to the exact spot.
               </span>
+            )}
+
+            {/* Zone auto-detected: shows in green for Rawai or amber for outside */}
+            {geoStatus.zoneDetected && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-xs ${
+                  geoStatus.zoneDetected === "rawai"
+                    ? "border-emerald-500/30 bg-emerald-500/[0.06] text-emerald-300"
+                    : "border-amber-500/30 bg-amber-500/[0.06] text-amber-300"
+                }`}
+              >
+                <CheckCircle size={14} weight="duotone" />
+                {geoStatus.zoneDetected === "rawai" ? (
+                  <span>
+                    <span className="font-medium">You're in Rawai</span> —
+                    delivery is on us.
+                  </span>
+                ) : (
+                  <span>
+                    <span className="font-medium">You're outside Rawai</span>{" "}
+                    — {formatPrice(20)} delivery fee added automatically.
+                  </span>
+                )}
+              </motion.div>
             )}
 
             {locationOk && (

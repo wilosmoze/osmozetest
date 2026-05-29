@@ -96,6 +96,19 @@ type OrderState = {
   reset: () => void;
 };
 
+// ---------- UI state (menu modal, etc.) ----------
+type UIState = {
+  menuOpen: boolean;
+  openMenu: () => void;
+  closeMenu: () => void;
+};
+
+export const useUI = create<UIState>((set) => ({
+  menuOpen: false,
+  openMenu: () => set({ menuOpen: true }),
+  closeMenu: () => set({ menuOpen: false }),
+}));
+
 export const useOrder = create<OrderState>((set) => ({
   step: 0,
   lastOrder: null,

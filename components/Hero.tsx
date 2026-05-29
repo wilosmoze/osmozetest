@@ -3,9 +3,12 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
+import { useUI } from "@/lib/store";
+import { SpinningVinyl } from "./SpinningVinyl";
 
 export function Hero() {
   const { hero } = themeConfig;
+  const openMenu = useUI((s) => s.openMenu);
 
   return (
     <section
@@ -22,6 +25,7 @@ export function Hero() {
 
       <div className="container-app">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
+          {/* LEFT — copy + CTAs */}
           <div className="lg:col-span-7">
             <motion.span
               initial={{ opacity: 0, y: 8 }}
@@ -76,49 +80,35 @@ export function Hero() {
                 {hero.cta}
                 <ArrowRight size={18} weight="bold" />
               </a>
-              <a href="#burgers" className="btn-ghost">
+              <button onClick={openMenu} className="btn-ghost">
                 {hero.secondaryCta}
-              </a>
+              </button>
             </motion.div>
           </div>
 
+          {/* RIGHT — Spinning vinyl + reassurances */}
           <div className="lg:col-span-5">
-            <div className="relative h-full">
+            <div className="flex h-full flex-col items-center gap-10">
               <motion.div
-                initial={{ opacity: 0, scale: 0.96 }}
+                initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-zinc-950"
+                transition={{ duration: 0.9, delay: 0.2 }}
+                className="flex items-center justify-center"
               >
-                <img
-                  src={themeConfig.brand.logoImage || "/images/hero-logo.png"}
-                  alt={`${themeConfig.brand.name} — vinyl logo`}
-                  className="h-full w-full object-contain"
-                />
-
-                {/* Delivery badge — bottom-right to avoid the logo's top arrow */}
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8 }}
-                  className="absolute bottom-5 right-5 flex items-center gap-2 rounded-full border border-white/15 bg-zinc-950/70 px-3 py-1.5 text-xs backdrop-blur-md"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse-dot" />
-                  <span className="font-mono tabular-nums">
-                    {themeConfig.delivery.estimatedMinutes.min}–
-                    {themeConfig.delivery.estimatedMinutes.max} min
-                  </span>
-                </motion.div>
+                <SpinningVinyl size="hero" onClick={openMenu} />
               </motion.div>
 
-              <div className="mt-4 grid grid-cols-3 gap-2">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                className="grid w-full grid-cols-3 gap-2"
+              >
                 {hero.reassurances.map((r, i) => (
-                  <motion.div
+                  <div
                     key={r.label}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 + i * 0.07 }}
                     className="rounded-2xl border border-white/[0.06] bg-surface/60 p-3 backdrop-blur-sm"
+                    style={{ transitionDelay: `${i * 70}ms` }}
                   >
                     <div className="font-display text-base font-semibold tracking-tight">
                       {r.label}
@@ -126,9 +116,9 @@ export function Hero() {
                     <div className="mt-0.5 text-[11px] text-zinc-500">
                       {r.sub}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

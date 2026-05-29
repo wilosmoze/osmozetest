@@ -7,6 +7,7 @@ import { SocialBlock } from "@/components/SocialBlock";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { FloatingCartBar } from "@/components/FloatingCartBar";
+import { MenuModal } from "@/components/MenuModal";
 import { menu } from "@/data/menu";
 
 export default function HomePage() {
@@ -45,6 +46,7 @@ export default function HomePage() {
       <Footer />
       <CartDrawer />
       <FloatingCartBar />
+      <MenuModal />
     </main>
   );
 }

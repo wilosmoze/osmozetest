@@ -4,8 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CaretDown, Receipt } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/utils";
-import { themeConfig } from "@/config/theme.config";
 import type { OrderSnapshot } from "@/lib/store";
+import { SpinningVinyl } from "./SpinningVinyl";
 
 type Props = {
   order: OrderSnapshot;
@@ -17,50 +17,11 @@ export function OrderVinyl({ order }: Props) {
   return (
     <div className="mx-auto flex max-w-2xl flex-col items-center">
       {/* ---------- SPINNING VINYL ---------- */}
-      <button
+      <SpinningVinyl
+        size="md"
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Hide order details" : "Show order details"}
-        className="group relative h-60 w-60 select-none md:h-72 md:w-72"
-      >
-        {/* Ember glow halo behind the disc */}
-        <div
-          aria-hidden
-          className="absolute -inset-8 rounded-full opacity-60 transition-opacity group-hover:opacity-90"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(224,113,44,0.35), transparent 65%)",
-          }}
-        />
-
-        {/* The vinyl disc itself — full circular logo, spinning continuously */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 9,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          className="relative h-full w-full overflow-hidden rounded-full border border-white/[0.08] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)]"
-        >
-          <img
-            src={themeConfig.brand.logoImage || "/images/hero-logo.png"}
-            alt=""
-            className="h-full w-full object-cover"
-            style={{ objectPosition: "50% 35%" }}
-          />
-
-          {/* Subtle concentric groove rings on top of the image */}
-          <div className="pointer-events-none absolute inset-3 rounded-full border border-white/[0.04]" />
-          <div className="pointer-events-none absolute inset-6 rounded-full border border-white/[0.03]" />
-          <div className="pointer-events-none absolute inset-10 rounded-full border border-white/[0.03]" />
-
-          {/* Center spindle hole */}
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-zinc-950 ring-2 ring-white/10" />
-        </motion.div>
-
-        {/* Tonearm indicator (subtle, top-right) */}
-        <div className="pointer-events-none absolute -top-2 right-4 h-3 w-3 rounded-full bg-accent shadow-[0_0_10px_rgba(224,113,44,0.8)]" />
-      </button>
+        spinning
+      />
 
       {/* Hint label below the vinyl */}
       <motion.div
