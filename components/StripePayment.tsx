@@ -43,7 +43,15 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
       if (!stripePromise) {
         await new Promise((r) => setTimeout(r, 1200));
         const orderId = `BR-DEMO-${Date.now().toString(36).toUpperCase()}`;
-        startOrder(orderId);
+        const subtotal = lines.reduce((s, l) => s + l.price * l.quantity, 0);
+        startOrder({
+          id: orderId,
+          lines,
+          subtotal,
+          deliveryFee,
+          total: amount,
+          createdAt: Date.now(),
+        });
         clearCart();
         router.push(`/tracking/${orderId}`);
         return;

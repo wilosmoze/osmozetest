@@ -80,20 +80,31 @@ export const useCart = create<CartState>()(
   ),
 );
 
+export type OrderSnapshot = {
+  id: string;
+  lines: { itemId: string; name: string; price: number; quantity: number }[];
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+  createdAt: number;
+};
+
 type OrderState = {
   step: 0 | 1 | 2 | 3;
-  start: (orderId: string) => void;
+  lastOrder: OrderSnapshot | null;
+  start: (snapshot: OrderSnapshot) => void;
   reset: () => void;
 };
 
 export const useOrder = create<OrderState>((set) => ({
   step: 0,
-  start: () => {
-    set({ step: 1 });
+  lastOrder: null,
+  start: (snapshot) => {
+    set({ step: 1, lastOrder: snapshot });
     const [a, b, c] = themeConfig.tracking.mockDurationsMs;
     setTimeout(() => set({ step: 2 }), a);
     setTimeout(() => set({ step: 3 }), a + b);
     setTimeout(() => set({ step: 3 }), a + b + c);
   },
-  reset: () => set({ step: 0 }),
+  reset: () => set({ step: 0, lastOrder: null }),
 }));

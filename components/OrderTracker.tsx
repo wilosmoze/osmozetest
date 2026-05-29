@@ -7,6 +7,7 @@ import {
 } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
 import { useOrder } from "@/lib/store";
+import { OrderVinyl } from "./OrderVinyl";
 
 const ICONS = { flame: Flame, package: Package, scooter: Motorcycle };
 
@@ -30,6 +31,7 @@ export function OrderTracker({ orderId }: { orderId: string }) {
   const [order, setOrder] = useState<PublicOrder | null>(null);
   const [notFound, setNotFound] = useState(false);
   const mockStep = useOrder((s) => s.step);
+  const lastOrder = useOrder((s) => s.lastOrder);
 
   useEffect(() => {
     // Mode démo : pas de SSE, on utilise le store mock
@@ -78,6 +80,13 @@ export function OrderTracker({ orderId }: { orderId: string }) {
           automatically.
         </p>
       </header>
+
+      {/* ---------- SPINNING VINYL — tap to reveal order details ---------- */}
+      {lastOrder && lastOrder.id === orderId && (
+        <div className="mb-20">
+          <OrderVinyl order={lastOrder} />
+        </div>
+      )}
 
       <div className="relative mx-auto max-w-3xl">
         <div className="absolute left-7 top-7 bottom-7 w-px bg-white/[0.06] md:left-1/2 md:right-1/2 md:top-7 md:h-px md:w-auto">
