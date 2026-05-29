@@ -91,8 +91,8 @@ export function Hero() {
                 className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] border border-white/10"
               >
                 <img
-                  src="https://picsum.photos/seed/hero-burger-braise/800/1000"
-                  alt="Burger signature flambé à la braise"
+                  src="/images/burger-hero.jpg"
+                  alt="Signature closed-bun burger"
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-bg via-transparent to-transparent" />

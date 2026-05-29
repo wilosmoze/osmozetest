@@ -21,8 +21,8 @@ export default function HomePage() {
       <Marquee />
       <MenuSection
         id="burgers"
-        eyebrow="01 — Signature menu"
-        title="Six burgers, six temperaments."
+        eyebrow="01 — The lineup"
+        title="Six burgers. Sealed tight."
         items={burgers}
         variant="hero"
       />
@@ -30,14 +30,14 @@ export default function HomePage() {
       <MenuSection
         id="sauces"
         eyebrow="02 — House sauces"
-        title="Six sauces. Pick your ally."
+        title="Six mixers. Pick your tone."
         items={sauces}
         variant="compact"
       />
       <MenuSection
         id="desserts"
-        eyebrow="03 — Brioche desserts"
-        title="Three finales. One rule: indulgence."
+        eyebrow="03 — Brioche B-sides"
+        title="Three B-sides. One rule: indulgence."
         items={desserts}
         variant="hero"
       />

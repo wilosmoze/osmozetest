@@ -1,11 +1,11 @@
 export function Marquee() {
   const items = [
-    "Flame-grilled",
-    "French Black Angus",
-    "House brioche bun",
-    "Delivery under 30 min",
+    "Premium burgers",
+    "Black Angus beef",
+    "Closed-bun creations",
+    "Sealed tight",
     "House-made sauces",
-    "Open 6:30 PM → 11:00 PM",
+    "Tue–Sun · Noon to 11 PM",
   ];
   return (
     <div className="border-y border-white/[0.05] bg-surface/40 py-4 overflow-hidden">

@@ -28,11 +28,11 @@ export function DeliveryBanner() {
                 <span className="text-accent italic">Always.</span>
               </h3>
               <p className="mt-4 max-w-[52ch] text-zinc-400">
-                Our dark kitchen is based in Rawai and we deliver
-                throughout the whole area at no cost. Outside Rawai? A flat{" "}
+                Our kitchen is based in Rawai and we deliver throughout the
+                whole area at no cost. Outside Rawai? A flat{" "}
                 {outside ? formatPrice(outside.fee) : ""} fee covers the extra
-                ride. Arrives hot in under {delivery.estimatedMinutes.max}{" "}
-                minutes. {delivery.cutoffMessage}.
+                ride. Sealed tight, arrives hot in under{" "}
+                {delivery.estimatedMinutes.max} minutes. {delivery.cutoffMessage}.
               </p>
             </div>
 

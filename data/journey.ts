@@ -15,10 +15,10 @@ export const journeyTimeline = [
   },
   {
     id: 2,
-    title: "The Bun",
+    title: "The Pressing",
     date: "Daily",
     content:
-      "Brioche kneaded every morning by our partner baker. Natural sourdough, 24-hour proof.",
+      "House brioche pressed every morning. Natural sourdough, 24-hour proof, sealed tight to lock the heat in.",
     category: "Bakery",
     icon: Wheat,
     relatedIds: [1, 3],
@@ -27,10 +27,10 @@ export const journeyTimeline = [
   },
   {
     id: 3,
-    title: "The Flame",
+    title: "The Drop",
     date: "Cooking",
     content:
-      "Patty seared to order at 280°C on our cast-iron grill. Caramelised crust, pink centre.",
+      "Patty seared at 280°C on cast iron. Caramelised crust, pink heart. The drop happens here.",
     category: "Cooking",
     icon: Flame,
     relatedIds: [1, 2, 4],
@@ -39,10 +39,10 @@ export const journeyTimeline = [
   },
   {
     id: 4,
-    title: "Assembly",
+    title: "The Mix",
     date: "Build",
     content:
-      "House sauces, fresh toppings, careful build, insulated packaging to lock in the heat.",
+      "House sauces, fresh toppings, careful mastering. Each burger sealed tight for the road.",
     category: "Workshop",
     icon: Layers,
     relatedIds: [3, 5],
@@ -51,10 +51,10 @@ export const journeyTimeline = [
   },
   {
     id: 5,
-    title: "Delivery",
+    title: "The Release",
     date: "30 min max",
     content:
-      "Dedicated courier, large insulated bag, arrives hot at your door. Live tracking.",
+      "Dedicated courier, insulated bag, arrives hot at your door. Live tracking.",
     category: "Logistics",
     icon: Bike,
     relatedIds: [4],

@@ -8,6 +8,11 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default function OpenGraphImage() {
+  // Strip trailing period (we render it as the accent separator).
+  const brandClean = themeConfig.brand.name.replace(/[.]$/, "").toUpperCase();
+  // Adaptive title size so long brand names (e.g. "BUN & BASS") still fit.
+  const titleSize = brandClean.length > 7 ? 150 : 220;
+
   return new ImageResponse(
     (
       <div
@@ -37,7 +42,7 @@ export default function OpenGraphImage() {
             display: "flex",
           }}
         />
-        {/* Ember glow bottom-left subtle */}
+        {/* Ember glow bottom-left */}
         <div
           style={{
             position: "absolute",
@@ -77,7 +82,7 @@ export default function OpenGraphImage() {
                 display: "flex",
               }}
             />
-            Dark kitchen · Rawai
+            Premium burgers · Rawai
           </div>
         </div>
 
@@ -92,14 +97,14 @@ export default function OpenGraphImage() {
         >
           <div
             style={{
-              fontSize: 220,
+              fontSize: titleSize,
               fontWeight: 800,
               letterSpacing: "-0.06em",
               lineHeight: 0.95,
               display: "flex",
             }}
           >
-            <span>BRAISE</span>
+            <span>{brandClean}</span>
             <span style={{ color: themeConfig.colors.accent }}>.</span>
           </div>
           <div
@@ -111,20 +116,11 @@ export default function OpenGraphImage() {
               display: "flex",
             }}
           >
-            Flame-grilled burgers,{" "}
-            <span
-              style={{
-                color: themeConfig.colors.accent,
-                fontStyle: "italic",
-                marginLeft: 12,
-              }}
-            >
-              delivered in Rawai.
-            </span>
+            {themeConfig.brand.tagline}
           </div>
         </div>
 
-        {/* Bottom: 3 reassurances */}
+        {/* Bottom: 3 reassurances + handle */}
         <div
           style={{
             display: "flex",

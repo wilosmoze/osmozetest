@@ -12,11 +12,12 @@ export type DeliveryZone = {
 
 export const themeConfig = {
   brand: {
-    name: "BRAISE.",
-    tagline: "Flame-grilled burgers. Delivery only.",
+    name: "Bun & Bass.",
+    shortName: "BunBass",
+    tagline: "Premium burgers. Heavy bass.",
     description:
-      "The Rawai ghost kitchen reinventing the premium burger. Cooked over open flame, delivered to your door in under 30 minutes.",
-    logoText: "BRAISE.",
+      "Premium closed-bun burgers, hand-crafted in Rawai. Built for the bass culture — house-made buns, house-made sauces, delivered to your door.",
+    logoText: "Bun & Bass.",
     logoImage: "",
     favicon: "/favicon.ico",
   },
@@ -41,7 +42,6 @@ export const themeConfig = {
   },
 
   delivery: {
-    // Rawai → gratuit. Hors Rawai → 20 ฿.
     zones: [
       {
         id: "rawai",
@@ -58,20 +58,23 @@ export const themeConfig = {
     ] as DeliveryZone[],
     defaultZoneId: "rawai",
     estimatedMinutes: { min: 25, max: 35 },
-    cutoffMessage: "Open 6:30 PM to 11:00 PM — 7 days a week",
+    cutoffMessage: "Open Tue–Sun · 12 PM to 11 PM · Closed Mondays",
   },
 
   social: {
     instagram: {
-      handle: "@braise.rawai",
-      url: "https://instagram.com/braise.rawai",
-      ctaTitle: "Follow the journey & share your burger",
+      handle: "@bunbass__burgers",
+      url: "https://instagram.com/bunbass__burgers",
+      ctaTitle: "Follow the wave & share your burger",
       ctaBody:
-        "Behind-the-scenes from the lab, new drops first, and customer support that actually replies. We read every comment.",
+        "Behind-the-scenes from the kitchen, new drops first, and DMs that actually reply. We read every comment.",
     },
-    tiktok: { handle: "@braise.rawai", url: "https://tiktok.com/@braise.rawai" },
-    contactEmail: "hello@braise.kitchen",
-    contactPhone: "+66 0 00 00 00 00",
+    tiktok: {
+      handle: "@bunbass__burgers",
+      url: "https://tiktok.com/@bunbass__burgers",
+    },
+    contactEmail: "bunNbassburgers@gmail.com",
+    contactPhone: "", // Line ID will be added later
   },
 
   payment: {
@@ -82,10 +85,10 @@ export const themeConfig = {
   },
 
   hero: {
-    eyebrow: "Dark kitchen — Rawai only",
-    headline: ["The burger,", "at its sharpest", "intensity."],
+    eyebrow: "Premium burgers — Rawai",
+    headline: ["Bun in.", "Bass on."],
     subline:
-      "Six flame-grilled creations, six house sauces, three brioche desserts. Delivered in 30 minutes, never served in-house.",
+      "Six house-made creations, six house sauces, three brioche B-sides. Sealed tight, delivered to Rawai in under 30 minutes.",
     cta: "Order now",
     secondaryCta: "View the menu",
     reassurances: [
@@ -100,13 +103,13 @@ export const themeConfig = {
       {
         id: 1,
         title: "Order confirmed",
-        description: "Your burgers are being grilled over the flame.",
+        description: "Your burgers are being pressed and grilled to order.",
         icon: "flame",
       },
       {
         id: 2,
         title: "Your order is ready",
-        description: "Packed hot, waiting for the courier.",
+        description: "Sealed tight, waiting for the courier.",
         icon: "package",
       },
       {

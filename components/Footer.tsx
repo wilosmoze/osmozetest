@@ -51,7 +51,6 @@ export function Footer() {
               Contact
             </div>
             <ul className="mt-4 space-y-2 text-sm">
-              <li className="font-mono">{social.contactPhone}</li>
               <li>
                 <a
                   href={`mailto:${social.contactEmail}`}
@@ -60,6 +59,10 @@ export function Footer() {
                   {social.contactEmail}
                 </a>
               </li>
+              {social.contactPhone && (
+                <li className="font-mono">{social.contactPhone}</li>
+              )}
+              <li className="text-zinc-500">Line ID — coming soon</li>
               <li className="text-zinc-500">
                 {themeConfig.delivery.cutoffMessage}
               </li>
