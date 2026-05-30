@@ -16,7 +16,7 @@ export function DeliveryBanner() {
             className="absolute -right-20 -top-20 h-72 w-72 rounded-full"
             style={{
               background:
-                "radial-gradient(circle, rgba(224,113,44,0.18), transparent 70%)",
+                "radial-gradient(circle, rgba(201,163,92,0.18), transparent 70%)",
             }}
           />
 

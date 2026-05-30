@@ -28,8 +28,8 @@ export function FloatingCartBar() {
             <div className="flex justify-center md:justify-end">
               <button
                 onClick={openDrawer}
-                className="pointer-events-auto group relative inline-flex w-full max-w-md items-center justify-between gap-4 rounded-full border border-white/10 bg-accent px-5 py-4 text-zinc-950 shadow-[0_20px_60px_-15px_rgba(224,113,44,0.6)] transition-all hover:brightness-110 active:translate-y-[1px] md:w-auto md:min-w-[420px]"
-                style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 20px 60px -15px rgba(224,113,44,0.45)" }}
+                className="pointer-events-auto group relative inline-flex w-full max-w-md items-center justify-between gap-4 rounded-full border border-white/10 bg-accent px-5 py-4 text-zinc-950 shadow-[0_20px_60px_-15px_rgba(201,163,92,0.6)] transition-all hover:brightness-110 active:translate-y-[1px] md:w-auto md:min-w-[420px]"
+                style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 20px 60px -15px rgba(201,163,92,0.45)" }}
               >
                 {/* Left: count + bag */}
                 <span className="flex items-center gap-3">

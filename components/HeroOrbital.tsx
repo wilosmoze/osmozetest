@@ -16,7 +16,7 @@ export function HeroOrbital() {
         className="absolute inset-0 -z-10 opacity-50"
         style={{
           background:
-            "radial-gradient(ellipse at center, rgba(224,113,44,0.15), transparent 60%)",
+            "radial-gradient(ellipse at center, rgba(201,163,92,0.15), transparent 60%)",
         }}
       />
 

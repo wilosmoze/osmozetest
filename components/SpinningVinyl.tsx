@@ -42,7 +42,7 @@ export function SpinningVinyl({
         className="absolute -inset-8 rounded-full opacity-60 transition-opacity duration-500 group-hover:opacity-100"
         style={{
           background:
-            "radial-gradient(circle, rgba(224,113,44,0.35), transparent 65%)",
+            "radial-gradient(circle, rgba(201,163,92,0.35), transparent 65%)",
         }}
       />
 
@@ -73,7 +73,7 @@ export function SpinningVinyl({
       </motion.div>
 
       {/* Tonearm indicator (ember dot) */}
-      <div className="pointer-events-none absolute -top-2 right-4 h-3 w-3 rounded-full bg-accent shadow-[0_0_10px_rgba(224,113,44,0.8)]" />
+      <div className="pointer-events-none absolute -top-2 right-4 h-3 w-3 rounded-full bg-accent shadow-[0_0_10px_rgba(201,163,92,0.8)]" />
     </Tag>
   );
 }

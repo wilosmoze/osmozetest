@@ -22,7 +22,7 @@ export function SocialBlock({
             className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full opacity-40 transition-opacity group-hover:opacity-60"
             style={{
               background:
-                "radial-gradient(circle, rgba(224,113,44,0.4), transparent 70%)",
+                "radial-gradient(circle, rgba(201,163,92,0.4), transparent 70%)",
             }}
           />
 
