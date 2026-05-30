@@ -372,44 +372,97 @@ export function CheckoutForm() {
             multiline
           />
 
-          {/* ---------- ZONE TOGGLE ---------- */}
+          {/* ---------- DELIVERY ZONE — READ-ONLY, AUTO-DETECTED ---------- */}
           <div className="md:col-span-2 flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-wider text-zinc-500">
-              Delivery zone
-            </span>
-            <div className="grid grid-cols-2 gap-2 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-1.5">
-              {themeConfig.delivery.zones.map((zone) => {
-                const active = deliveryZoneId === zone.id;
+            <div className="flex items-center justify-between">
+              <span className="text-xs uppercase tracking-wider text-zinc-500">
+                Delivery zone
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-zinc-600">
+                <ShieldCheck size={11} weight="duotone" />
+                Auto-detected
+              </span>
+            </div>
+
+            {(() => {
+              const activeZone = themeConfig.delivery.zones.find(
+                (z) => z.id === deliveryZoneId,
+              );
+              const detected = !!geoStatus.zoneDetected;
+              const isRawai = deliveryZoneId === "rawai";
+
+              // No location set yet → neutral placeholder
+              if (!detected && !locationOk) {
                 return (
-                  <button
-                    key={zone.id}
-                    type="button"
-                    onClick={() => setDeliveryZone(zone.id)}
-                    className={`relative rounded-xl px-4 py-3 text-left transition-all ${
-                      active
-                        ? "bg-accent text-zinc-950"
-                        : "text-zinc-400 hover:bg-white/[0.04]"
-                    }`}
-                  >
-                    <div className="flex items-baseline justify-between gap-2">
-                      <span className="text-sm font-medium">{zone.name}</span>
-                      <span className="font-mono text-xs tabular-nums">
-                        {zone.fee === 0 ? "Free" : `+${formatPrice(zone.fee)}`}
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-3 rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.01] px-4 py-4 text-sm text-zinc-500">
+                    <MapPin size={18} weight="duotone" className="opacity-50" />
+                    <span>
+                      Share your location above — your delivery zone &amp; fee
+                      will appear here.
+                    </span>
+                  </div>
+                );
+              }
+
+              // Zone detected (or coming from a previous session)
+              return (
+                <motion.div
+                  layout
+                  initial={false}
+                  animate={{
+                    backgroundColor: isRawai
+                      ? "rgba(16, 185, 129, 0.06)"
+                      : "rgba(245, 158, 11, 0.06)",
+                    borderColor: isRawai
+                      ? "rgba(16, 185, 129, 0.3)"
+                      : "rgba(245, 158, 11, 0.3)",
+                  }}
+                  transition={{ duration: 0.4 }}
+                  className="flex items-center justify-between gap-3 rounded-2xl border px-5 py-4"
+                >
+                  <div className="flex items-center gap-3">
                     <div
-                      className={`mt-0.5 text-[11px] ${
-                        active ? "text-zinc-800" : "text-zinc-500"
+                      className={`flex h-9 w-9 items-center justify-center rounded-full ${
+                        isRawai
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : "bg-amber-500/15 text-amber-400"
                       }`}
                     >
-                      {zone.description}
+                      <MapPin size={18} weight="fill" />
                     </div>
-                  </button>
-                );
-              })}
-            </div>
+                    <div>
+                      <div
+                        className={`text-sm font-medium ${
+                          isRawai ? "text-emerald-300" : "text-amber-300"
+                        }`}
+                      >
+                        {activeZone?.name}
+                      </div>
+                      <div className="mt-0.5 text-[11px] text-zinc-500">
+                        {activeZone?.description}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    className={`text-right ${
+                      isRawai ? "text-emerald-300" : "text-amber-300"
+                    }`}
+                  >
+                    <div className="font-display text-xl font-semibold tracking-tight">
+                      {activeZone && activeZone.fee === 0
+                        ? "Free"
+                        : `+${formatPrice(activeZone?.fee ?? 0)}`}
+                    </div>
+                    <div className="mt-0.5 text-[10px] uppercase tracking-widest opacity-70">
+                      Delivery fee
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })()}
           </div>
-          {/* ---------- /ZONE TOGGLE ---------- */}
+          {/* ---------- /DELIVERY ZONE ---------- */}
         </form>
 
         <div className="mt-10 border-t border-white/[0.06] pt-8">
