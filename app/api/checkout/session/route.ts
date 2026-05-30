@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe, stripeEnabled } from "@/lib/stripe";
 import { createOrder, type OrderCustomer } from "@/lib/orders";
-import { resolveZoneAndFee } from "@/lib/delivery";
+import { resolveZoneAndFeeAsync } from "@/lib/delivery";
 import { themeConfig } from "@/config/theme.config";
 import { menu } from "@/data/menu";
 
@@ -94,10 +94,10 @@ export async function POST(req: Request) {
 
   // ---------- AUTHORITATIVE DELIVERY ZONE + FEE ----------
   // Re-resolve the zone server-side from the customer's Maps URL.
-  // The client's deliveryFee is ignored; we always trust our own computation.
-  const { zoneId, fee: serverFee, coordsResolved } = resolveZoneAndFee(
-    body.customer.locationUrl,
-  );
+  // The async version follows redirects on short links so a
+  // maps.app.goo.gl share URL is correctly classified.
+  const { zoneId, fee: serverFee, coordsResolved } =
+    await resolveZoneAndFeeAsync(body.customer.locationUrl);
 
   // Telemetry: detect tampering attempts on the fee.
   if (

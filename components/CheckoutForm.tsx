@@ -14,7 +14,7 @@ import {
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { themeConfig } from "@/config/theme.config";
-import { extractCoords, isInRawai } from "@/lib/delivery";
+import { extractCoords, isInRawai, isShortMapsUrl } from "@/lib/delivery";
 import { StripePayment } from "./StripePayment";
 
 type FormState = {
@@ -56,18 +56,69 @@ export function CheckoutForm() {
     setDeliveryZone,
   } = useCart();
 
-  // Auto-set zone when a URL containing parseable coords is entered
+  /** Auto-set zone when a URL is entered.
+   *  1. Try local extraction (instant, works for long URLs).
+   *  2. If the URL is a short maps.app.goo.gl link, ask the server to
+   *     follow the redirect and resolve the coords for us.            */
   const updateLocationUrl = (url: string) => {
     setForm((f) => ({ ...f, locationUrl: url }));
     setErrors((e) => ({ ...e, locationUrl: undefined }));
+
     const coords = extractCoords(url);
     if (coords) {
       const zone = isInRawai(coords.lat, coords.lng) ? "rawai" : "outside";
       setDeliveryZone(zone);
-      setGeoStatus((s) => ({ ...s, zoneDetected: zone, error: null }));
-    } else {
-      setGeoStatus((s) => ({ ...s, zoneDetected: null }));
+      setGeoStatus((s) => ({
+        ...s,
+        zoneDetected: zone,
+        error: null,
+        loading: false,
+      }));
+      return;
     }
+
+    // Local extraction failed. If it's a short Maps URL, ask the server.
+    if (isShortMapsUrl(url)) {
+      setGeoStatus((s) => ({
+        ...s,
+        zoneDetected: null,
+        error: null,
+        loading: true,
+      }));
+      fetch("/api/resolve-zone", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ locationUrl: url }),
+      })
+        .then((r) => (r.ok ? r.json() : Promise.reject(r)))
+        .then((data: { zoneId: "rawai" | "outside"; coordsResolved: boolean }) => {
+          if (data.coordsResolved) {
+            setDeliveryZone(data.zoneId);
+            setGeoStatus({
+              loading: false,
+              error: null,
+              zoneDetected: data.zoneId,
+            });
+          } else {
+            setGeoStatus({
+              loading: false,
+              error:
+                "Couldn't auto-detect zone from short link — the fee will be confirmed at checkout.",
+              zoneDetected: null,
+            });
+          }
+        })
+        .catch(() =>
+          setGeoStatus({
+            loading: false,
+            error: null,
+            zoneDetected: null,
+          }),
+        );
+      return;
+    }
+
+    setGeoStatus((s) => ({ ...s, zoneDetected: null, loading: false }));
   };
 
   const handleUseCurrentLocation = () => {
