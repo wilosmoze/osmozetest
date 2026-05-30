@@ -277,6 +277,31 @@ export function CheckoutForm() {
               <span className="h-px flex-1 bg-white/[0.04]" />
             </div>
 
+            {/* Direct shortcut to open Google Maps in a new tab */}
+            <a
+              href="https://www.google.com/maps"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex w-full items-center justify-between gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-4 py-3.5 text-sm text-zinc-300 transition-all hover:border-white/20 hover:bg-white/[0.05] active:translate-y-[1px]"
+            >
+              <span className="flex items-center gap-3">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.06]">
+                  <MapPin size={16} weight="duotone" className="text-accent" />
+                </span>
+                <span>
+                  <span className="block font-medium">Open Google Maps</span>
+                  <span className="block text-[11px] text-zinc-500">
+                    Find your spot, tap Share → Copy link
+                  </span>
+                </span>
+              </span>
+              <ArrowSquareOut
+                size={16}
+                weight="bold"
+                className="text-zinc-500 transition-transform group-hover:translate-x-0.5 group-hover:text-white"
+              />
+            </a>
+
             {showHelp && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
