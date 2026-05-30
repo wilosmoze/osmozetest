@@ -3,6 +3,7 @@ import { AdminClient } from "./AdminClient";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminPage() {
-  return <AdminClient initialOrders={listOrders()} />;
+export default async function AdminPage() {
+  const initialOrders = await listOrders();
+  return <AdminClient initialOrders={initialOrders} />;
 }

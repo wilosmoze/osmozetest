@@ -34,18 +34,22 @@ export async function POST(req: Request) {
       const session = event.data.object as Stripe.Checkout.Session;
       const orderId = session.metadata?.orderId;
       if (orderId) {
-        updateOrder(orderId, {
-          paymentStatus: "paid",
-          status: "preparing",
-          stripeSessionId: session.id,
-        });
+        await updateOrder(
+          orderId,
+          {
+            paymentStatus: "paid",
+            status: "preparing",
+            stripeSessionId: session.id,
+          },
+          "stripe",
+        );
       }
       break;
     }
     case "payment_intent.payment_failed": {
       const intent = event.data.object as Stripe.PaymentIntent;
       const orderId = intent.metadata?.orderId;
-      if (orderId) updateOrder(orderId, { paymentStatus: "failed" });
+      if (orderId) await updateOrder(orderId, { paymentStatus: "failed" }, "stripe");
       break;
     }
   }

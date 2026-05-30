@@ -45,13 +45,20 @@ export async function GET(req: Request) {
         );
       };
 
-      if (orderId) {
-        const order = getOrder(orderId);
-        if (order) send("snapshot", project(order));
-        else send("not_found", { orderId });
-      } else {
-        send("snapshot", listOrders());
-      }
+      // Initial snapshot (async — fire-and-forget inside the sync start cb)
+      (async () => {
+        try {
+          if (orderId) {
+            const order = await getOrder(orderId);
+            if (order) send("snapshot", project(order));
+            else send("not_found", { orderId });
+          } else {
+            send("snapshot", await listOrders());
+          }
+        } catch {
+          /* stream may have been aborted */
+        }
+      })();
 
       const handler = (order: Order) => {
         if (!orderId || order.id === orderId) send("update", project(order));

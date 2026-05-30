@@ -23,7 +23,7 @@ export async function PATCH(
   if (!auth.ok)
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const order = getOrder(params.id);
+  const order = await getOrder(params.id);
   if (!order)
     return NextResponse.json({ error: "not_found" }, { status: 404 });
 
@@ -43,7 +43,7 @@ export async function PATCH(
         { status: 409 },
       );
     }
-    const updated = assignCourier(params.id, auth.name, true);
+    const updated = await assignCourier(params.id, auth.name, true);
     return NextResponse.json({ order: updated });
   }
 
@@ -60,7 +60,7 @@ export async function PATCH(
         { status: 403 },
       );
     }
-    const updated = updateOrder(
+    const updated = await updateOrder(
       params.id,
       { status: "delivered" },
       `courier:${auth.name}`,

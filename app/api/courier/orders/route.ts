@@ -18,7 +18,8 @@ export async function GET() {
 
   const fourHoursAgo = Date.now() - 4 * 60 * 60 * 1000;
 
-  const orders = listOrders()
+  const all = await listOrders();
+  const orders = all
     .filter((o) => {
       if (o.status === "ready") return true;
       if (o.status === "delivering" && o.assignedCourier === auth.name) return true;

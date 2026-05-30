@@ -25,7 +25,7 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } },
 ) {
-  const order = getOrder(params.id);
+  const order = await getOrder(params.id);
   if (!order) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
   const url = new URL(req.url);
@@ -73,7 +73,7 @@ export async function PATCH(
   };
 
   if (body.action === "advance") {
-    const updated = advanceStatus(params.id, "admin");
+    const updated = await advanceStatus(params.id, "admin");
     if (!updated) return NextResponse.json({ error: "not_found" }, { status: 404 });
     return NextResponse.json({ order: updated });
   }
@@ -85,13 +85,13 @@ export async function PATCH(
         { status: 400 },
       );
     }
-    const updated = assignCourier(params.id, body.courier, false);
+    const updated = await assignCourier(params.id, body.courier, false);
     if (!updated) return NextResponse.json({ error: "not_found" }, { status: 404 });
     return NextResponse.json({ order: updated });
   }
 
   if (body.status && ALLOWED.includes(body.status)) {
-    const updated = updateOrder(params.id, { status: body.status }, "admin");
+    const updated = await updateOrder(params.id, { status: body.status }, "admin");
     if (!updated) return NextResponse.json({ error: "not_found" }, { status: 404 });
     return NextResponse.json({ order: updated });
   }

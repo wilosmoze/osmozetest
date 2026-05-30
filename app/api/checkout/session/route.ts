@@ -129,7 +129,7 @@ export async function POST(req: Request) {
   const total = subtotal + serverFee;
 
   // ---------- Persist order with SERVER-VERIFIED amounts ----------
-  const order = createOrder({
+  const order = await createOrder({
     customer: body.customer,
     lines: serverLines,
     subtotal,
@@ -144,7 +144,7 @@ export async function POST(req: Request) {
   // hit the server so it shows up in /admin and /courier. We mark it as
   // paid+preparing immediately to simulate a successful payment.
   if (!stripeEnabled || !stripe) {
-    updateOrder(
+    await updateOrder(
       order.id,
       { paymentStatus: "paid", status: "preparing" },
       "system",

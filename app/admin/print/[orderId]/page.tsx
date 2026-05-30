@@ -6,12 +6,12 @@ import { formatPrice } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default function PrintReceiptPage({
+export default async function PrintReceiptPage({
   params,
 }: {
   params: { orderId: string };
 }) {
-  const order = getOrder(params.orderId);
+  const order = await getOrder(params.orderId);
   if (!order) notFound();
 
   const createdAt = new Date(order.createdAt);
