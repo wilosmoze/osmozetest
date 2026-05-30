@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
-import { advanceStatus, getOrder, updateOrder, type OrderStatus } from "@/lib/orders";
+import {
+  advanceStatus,
+  assignCourier,
+  getOrder,
+  updateOrder,
+  type OrderStatus,
+} from "@/lib/orders";
+import { listCourierNames } from "@/lib/courier";
 import { requireAdmin } from "@/lib/auth";
 import { isSameOrigin, verifyOrderToken, safeExternalUrl } from "@/lib/security";
 
@@ -59,16 +66,32 @@ export async function PATCH(
   const auth = await requireAdmin();
   if (!auth.ok) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const body = (await req.json()) as { action?: "advance"; status?: OrderStatus };
+  const body = (await req.json()) as {
+    action?: "advance" | "assign";
+    status?: OrderStatus;
+    courier?: string;
+  };
 
   if (body.action === "advance") {
-    const updated = advanceStatus(params.id);
+    const updated = advanceStatus(params.id, "admin");
+    if (!updated) return NextResponse.json({ error: "not_found" }, { status: 404 });
+    return NextResponse.json({ order: updated });
+  }
+
+  if (body.action === "assign") {
+    if (!body.courier || !listCourierNames().includes(body.courier)) {
+      return NextResponse.json(
+        { error: "Unknown courier" },
+        { status: 400 },
+      );
+    }
+    const updated = assignCourier(params.id, body.courier, false);
     if (!updated) return NextResponse.json({ error: "not_found" }, { status: 404 });
     return NextResponse.json({ order: updated });
   }
 
   if (body.status && ALLOWED.includes(body.status)) {
-    const updated = updateOrder(params.id, { status: body.status });
+    const updated = updateOrder(params.id, { status: body.status }, "admin");
     if (!updated) return NextResponse.json({ error: "not_found" }, { status: 404 });
     return NextResponse.json({ order: updated });
   }

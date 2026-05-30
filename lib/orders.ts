@@ -29,6 +29,12 @@ export type OrderCustomer = {
   notes?: string;        // Digicode, étage, instructions livreur
 };
 
+export type StatusEvent = {
+  status: OrderStatus;
+  by: string; // "admin" | "courier:<name>" | "system" | "stripe"
+  at: number;
+};
+
 export type Order = {
   id: string;
   status: OrderStatus;
@@ -41,6 +47,8 @@ export type Order = {
   total: number;
   createdAt: number;
   updatedAt: number;
+  assignedCourier?: string; // courier name who's delivering it
+  history: StatusEvent[];   // append-only audit trail
 };
 
 type Store = {
@@ -80,7 +88,16 @@ function pruneExpired(now: number) {
 }
 
 export function createOrder(
-  data: Omit<Order, "id" | "createdAt" | "updatedAt" | "status" | "paymentStatus">,
+  data: Omit<
+    Order,
+    | "id"
+    | "createdAt"
+    | "updatedAt"
+    | "status"
+    | "paymentStatus"
+    | "history"
+    | "assignedCourier"
+  >,
 ): Order {
   const now = Date.now();
   pruneExpired(now); // opportunistic cleanup on every new order
@@ -91,6 +108,7 @@ export function createOrder(
     paymentStatus: "unpaid",
     createdAt: now,
     updatedAt: now,
+    history: [{ status: "pending_payment", by: "system", at: now }],
   };
   orderStore.orders.set(order.id, order);
   orderStore.emitter.emit("update", order);
@@ -107,22 +125,47 @@ export function listOrders(): Order[] {
   );
 }
 
-export function updateOrder(id: string, patch: Partial<Order>): Order | null {
+export function updateOrder(
+  id: string,
+  patch: Partial<Order>,
+  actor: string = "admin",
+): Order | null {
   const order = orderStore.orders.get(id);
   if (!order) return null;
-  const next: Order = { ...order, ...patch, updatedAt: Date.now() };
+  const now = Date.now();
+  const next: Order = { ...order, ...patch, updatedAt: now };
+  // Append to audit trail when status actually changes
+  if (patch.status && patch.status !== order.status) {
+    next.history = [
+      ...order.history,
+      { status: patch.status, by: actor, at: now },
+    ];
+  }
   orderStore.orders.set(id, next);
   orderStore.emitter.emit("update", next);
   return next;
 }
 
-export function advanceStatus(id: string): Order | null {
+export function advanceStatus(id: string, actor: string = "admin"): Order | null {
   const order = orderStore.orders.get(id);
   if (!order) return null;
   const flow: OrderStatus[] = ["preparing", "ready", "delivering", "delivered"];
   const idx = flow.indexOf(order.status);
   if (idx === -1 || idx === flow.length - 1) return order;
-  return updateOrder(id, { status: flow[idx + 1] });
+  return updateOrder(id, { status: flow[idx + 1] }, actor);
+}
+
+/** Assign an order to a courier and (optionally) move it to delivering. */
+export function assignCourier(
+  id: string,
+  courierName: string,
+  pickUp: boolean,
+): Order | null {
+  const order = orderStore.orders.get(id);
+  if (!order) return null;
+  const patch: Partial<Order> = { assignedCourier: courierName };
+  if (pickUp && order.status === "ready") patch.status = "delivering";
+  return updateOrder(id, patch, `courier:${courierName}`);
 }
 
 export function statusToStep(s: OrderStatus): 0 | 1 | 2 | 3 {

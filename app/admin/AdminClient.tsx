@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
@@ -14,6 +15,10 @@ import {
   ArrowRight,
   MapPin,
   NavigationArrow,
+  Printer,
+  SpeakerHigh,
+  SpeakerSlash,
+  User,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import type { Order, OrderStatus } from "@/lib/orders";
@@ -45,20 +50,105 @@ function isSafeHref(value: string | null | undefined): value is string {
   }
 }
 
+/** Short two-tone chime using the Web Audio API (no asset needed). */
+function playOrderBell() {
+  try {
+    const AudioCtx =
+      (window as unknown as { AudioContext?: typeof AudioContext })
+        .AudioContext ??
+      (window as unknown as { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const tones = [880, 1320]; // A5 then E6
+    tones.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.16);
+      gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + i * 0.16 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        ctx.currentTime + i * 0.16 + 0.35,
+      );
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + i * 0.16);
+      osc.stop(ctx.currentTime + i * 0.16 + 0.4);
+    });
+  } catch {
+    /* audio may be blocked until first user gesture */
+  }
+}
+
 export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [filter, setFilter] = useState<"active" | "all">("active");
+  const [soundOn, setSoundOn] = useState(true);
+  const [couriers, setCouriers] = useState<string[]>([]);
+  const knownIdsRef = useRef<Set<string>>(
+    new Set(initialOrders.map((o) => o.id)),
+  );
+  const baseTitleRef = useRef<string>("");
+  const flashTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Load courier list on mount (for the assign dropdown)
+  useEffect(() => {
+    fetch("/api/admin/couriers")
+      .then((r) => (r.ok ? r.json() : { couriers: [] }))
+      .then((d) => setCouriers(d.couriers ?? []))
+      .catch(() => {});
+  }, []);
+
+  // Persist sound toggle across page reloads
+  useEffect(() => {
+    const stored = localStorage.getItem("braise.adminSound");
+    if (stored === "off") setSoundOn(false);
+    baseTitleRef.current = document.title;
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("braise.adminSound", soundOn ? "on" : "off");
+  }, [soundOn]);
+
+  const flashTitle = useCallback(() => {
+    if (flashTimerRef.current) return;
+    let on = false;
+    flashTimerRef.current = setInterval(() => {
+      on = !on;
+      document.title = on
+        ? `🔔 New order — ${baseTitleRef.current}`
+        : baseTitleRef.current;
+    }, 700);
+    const stop = () => {
+      if (flashTimerRef.current) clearInterval(flashTimerRef.current);
+      flashTimerRef.current = null;
+      document.title = baseTitleRef.current;
+      window.removeEventListener("focus", stop);
+      window.removeEventListener("click", stop);
+    };
+    window.addEventListener("focus", stop, { once: true });
+    window.addEventListener("click", stop, { once: true });
+  }, []);
 
   useEffect(() => {
     const es = new EventSource("/api/orders/stream");
 
     es.addEventListener("snapshot", (e) => {
-      setOrders(JSON.parse((e as MessageEvent).data));
+      const data = JSON.parse((e as MessageEvent).data) as Order[];
+      knownIdsRef.current = new Set(data.map((o) => o.id));
+      setOrders(data);
     });
 
     es.addEventListener("update", (e) => {
       const updated = JSON.parse((e as MessageEvent).data) as Order;
+      const isNew = !knownIdsRef.current.has(updated.id);
+      if (isNew) {
+        knownIdsRef.current.add(updated.id);
+        if (soundOn) playOrderBell();
+        if (document.hidden) flashTitle();
+      }
       setOrders((prev) => {
         const exists = prev.find((o) => o.id === updated.id);
         if (exists) return prev.map((o) => (o.id === updated.id ? updated : o));
@@ -68,7 +158,7 @@ export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
 
     es.onerror = () => {};
     return () => es.close();
-  }, []);
+  }, [soundOn, flashTitle]);
 
   const logout = async () => {
     await fetch("/api/admin/login", { method: "DELETE" });
@@ -110,6 +200,24 @@ export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
           </div>
           <div className="flex items-center gap-2">
             <LiveDot />
+            <button
+              onClick={() => {
+                setSoundOn((v) => !v);
+                if (!soundOn) playOrderBell(); // test ping when turning on
+              }}
+              title={soundOn ? "Notifications: ON" : "Notifications: OFF"}
+              className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm transition-colors ${
+                soundOn
+                  ? "border-accent/30 bg-accent/[0.08] text-accent"
+                  : "border-white/10 text-zinc-500 hover:bg-white/[0.05]"
+              }`}
+            >
+              {soundOn ? (
+                <SpeakerHigh size={16} weight="duotone" />
+              ) : (
+                <SpeakerSlash size={16} weight="duotone" />
+              )}
+            </button>
             <button
               onClick={logout}
               className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm transition-colors hover:bg-white/[0.05]"
@@ -154,7 +262,13 @@ export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
                 No orders yet.
               </div>
             ) : (
-              filtered.map((order) => <OrderRow key={order.id} order={order} />)
+              filtered.map((order) => (
+                <OrderRow
+                  key={order.id}
+                  order={order}
+                  couriers={couriers}
+                />
+              ))
             )}
           </AnimatePresence>
         </div>
@@ -186,7 +300,13 @@ function StatCard({ label, value, mono }: { label: string; value: string; mono?:
   );
 }
 
-function OrderRow({ order }: { order: Order }) {
+function OrderRow({
+  order,
+  couriers,
+}: {
+  order: Order;
+  couriers: string[];
+}) {
   const [expanded, setExpanded] = useState(false);
   const [updating, setUpdating] = useState(false);
   const meta = STATUS_META[order.status];
@@ -211,6 +331,18 @@ function OrderRow({ order }: { order: Order }) {
     });
     setUpdating(false);
   };
+
+  const assignTo = async (courier: string) => {
+    setUpdating(true);
+    await fetch(`/api/orders/${order.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "assign", courier }),
+    });
+    setUpdating(false);
+  };
+
+  const printUrl = `/admin/print/${order.id}`;
 
   const nextLabel =
     order.status === "preparing" ? "Mark ready"
@@ -331,6 +463,76 @@ function OrderRow({ order }: { order: Order }) {
                 </div>
               </div>
             </div>
+
+            {/* ---------- COURIER ASSIGNMENT + AUDIT ---------- */}
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-4">
+              <div className="flex items-center gap-2 text-xs text-zinc-500">
+                <User size={14} weight="duotone" />
+                <span className="uppercase tracking-wider">Courier:</span>
+                <span
+                  className={`font-medium ${
+                    order.assignedCourier ? "text-accent" : "text-zinc-600"
+                  }`}
+                >
+                  {order.assignedCourier ?? "Unassigned"}
+                </span>
+              </div>
+
+              {couriers.length > 0 && order.status !== "delivered" && order.status !== "cancelled" && (
+                <select
+                  value={order.assignedCourier ?? ""}
+                  onChange={(e) => {
+                    if (e.target.value) assignTo(e.target.value);
+                  }}
+                  disabled={updating}
+                  className="ml-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-zinc-300 focus:border-accent/60 focus:outline-none"
+                >
+                  <option value="" className="bg-zinc-900">
+                    Assign to…
+                  </option>
+                  {couriers.map((c) => (
+                    <option key={c} value={c} className="bg-zinc-900">
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              )}
+
+              <Link
+                href={`/admin/print/${order.id}`}
+                target="_blank"
+                className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-zinc-300 transition-colors hover:bg-white/[0.08] hover:text-white"
+              >
+                <Printer size={13} weight="duotone" />
+                Print receipt
+              </Link>
+            </div>
+
+            {/* ---------- AUDIT TRAIL ---------- */}
+            {order.history && order.history.length > 1 && (
+              <details className="mt-3 group">
+                <summary className="cursor-pointer text-[10px] uppercase tracking-widest text-zinc-600 hover:text-zinc-400">
+                  Audit trail ({order.history.length})
+                </summary>
+                <ul className="mt-2 space-y-1 text-[11px] text-zinc-500 font-mono">
+                  {order.history.map((h, i) => (
+                    <li key={i} className="flex items-center gap-3">
+                      <span className="text-zinc-600">
+                        {new Date(h.at).toLocaleTimeString("en-GB", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                        })}
+                      </span>
+                      <span className="rounded bg-white/[0.04] px-1.5 py-0.5">
+                        {h.by}
+                      </span>
+                      <span className="text-zinc-400">{h.status}</span>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
 
             <div className="mt-4 flex flex-wrap items-center gap-2">
               {nextLabel && (
