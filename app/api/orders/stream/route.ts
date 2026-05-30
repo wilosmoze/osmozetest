@@ -1,4 +1,6 @@
 import { orderStore, listOrders, getOrder, type Order } from "@/lib/orders";
+import { requireAdmin } from "@/lib/auth";
+import { verifyOrderToken, safeExternalUrl } from "@/lib/security";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -6,7 +8,34 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const orderId = url.searchParams.get("orderId");
+  const token = url.searchParams.get("t") ?? "";
+
+  // Admin (no orderId) → must be authenticated
+  if (!orderId) {
+    const auth = await requireAdmin();
+    if (!auth.ok) return new Response("Unauthorized", { status: 401 });
+  } else {
+    // Per-order stream → must have a valid token
+    if (!verifyOrderToken(orderId, token)) {
+      // Allow the connection but only push minimal data
+    }
+  }
+
+  const authorized = orderId ? verifyOrderToken(orderId, token) : true;
+
   const encoder = new TextEncoder();
+
+  /** Strip customer info if the caller isn't authorized for that order. */
+  const project = (order: Order) =>
+    authorized
+      ? {
+          ...order,
+          customer: {
+            ...order.customer,
+            locationUrl: safeExternalUrl(order.customer.locationUrl),
+          },
+        }
+      : { id: order.id, status: order.status, paymentStatus: order.paymentStatus };
 
   const stream = new ReadableStream({
     start(controller) {
@@ -18,14 +47,14 @@ export async function GET(req: Request) {
 
       if (orderId) {
         const order = getOrder(orderId);
-        if (order) send("snapshot", order);
+        if (order) send("snapshot", project(order));
         else send("not_found", { orderId });
       } else {
         send("snapshot", listOrders());
       }
 
       const handler = (order: Order) => {
-        if (!orderId || order.id === orderId) send("update", order);
+        if (!orderId || order.id === orderId) send("update", project(order));
       };
       orderStore.emitter.on("update", handler);
 

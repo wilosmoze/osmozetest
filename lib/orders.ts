@@ -60,10 +60,30 @@ export function generateOrderId() {
   return `BR-${randomBytes(4).toString("hex").toUpperCase()}`;
 }
 
+/** Max age before an order is garbage-collected from the in-memory store.
+ *  48h is a comfortable window for tracking + dispute resolution.        */
+const ORDER_TTL_MS = 48 * 60 * 60 * 1000;
+
+/** Hard cap on stored orders to bound memory in pathological cases. */
+const ORDER_HARD_CAP = 1000;
+
+function pruneExpired(now: number) {
+  const m = orderStore.orders;
+  for (const [id, order] of m) {
+    if (now - order.createdAt > ORDER_TTL_MS) m.delete(id);
+  }
+  if (m.size > ORDER_HARD_CAP) {
+    // Drop oldest until we're under the cap
+    const sorted = [...m.entries()].sort((a, b) => a[1].createdAt - b[1].createdAt);
+    for (let i = 0; i < m.size - ORDER_HARD_CAP; i++) m.delete(sorted[i][0]);
+  }
+}
+
 export function createOrder(
   data: Omit<Order, "id" | "createdAt" | "updatedAt" | "status" | "paymentStatus">,
 ): Order {
   const now = Date.now();
+  pruneExpired(now); // opportunistic cleanup on every new order
   const order: Order = {
     ...data,
     id: generateOrderId(),

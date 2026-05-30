@@ -27,7 +27,13 @@ function statusToStep(s: PublicOrder["status"] | undefined): 0 | 1 | 2 | 3 {
   }
 }
 
-export function OrderTracker({ orderId }: { orderId: string }) {
+export function OrderTracker({
+  orderId,
+  token,
+}: {
+  orderId: string;
+  token?: string;
+}) {
   const [order, setOrder] = useState<PublicOrder | null>(null);
   const [notFound, setNotFound] = useState(false);
   const mockStep = useOrder((s) => s.step);
@@ -39,12 +45,14 @@ export function OrderTracker({ orderId }: { orderId: string }) {
       return;
     }
 
-    const es = new EventSource(`/api/orders/stream?orderId=${orderId}`);
+    const q = new URLSearchParams({ orderId });
+    if (token) q.set("t", token);
+    const es = new EventSource(`/api/orders/stream?${q.toString()}`);
     es.addEventListener("snapshot", (e) => setOrder(JSON.parse((e as MessageEvent).data)));
     es.addEventListener("update", (e) => setOrder(JSON.parse((e as MessageEvent).data)));
     es.addEventListener("not_found", () => setNotFound(true));
     return () => es.close();
-  }, [orderId]);
+  }, [orderId, token]);
 
   const isDemo = orderId.startsWith("BR-DEMO-");
   const step = isDemo ? mockStep : statusToStep(order?.status);

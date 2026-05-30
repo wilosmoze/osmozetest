@@ -4,6 +4,8 @@ import { createOrder, type OrderCustomer } from "@/lib/orders";
 import { resolveZoneAndFeeAsync } from "@/lib/delivery";
 import { themeConfig } from "@/config/theme.config";
 import { menu } from "@/data/menu";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { isSameOrigin, signOrderToken } from "@/lib/security";
 
 export const runtime = "nodejs";
 
@@ -26,6 +28,19 @@ type Body = {
 };
 
 export async function POST(req: Request) {
+  // ---------- Lightweight CSRF + rate limit ----------
+  if (!isSameOrigin(req)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+  const ip = clientIp(req);
+  const rl = rateLimit(`checkout:${ip}`, 10, 60 * 1000); // 10/min/IP
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: `Too many checkouts. Retry in ${rl.retryAfterSec}s.` },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+    );
+  }
+
   const body = (await req.json()) as Body;
 
   // ---------- Basic payload validation ----------
@@ -130,10 +145,12 @@ export async function POST(req: Request) {
     );
   }
 
+  const trackingToken = signOrderToken(order.id);
+
   const session = await stripe.checkout.sessions.create({
     ui_mode: "embedded",
     mode: "payment",
-    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/tracking/${order.id}?session_id={CHECKOUT_SESSION_ID}`,
+    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/tracking/${order.id}?session_id={CHECKOUT_SESSION_ID}&t=${trackingToken}`,
     line_items: [
       ...serverLines.map((l) => ({
         quantity: l.quantity,
@@ -169,6 +186,7 @@ export async function POST(req: Request) {
   return NextResponse.json({
     clientSecret: session.client_secret,
     orderId: order.id,
+    trackingToken,
     zoneId,
     fee: serverFee,
   });

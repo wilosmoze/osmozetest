@@ -34,6 +34,17 @@ const STATUS_META: Record<
 
 const STATUS_FLOW: OrderStatus[] = ["preparing", "ready", "delivering", "delivered"];
 
+/** Only allow plain http(s) URLs to be used as hrefs (anti-`javascript:`). */
+function isSafeHref(value: string | null | undefined): value is string {
+  if (!value || typeof value !== "string") return false;
+  try {
+    const u = new URL(value);
+    return u.protocol === "https:" || u.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
 export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>(initialOrders);
@@ -263,20 +274,27 @@ function OrderRow({ order }: { order: Order }) {
                 </a>
 
                 <div className="mt-4 space-y-2">
-                  <a
-                    href={order.customer.locationUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex w-full items-center justify-between gap-2 rounded-2xl border border-accent/40 bg-accent/[0.08] px-4 py-3 text-sm text-accent transition-all hover:bg-accent hover:text-zinc-950 active:translate-y-[1px]"
-                  >
-                    <span className="flex items-center gap-2">
-                      <NavigationArrow size={16} weight="fill" />
-                      Navigate (Google Maps)
-                    </span>
-                    <MapPin size={16} weight="duotone" />
-                  </a>
+                  {isSafeHref(order.customer.locationUrl) ? (
+                    <a
+                      href={order.customer.locationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex w-full items-center justify-between gap-2 rounded-2xl border border-accent/40 bg-accent/[0.08] px-4 py-3 text-sm text-accent transition-all hover:bg-accent hover:text-zinc-950 active:translate-y-[1px]"
+                    >
+                      <span className="flex items-center gap-2">
+                        <NavigationArrow size={16} weight="fill" />
+                        Navigate (Google Maps)
+                      </span>
+                      <MapPin size={16} weight="duotone" />
+                    </a>
+                  ) : (
+                    <div className="rounded-2xl border border-red-500/30 bg-red-500/[0.06] px-4 py-3 text-xs text-red-300">
+                      ⚠ Unsafe or missing location URL — verify with the customer.
+                    </div>
+                  )}
+                  {/* React already escapes text — but truncate to keep it sane */}
                   <div className="break-all rounded-lg border border-white/[0.04] bg-zinc-950/40 p-2.5 font-mono text-[10px] text-zinc-500">
-                    {order.customer.locationUrl}
+                    {(order.customer.locationUrl ?? "").slice(0, 300)}
                   </div>
                 </div>
 
