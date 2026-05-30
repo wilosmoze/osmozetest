@@ -1,15 +1,28 @@
 import { NextResponse } from "next/server";
 import { stripe, stripeEnabled } from "@/lib/stripe";
-import { createOrder, type OrderLine, type OrderCustomer } from "@/lib/orders";
+import { createOrder, type OrderCustomer } from "@/lib/orders";
 import { resolveZoneAndFee } from "@/lib/delivery";
 import { themeConfig } from "@/config/theme.config";
+import { menu } from "@/data/menu";
 
 export const runtime = "nodejs";
 
+/** What we ACCEPT from the client: only ids + quantities.
+ *  We deliberately ignore client-supplied name & price — those are
+ *  re-resolved server-side from data/menu.ts.                       */
+type ClientLine = {
+  itemId: string;
+  quantity: number;
+  /** Tolerated for backwards compat but ignored. */
+  name?: string;
+  price?: number;
+};
+
 type Body = {
   customer: OrderCustomer;
-  lines: OrderLine[];
-  deliveryFee: number; // client-suggested fee — IGNORED for authority
+  lines: ClientLine[];
+  /** Tolerated but ignored — recomputed authoritatively. */
+  deliveryFee?: number;
 };
 
 export async function POST(req: Request) {
@@ -34,6 +47,51 @@ export async function POST(req: Request) {
     );
   }
 
+  // ---------- AUTHORITATIVE PRICES (look each line up in menu) ----------
+  const serverLines: { itemId: string; name: string; price: number; quantity: number }[] = [];
+
+  for (const clientLine of body.lines) {
+    // Quantity sanity
+    const qty = Number(clientLine.quantity);
+    if (!Number.isInteger(qty) || qty < 1 || qty > 50) {
+      return NextResponse.json(
+        { error: `Invalid quantity for item ${clientLine.itemId}` },
+        { status: 400 },
+      );
+    }
+
+    // Look up the canonical menu entry by id
+    const menuItem = menu.find((m) => m.id === clientLine.itemId);
+    if (!menuItem) {
+      return NextResponse.json(
+        { error: `Unknown item: ${clientLine.itemId}` },
+        { status: 400 },
+      );
+    }
+
+    // Telemetry: detect tampering attempts on price/name
+    if (
+      typeof clientLine.price === "number" &&
+      Math.abs(clientLine.price - menuItem.price) > 0.01
+    ) {
+      console.warn(
+        `[checkout] price mismatch on ${menuItem.id}: client=${clientLine.price} ฿, server=${menuItem.price} ฿`,
+      );
+    }
+    if (clientLine.name && clientLine.name !== menuItem.name) {
+      console.warn(
+        `[checkout] name mismatch on ${menuItem.id}: client="${clientLine.name}", server="${menuItem.name}"`,
+      );
+    }
+
+    serverLines.push({
+      itemId: menuItem.id,
+      name: menuItem.name,
+      price: menuItem.price,
+      quantity: qty,
+    });
+  }
+
   // ---------- AUTHORITATIVE DELIVERY ZONE + FEE ----------
   // Re-resolve the zone server-side from the customer's Maps URL.
   // The client's deliveryFee is ignored; we always trust our own computation.
@@ -41,21 +99,24 @@ export async function POST(req: Request) {
     body.customer.locationUrl,
   );
 
-  // Telemetry: detect tampering attempts (client suggested a different fee).
-  if (Math.abs((body.deliveryFee ?? 0) - serverFee) > 0.01) {
+  // Telemetry: detect tampering attempts on the fee.
+  if (
+    typeof body.deliveryFee === "number" &&
+    Math.abs(body.deliveryFee - serverFee) > 0.01
+  ) {
     console.warn(
       `[checkout] delivery fee mismatch: client=${body.deliveryFee} ฿, server=${serverFee} ฿ (zone=${zoneId}, coords resolved=${coordsResolved})`,
     );
   }
 
-  // ---------- Recalculate totals server-side ----------
-  const subtotal = body.lines.reduce((s, l) => s + l.price * l.quantity, 0);
+  // ---------- Recompute totals from SERVER prices only ----------
+  const subtotal = serverLines.reduce((s, l) => s + l.price * l.quantity, 0);
   const total = subtotal + serverFee;
 
   // ---------- Persist order with SERVER-VERIFIED amounts ----------
   const order = createOrder({
     customer: body.customer,
-    lines: body.lines,
+    lines: serverLines,
     subtotal,
     deliveryFee: serverFee,
     total,
@@ -74,7 +135,7 @@ export async function POST(req: Request) {
     mode: "payment",
     return_url: `${process.env.NEXT_PUBLIC_APP_URL}/tracking/${order.id}?session_id={CHECKOUT_SESSION_ID}`,
     line_items: [
-      ...body.lines.map((l) => ({
+      ...serverLines.map((l) => ({
         quantity: l.quantity,
         price_data: {
           currency: themeConfig.payment.currency.toLowerCase(),
