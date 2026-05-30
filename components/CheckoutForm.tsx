@@ -14,6 +14,7 @@ import {
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { themeConfig } from "@/config/theme.config";
+import { extractCoords, isInRawai } from "@/lib/delivery";
 import { StripePayment } from "./StripePayment";
 
 type FormState = {
@@ -35,34 +36,6 @@ const empty: FormState = {
 // Validation : doit ressembler à un lien Google Maps (court ou long)
 const GMAPS_REGEX =
   /^https?:\/\/(?:[\w.-]+\.)?(?:google\.[a-z.]+\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)/i;
-
-// Rawai bounding box (Phuket). Approximate but covers all of Rawai + Naiharn.
-const RAWAI_BBOX = {
-  north: 7.795,
-  south: 7.750,
-  east: 98.360,
-  west: 98.300,
-};
-
-const isInRawai = (lat: number, lng: number) =>
-  lat >= RAWAI_BBOX.south &&
-  lat <= RAWAI_BBOX.north &&
-  lng >= RAWAI_BBOX.west &&
-  lng <= RAWAI_BBOX.east;
-
-/**
- * Extract lat/lng from a Google Maps URL.
- * Handles `@lat,lng`, `q=lat,lng`, `ll=lat,lng`, and `?lat,lng` patterns.
- * Returns null for short links (maps.app.goo.gl/xxx) or unrecognised formats.
- */
-function extractCoords(url: string): { lat: number; lng: number } | null {
-  const match = url.match(/(-?\d{1,3}\.\d{4,})[, ]+(-?\d{1,3}\.\d{4,})/);
-  if (!match) return null;
-  const lat = parseFloat(match[1]);
-  const lng = parseFloat(match[2]);
-  if (Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
-  return { lat, lng };
-}
 
 export function CheckoutForm() {
   const router = useRouter();
