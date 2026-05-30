@@ -63,23 +63,46 @@ export function isShortMapsUrl(url: string): boolean {
   return SHORT_MAPS_URL.test(url.trim());
 }
 
-/** Follow redirects on a short Maps URL → returns the expanded URL or null. */
+/** Follow redirects on a short Maps URL → returns the expanded URL or null.
+ *
+ *  IMPORTANT: Google's maps.app.goo.gl does user-agent sniffing — desktop UAs
+ *  get a 200 OK with a JS-only page (no Location header). Mobile UAs get a
+ *  proper 302 with Location → the long /maps/place/... URL containing coords.
+ *  We use an iPhone UA so `redirect: "follow"` resolves to the real target.
+ */
 async function followRedirects(url: string): Promise<string | null> {
+  const MOBILE_UA =
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1";
+
+  // 1. Try the standard "follow" path with a mobile UA
   try {
     const res = await fetch(url.trim(), {
       method: "GET",
       redirect: "follow",
-      headers: {
-        // Some redirectors need a real-looking UA
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15",
-      },
+      headers: { "User-Agent": MOBILE_UA },
       signal: AbortSignal.timeout(6000),
     });
-    return res.url ?? null;
+    if (res.url && res.url !== url.trim()) return res.url;
   } catch {
-    return null;
+    /* fall through to manual mode */
   }
+
+  // 2. Fallback: read the Location header manually (some envs / Vercel edge
+  //    cases don't expose the final URL on res.url).
+  try {
+    const res = await fetch(url.trim(), {
+      method: "GET",
+      redirect: "manual",
+      headers: { "User-Agent": MOBILE_UA },
+      signal: AbortSignal.timeout(6000),
+    });
+    const loc = res.headers.get("location");
+    if (loc) return loc;
+  } catch {
+    /* nothing more we can do */
+  }
+
+  return null;
 }
 
 /** Resolve the zone id from a Maps URL. Sync — no network calls.
