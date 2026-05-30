@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { stripe, stripeEnabled } from "@/lib/stripe";
-import { createOrder, type OrderCustomer } from "@/lib/orders";
+import { createOrder, updateOrder, type OrderCustomer } from "@/lib/orders";
 import { resolveZoneAndFeeAsync } from "@/lib/delivery";
 import { themeConfig } from "@/config/theme.config";
 import { menu } from "@/data/menu";
@@ -137,15 +137,26 @@ export async function POST(req: Request) {
     total,
   });
 
-  // ---------- Stripe session ----------
-  if (!stripeEnabled || !stripe) {
-    return NextResponse.json(
-      { error: "Stripe not configured on server" },
-      { status: 503 },
-    );
-  }
-
   const trackingToken = signOrderToken(order.id);
+
+  // ---------- Demo path (no Stripe keys) ----------
+  // Stripe is optional in dev / pre-launch — we still want the order to
+  // hit the server so it shows up in /admin and /courier. We mark it as
+  // paid+preparing immediately to simulate a successful payment.
+  if (!stripeEnabled || !stripe) {
+    updateOrder(
+      order.id,
+      { paymentStatus: "paid", status: "preparing" },
+      "system",
+    );
+    return NextResponse.json({
+      demo: true,
+      orderId: order.id,
+      trackingToken,
+      zoneId,
+      fee: serverFee,
+    });
+  }
 
   const session = await stripe.checkout.sessions.create({
     ui_mode: "embedded",

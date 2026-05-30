@@ -39,24 +39,8 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
     setLoading(true);
 
     try {
-      // Demo mode: no Stripe key configured → simulate payment
-      if (!stripePromise) {
-        await new Promise((r) => setTimeout(r, 1200));
-        const orderId = `BR-DEMO-${Date.now().toString(36).toUpperCase()}`;
-        const subtotal = lines.reduce((s, l) => s + l.price * l.quantity, 0);
-        startOrder({
-          id: orderId,
-          lines,
-          subtotal,
-          deliveryFee,
-          total: amount,
-          createdAt: Date.now(),
-        });
-        clearCart();
-        router.push(`/tracking/${orderId}`);
-        return;
-      }
-
+      // Always create the order server-side. The API will respond with
+      // either a Stripe clientSecret (prod) or { demo: true } (no keys yet).
       const res = await fetch("/api/checkout/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -67,11 +51,41 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
         throw new Error(data.error ?? "Failed to create checkout session");
       }
 
-      const { clientSecret } = (await res.json()) as { clientSecret: string };
-      const stripe = await stripePromise;
-      if (!stripe || !containerRef.current) throw new Error("Stripe failed to load");
+      const data = (await res.json()) as {
+        demo?: boolean;
+        clientSecret?: string;
+        orderId: string;
+        trackingToken: string;
+        fee: number;
+      };
 
-      checkoutRef.current = await stripe.initEmbeddedCheckout({ clientSecret });
+      // ---------- DEMO PATH (no Stripe keys) ----------
+      if (data.demo) {
+        // Persist the snapshot in Zustand so OrderVinyl can render it
+        // with the SERVER-issued order id (matches what /admin & SSE see).
+        const subtotal = lines.reduce((s, l) => s + l.price * l.quantity, 0);
+        startOrder({
+          id: data.orderId,
+          lines,
+          subtotal,
+          deliveryFee: data.fee,
+          total: subtotal + data.fee,
+          createdAt: Date.now(),
+        });
+        clearCart();
+        router.push(`/tracking/${data.orderId}?t=${data.trackingToken}`);
+        return;
+      }
+
+      // ---------- REAL STRIPE PATH ----------
+      if (!data.clientSecret) throw new Error("Missing client secret");
+      const stripe = await stripePromise;
+      if (!stripe || !containerRef.current)
+        throw new Error("Stripe failed to load");
+
+      checkoutRef.current = await stripe.initEmbeddedCheckout({
+        clientSecret: data.clientSecret,
+      });
       checkoutRef.current.mount(containerRef.current);
       setMounted(true);
     } catch (e) {
