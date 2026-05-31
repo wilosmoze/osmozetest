@@ -10,11 +10,18 @@ import {
   Info,
   Crosshair,
   CheckCircle,
+  WarningCircle,
+  X,
 } from "@phosphor-icons/react";
+import { AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { themeConfig } from "@/config/theme.config";
-import { extractCoords, isInRawai, isShortMapsUrl } from "@/lib/delivery";
+import {
+  extractCoords,
+  isShortMapsUrl,
+  distanceKm as computeDistanceKm,
+} from "@/lib/delivery";
 import { StripePayment } from "./StripePayment";
 
 type FormState = {
@@ -45,8 +52,10 @@ export function CheckoutForm() {
   const [geoStatus, setGeoStatus] = useState<{
     loading: boolean;
     error: string | null;
-    zoneDetected: "rawai" | "outside" | null;
-  }>({ loading: false, error: null, zoneDetected: null });
+    zoneDetected: "rawai" | "outside" | "too_far" | null;
+    distanceKm: number | null;
+  }>({ loading: false, error: null, zoneDetected: null, distanceKm: null });
+  const [showGrabModal, setShowGrabModal] = useState(false);
   const {
     lines,
     subtotal,
@@ -55,6 +64,24 @@ export function CheckoutForm() {
     deliveryZoneId,
     setDeliveryZone,
   } = useCart();
+
+  /** Classify a coords pair locally — mirrors lib/delivery.ts logic. */
+  const classifyLocal = (
+    lat: number,
+    lng: number,
+  ): { zone: "rawai" | "outside" | "too_far"; km: number } => {
+    const km = computeDistanceKm(
+      themeConfig.delivery.kitchenLocation,
+      { lat, lng },
+    );
+    if (km > themeConfig.delivery.maxDistanceKm) {
+      return { zone: "too_far", km };
+    }
+    const RAWAI = { n: 7.815, s: 7.735, e: 98.375, w: 98.282 };
+    const inRawai =
+      lat >= RAWAI.s && lat <= RAWAI.n && lng >= RAWAI.w && lng <= RAWAI.e;
+    return { zone: inRawai ? "rawai" : "outside", km };
+  };
 
   /** Auto-set zone when a URL is entered.
    *  1. Try local extraction (instant, works for long URLs).
@@ -66,14 +93,15 @@ export function CheckoutForm() {
 
     const coords = extractCoords(url);
     if (coords) {
-      const zone = isInRawai(coords.lat, coords.lng) ? "rawai" : "outside";
-      setDeliveryZone(zone);
-      setGeoStatus((s) => ({
-        ...s,
-        zoneDetected: zone,
-        error: null,
+      const { zone, km } = classifyLocal(coords.lat, coords.lng);
+      if (zone !== "too_far") setDeliveryZone(zone);
+      setGeoStatus({
         loading: false,
-      }));
+        error: null,
+        zoneDetected: zone,
+        distanceKm: km,
+      });
+      if (zone === "too_far") setShowGrabModal(true);
       return;
     }
 
@@ -82,6 +110,7 @@ export function CheckoutForm() {
       setGeoStatus((s) => ({
         ...s,
         zoneDetected: null,
+        distanceKm: null,
         error: null,
         loading: true,
       }));
@@ -91,34 +120,44 @@ export function CheckoutForm() {
         body: JSON.stringify({ locationUrl: url }),
       })
         .then((r) => (r.ok ? r.json() : Promise.reject(r)))
-        .then((data: { zoneId: "rawai" | "outside"; coordsResolved: boolean }) => {
-          if (data.coordsResolved) {
-            setDeliveryZone(data.zoneId);
-            setGeoStatus({
-              loading: false,
-              error: null,
-              zoneDetected: data.zoneId,
-            });
-          } else {
-            setGeoStatus({
-              loading: false,
-              error:
-                "Couldn't auto-detect zone from short link — the fee will be confirmed at checkout.",
-              zoneDetected: null,
-            });
-          }
-        })
+        .then(
+          (data: {
+            zoneId: "rawai" | "outside" | "too_far";
+            coordsResolved: boolean;
+            distanceKm: number | null;
+          }) => {
+            if (data.coordsResolved) {
+              if (data.zoneId !== "too_far") setDeliveryZone(data.zoneId);
+              setGeoStatus({
+                loading: false,
+                error: null,
+                zoneDetected: data.zoneId,
+                distanceKm: data.distanceKm,
+              });
+              if (data.zoneId === "too_far") setShowGrabModal(true);
+            } else {
+              setGeoStatus({
+                loading: false,
+                error:
+                  "Couldn't auto-detect zone from short link — the fee will be confirmed at checkout.",
+                zoneDetected: null,
+                distanceKm: null,
+              });
+            }
+          },
+        )
         .catch(() =>
           setGeoStatus({
             loading: false,
             error: null,
             zoneDetected: null,
+            distanceKm: null,
           }),
         );
       return;
     }
 
-    setGeoStatus((s) => ({ ...s, zoneDetected: null, loading: false }));
+    setGeoStatus((s) => ({ ...s, zoneDetected: null, distanceKm: null, loading: false }));
   };
 
   const handleUseCurrentLocation = () => {
@@ -129,16 +168,17 @@ export function CheckoutForm() {
       }));
       return;
     }
-    setGeoStatus({ loading: true, error: null, zoneDetected: null });
+    setGeoStatus({ loading: true, error: null, zoneDetected: null, distanceKm: null });
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
         const url = `https://www.google.com/maps?q=${latitude.toFixed(6)},${longitude.toFixed(6)}`;
-        const zone = isInRawai(latitude, longitude) ? "rawai" : "outside";
+        const { zone, km } = classifyLocal(latitude, longitude);
         setForm((f) => ({ ...f, locationUrl: url }));
         setErrors((e) => ({ ...e, locationUrl: undefined }));
-        setDeliveryZone(zone);
-        setGeoStatus({ loading: false, error: null, zoneDetected: zone });
+        if (zone !== "too_far") setDeliveryZone(zone);
+        setGeoStatus({ loading: false, error: null, zoneDetected: zone, distanceKm: km });
+        if (zone === "too_far") setShowGrabModal(true);
       },
       (err) => {
         let msg = "Couldn't get your location.";
@@ -148,7 +188,7 @@ export function CheckoutForm() {
         } else if (err.code === err.TIMEOUT) {
           msg = "Location request timed out. Try again or paste a Maps link.";
         }
-        setGeoStatus({ loading: false, error: msg, zoneDetected: null });
+        setGeoStatus({ loading: false, error: msg, zoneDetected: null, distanceKm: null });
       },
       { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
     );
@@ -186,6 +226,12 @@ export function CheckoutForm() {
       e.locationUrl =
         "This doesn't look like a Google Maps URL. Check and paste again.";
     }
+    // Hard block: too far from kitchen
+    if (geoStatus.zoneDetected === "too_far") {
+      e.locationUrl =
+        "Address is beyond our delivery range. Use Grab Food instead.";
+      setShowGrabModal(true);
+    }
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -195,6 +241,7 @@ export function CheckoutForm() {
     GMAPS_REGEX.test(form.locationUrl.trim());
 
   return (
+    <>
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
       <motion.section
         initial={{ opacity: 0, y: 12 }}
@@ -372,7 +419,7 @@ export function CheckoutForm() {
               </span>
             )}
 
-            {/* Zone auto-detected: shows in green for Rawai or amber for outside */}
+            {/* Zone auto-detected: green Rawai / amber Outside / red TooFar */}
             {geoStatus.zoneDetected && (
               <motion.div
                 initial={{ opacity: 0, y: -4 }}
@@ -380,19 +427,39 @@ export function CheckoutForm() {
                 className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-xs ${
                   geoStatus.zoneDetected === "rawai"
                     ? "border-emerald-500/30 bg-emerald-500/[0.06] text-emerald-300"
-                    : "border-amber-500/30 bg-amber-500/[0.06] text-amber-300"
+                    : geoStatus.zoneDetected === "outside"
+                      ? "border-amber-500/30 bg-amber-500/[0.06] text-amber-300"
+                      : "border-red-500/30 bg-red-500/[0.06] text-red-300"
                 }`}
               >
-                <CheckCircle size={14} weight="duotone" />
-                {geoStatus.zoneDetected === "rawai" ? (
+                {geoStatus.zoneDetected === "too_far" ? (
+                  <WarningCircle size={14} weight="duotone" />
+                ) : (
+                  <CheckCircle size={14} weight="duotone" />
+                )}
+                {geoStatus.zoneDetected === "rawai" && (
                   <span>
                     <span className="font-medium">You're in Rawai</span> —
                     delivery is on us.
                   </span>
-                ) : (
+                )}
+                {geoStatus.zoneDetected === "outside" && (
                   <span>
                     <span className="font-medium">You're outside Rawai</span>{" "}
                     — {formatPrice(20)} delivery fee added automatically.
+                  </span>
+                )}
+                {geoStatus.zoneDetected === "too_far" && (
+                  <span>
+                    <span className="font-medium">
+                      Beyond our {themeConfig.delivery.maxDistanceKm} km range
+                    </span>
+                    {geoStatus.distanceKm !== null && (
+                      <span className="ml-1 text-red-200/80">
+                        ({geoStatus.distanceKm.toFixed(1)} km away)
+                      </span>
+                    )}{" "}
+                    — please use Grab Food instead.
                   </span>
                 )}
               </motion.div>
@@ -434,11 +501,12 @@ export function CheckoutForm() {
             </div>
 
             {(() => {
+              const tooFar = geoStatus.zoneDetected === "too_far";
               const activeZone = themeConfig.delivery.zones.find(
                 (z) => z.id === deliveryZoneId,
               );
               const detected = !!geoStatus.zoneDetected;
-              const isRawai = deliveryZoneId === "rawai";
+              const isRawai = deliveryZoneId === "rawai" && !tooFar;
 
               // No location set yet → neutral placeholder
               if (!detected && !locationOk) {
@@ -453,7 +521,43 @@ export function CheckoutForm() {
                 );
               }
 
-              // Zone detected (or coming from a previous session)
+              // Too far → red card with Grab CTA
+              if (tooFar) {
+                return (
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-red-500/30 bg-red-500/[0.06] px-5 py-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-500/15 text-red-400">
+                        <WarningCircle size={18} weight="fill" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-red-300">
+                          Outside delivery range
+                        </div>
+                        <div className="mt-0.5 text-[11px] text-red-200/70">
+                          {geoStatus.distanceKm !== null
+                            ? `${geoStatus.distanceKm.toFixed(1)} km from us — `
+                            : ""}
+                          we only deliver within {themeConfig.delivery.maxDistanceKm} km
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowGrabModal(true)}
+                      className="rounded-full border border-red-500/40 bg-red-500/10 px-4 py-2 text-xs font-medium text-red-200 transition-colors hover:bg-red-500/20"
+                    >
+                      Use Grab
+                    </button>
+                  </motion.div>
+                );
+              }
+
+              // Zone detected (Rawai or Outside)
               return (
                 <motion.div
                   layout
@@ -489,6 +593,11 @@ export function CheckoutForm() {
                       </div>
                       <div className="mt-0.5 text-[11px] text-zinc-500">
                         {activeZone?.description}
+                        {geoStatus.distanceKm !== null && (
+                          <span className="ml-1 text-zinc-600">
+                            · {geoStatus.distanceKm.toFixed(1)} km
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -515,18 +624,43 @@ export function CheckoutForm() {
         </form>
 
         <div className="mt-10 border-t border-white/[0.06] pt-8">
-          <StripePayment
-            customer={form}
-            lines={lines.map((l) => ({
-              itemId: l.item.id,
-              name: l.item.name,
-              price: l.item.price,
-              quantity: l.quantity,
-            }))}
-            deliveryFee={deliveryFee()}
-            amount={total()}
-            onValidate={validate}
-          />
+          {geoStatus.zoneDetected === "too_far" ? (
+            <div className="rounded-3xl border border-red-500/30 bg-red-500/[0.04] p-6 text-center">
+              <WarningCircle
+                size={28}
+                weight="duotone"
+                className="mx-auto text-red-400"
+              />
+              <h3 className="mt-3 font-display text-xl font-semibold tracking-tight text-red-200">
+                Out of delivery range
+              </h3>
+              <p className="mt-2 mx-auto max-w-[42ch] text-sm text-red-200/70">
+                We can't deliver to your address — but Grab Food can. Tap
+                below to find burgers near you.
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowGrabModal(true)}
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-red-500/15 px-5 py-3 text-sm font-medium text-red-200 transition-colors hover:bg-red-500/25"
+              >
+                <ArrowSquareOut size={16} weight="bold" />
+                Open Grab Food
+              </button>
+            </div>
+          ) : (
+            <StripePayment
+              customer={form}
+              lines={lines.map((l) => ({
+                itemId: l.item.id,
+                name: l.item.name,
+                price: l.item.price,
+                quantity: l.quantity,
+              }))}
+              deliveryFee={deliveryFee()}
+              amount={total()}
+              onValidate={validate}
+            />
+          )}
         </div>
       </motion.section>
 
@@ -573,6 +707,89 @@ export function CheckoutForm() {
         </div>
       </aside>
     </div>
+
+    {/* ---------- OUT-OF-RANGE GRAB MODAL ---------- */}
+    <AnimatePresence>
+      {showGrabModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setShowGrabModal(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/85 p-4 backdrop-blur-md"
+        >
+          <motion.div
+            initial={{ scale: 0.95, y: 12, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.95, y: 12, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 220, damping: 26 }}
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md rounded-3xl border border-white/[0.08] bg-surface p-8"
+          >
+            <button
+              type="button"
+              onClick={() => setShowGrabModal(false)}
+              aria-label="Close"
+              className="absolute right-4 top-4 rounded-full border border-white/10 p-2 text-zinc-400 hover:bg-white/[0.05] hover:text-white"
+            >
+              <X size={16} weight="bold" />
+            </button>
+
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/15 text-red-400">
+              <WarningCircle size={28} weight="duotone" />
+            </div>
+
+            <h2 className="mt-5 font-display text-2xl font-bold tracking-tight">
+              You're outside our range
+            </h2>
+            <p className="mt-3 text-sm text-zinc-400">
+              We only deliver within{" "}
+              <span className="text-white">
+                {themeConfig.delivery.maxDistanceKm} km
+              </span>{" "}
+              of our Rawai kitchen.
+              {geoStatus.distanceKm !== null && (
+                <>
+                  {" "}Your address is roughly{" "}
+                  <span className="text-white">
+                    {geoStatus.distanceKm.toFixed(1)} km
+                  </span>{" "}
+                  away.
+                </>
+              )}
+            </p>
+            <p className="mt-3 text-sm text-zinc-400">
+              No worries — you can still get great burgers delivered through
+              Grab Food.
+            </p>
+
+            <a
+              href={themeConfig.delivery.grabUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 flex w-full items-center justify-between gap-3 rounded-full bg-emerald-500 px-5 py-4 text-sm font-semibold text-zinc-950 transition-all hover:brightness-110 active:translate-y-[1px]"
+            >
+              <span className="flex items-center gap-2">
+                <ArrowSquareOut size={18} weight="bold" />
+                Open Grab Food
+              </span>
+              <span className="text-xs uppercase tracking-widest opacity-70">
+                External
+              </span>
+            </a>
+
+            <button
+              type="button"
+              onClick={() => setShowGrabModal(false)}
+              className="mt-3 w-full rounded-full border border-white/10 px-5 py-3 text-xs uppercase tracking-wider text-zinc-400 hover:bg-white/[0.05] hover:text-white"
+            >
+              Use a different address
+            </button>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   );
 }
 

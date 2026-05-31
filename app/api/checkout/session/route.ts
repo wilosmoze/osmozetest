@@ -111,8 +111,23 @@ export async function POST(req: Request) {
   // Re-resolve the zone server-side from the customer's Maps URL.
   // The async version follows redirects on short links so a
   // maps.app.goo.gl share URL is correctly classified.
-  const { zoneId, fee: serverFee, coordsResolved } =
+  const { zoneId, fee: serverFee, coordsResolved, distanceKm } =
     await resolveZoneAndFeeAsync(body.customer.locationUrl);
+
+  // Hard refuse: beyond max delivery range
+  if (zoneId === "too_far") {
+    return NextResponse.json(
+      {
+        error: "out_of_range",
+        message:
+          "Sorry — your address is beyond our delivery range. Try Grab Food instead.",
+        distanceKm,
+        maxDistanceKm: themeConfig.delivery.maxDistanceKm,
+        grabUrl: themeConfig.delivery.grabUrl,
+      },
+      { status: 422 },
+    );
+  }
 
   // Telemetry: detect tampering attempts on the fee.
   if (

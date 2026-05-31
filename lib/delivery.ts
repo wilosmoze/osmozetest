@@ -13,7 +13,7 @@ export const RAWAI_BBOX = {
   west: 98.282,
 } as const;
 
-export type ZoneId = "rawai" | "outside";
+export type ZoneId = "rawai" | "outside" | "too_far";
 
 export function isInRawai(lat: number, lng: number): boolean {
   return (
@@ -22,6 +22,23 @@ export function isInRawai(lat: number, lng: number): boolean {
     lng >= RAWAI_BBOX.west &&
     lng <= RAWAI_BBOX.east
   );
+}
+
+/** Haversine distance in kilometres between two lat/lng points. */
+export function distanceKm(
+  a: { lat: number; lng: number },
+  b: { lat: number; lng: number },
+): number {
+  const R = 6371;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const x =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
 }
 
 /**
@@ -74,7 +91,6 @@ async function followRedirects(url: string): Promise<string | null> {
   const MOBILE_UA =
     "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1";
 
-  // 1. Try the standard "follow" path with a mobile UA
   try {
     const res = await fetch(url.trim(), {
       method: "GET",
@@ -87,8 +103,6 @@ async function followRedirects(url: string): Promise<string | null> {
     /* fall through to manual mode */
   }
 
-  // 2. Fallback: read the Location header manually (some envs / Vercel edge
-  //    cases don't expose the final URL on res.url).
   try {
     const res = await fetch(url.trim(), {
       method: "GET",
@@ -105,16 +119,24 @@ async function followRedirects(url: string): Promise<string | null> {
   return null;
 }
 
-/** Resolve the zone id from a Maps URL. Sync — no network calls.
- *  Returns null when coords can't be extracted locally (short links). */
-export function zoneFromUrl(url: string): ZoneId | null {
-  const coords = extractCoords(url);
-  if (!coords) return null;
-  return isInRawai(coords.lat, coords.lng) ? "rawai" : "outside";
+/** Classify a coords pair into a zone. */
+function classify(lat: number, lng: number): {
+  zoneId: ZoneId;
+  distanceKm: number;
+} {
+  const km = distanceKm(themeConfig.delivery.kitchenLocation, { lat, lng });
+  if (km > themeConfig.delivery.maxDistanceKm) {
+    return { zoneId: "too_far", distanceKm: km };
+  }
+  return {
+    zoneId: isInRawai(lat, lng) ? "rawai" : "outside",
+    distanceKm: km,
+  };
 }
 
 /** Fee in THB for the given zone id (reads from themeConfig). */
 export function feeForZone(zoneId: ZoneId): number {
+  if (zoneId === "too_far") return 0;
   const zone = themeConfig.delivery.zones.find((z) => z.id === zoneId);
   return zone ? zone.fee : 0;
 }
@@ -124,12 +146,24 @@ export function resolveZoneAndFee(url: string): {
   zoneId: ZoneId;
   fee: number;
   coordsResolved: boolean;
+  distanceKm: number | null;
 } {
-  const detected = zoneFromUrl(url);
-  if (detected) {
-    return { zoneId: detected, fee: feeForZone(detected), coordsResolved: true };
+  const coords = extractCoords(url);
+  if (!coords) {
+    return {
+      zoneId: "outside",
+      fee: feeForZone("outside"),
+      coordsResolved: false,
+      distanceKm: null,
+    };
   }
-  return { zoneId: "outside", fee: feeForZone("outside"), coordsResolved: false };
+  const { zoneId, distanceKm } = classify(coords.lat, coords.lng);
+  return {
+    zoneId,
+    fee: feeForZone(zoneId),
+    coordsResolved: true,
+    distanceKm,
+  };
 }
 
 /**
@@ -142,6 +176,7 @@ export async function resolveZoneAndFeeAsync(url: string): Promise<{
   zoneId: ZoneId;
   fee: number;
   coordsResolved: boolean;
+  distanceKm: number | null;
 }> {
   let coords = extractCoords(url);
 
@@ -151,12 +186,18 @@ export async function resolveZoneAndFeeAsync(url: string): Promise<{
   }
 
   if (coords) {
-    const zoneId = isInRawai(coords.lat, coords.lng) ? "rawai" : "outside";
-    return { zoneId, fee: feeForZone(zoneId), coordsResolved: true };
+    const { zoneId, distanceKm } = classify(coords.lat, coords.lng);
+    return {
+      zoneId,
+      fee: feeForZone(zoneId),
+      coordsResolved: true,
+      distanceKm,
+    };
   }
   return {
     zoneId: "outside",
     fee: feeForZone("outside"),
     coordsResolved: false,
+    distanceKm: null,
   };
 }

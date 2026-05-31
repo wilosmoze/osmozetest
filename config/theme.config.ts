@@ -53,10 +53,16 @@ export const themeConfig = {
         id: "outside",
         name: "Outside Rawai",
         fee: 20,
-        description: "+20 ฿ flat fee for nearby areas",
+        description: "+20 ฿ flat fee, within 6 km",
       },
     ] as DeliveryZone[],
     defaultZoneId: "rawai",
+    /** Reference point from which max-distance is computed. */
+    kitchenLocation: { lat: 7.7780, lng: 98.3220 },
+    /** Hard limit: refuse delivery beyond this many km from the kitchen. */
+    maxDistanceKm: 6,
+    /** Where to send the customer when they're out of range. */
+    grabUrl: "https://food.grab.com/th/en",
     estimatedMinutes: { min: 25, max: 35 },
     cutoffMessage: "Open Tue–Sun · 12 PM to 11 PM · Closed Mondays",
   },
