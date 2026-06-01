@@ -4,7 +4,7 @@ export function Marquee() {
     "Black Angus beef",
     "Closed-bun creations",
     "Sealed tight",
-    "House-made sauces",
+    "Home-made sauces",
     "Tue–Sun · Noon to 11 PM",
   ];
   return (

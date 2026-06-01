@@ -30,7 +30,7 @@ export default function HomePage() {
       <DeliveryBanner />
       <MenuSection
         id="sauces"
-        eyebrow="02 — House sauces"
+        eyebrow="02 — Home sauces"
         title="Six mixers. Pick your tone."
         items={sauces}
         variant="compact"
