@@ -4,11 +4,16 @@
 import { NextResponse } from "next/server";
 import { dbEnabled, ensureSchema, sql } from "@/lib/db";
 import { orderStore } from "@/lib/orders";
+import { requireAdmin } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const auth = await requireAdmin();
+  if (!auth.ok)
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+
   // Which POSTGRES_* keys are visible from the runtime?
   const envKeys = Object.keys(process.env)
     .filter((k) => k.startsWith("POSTGRES_") || k.startsWith("DATABASE_"))
