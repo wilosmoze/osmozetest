@@ -1,16 +1,24 @@
 import { getOrder } from "@/lib/orders";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { PrintClient } from "./PrintClient";
 import { themeConfig } from "@/config/theme.config";
 import { formatPrice } from "@/lib/utils";
+import { requireAdmin } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function PrintReceiptPage({
   params,
 }: {
   params: { orderId: string };
 }) {
+  const auth = await requireAdmin();
+  if (!auth.ok) redirect("/admin/login");
   const order = await getOrder(params.orderId);
   if (!order) notFound();
 

@@ -1,5 +1,8 @@
 "use client";
 
+// Note: client component — robots/noindex set via app/robots.ts disallow
+// rule (matches /admin/* prefix). Kept simple to avoid Metadata in CC.
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LockKey, ArrowRight } from "@phosphor-icons/react";

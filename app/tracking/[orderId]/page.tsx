@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { OrderTracker } from "@/components/OrderTracker";
 import { SocialBlock } from "@/components/SocialBlock";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function TrackingPage({
   params,
