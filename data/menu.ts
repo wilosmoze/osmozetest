@@ -133,19 +133,6 @@ export const menu: MenuItem[] = [
     category: "sauce",
   },
   {
-    id: "s-bbq",
-    name: "Bourbon BBQ",
-    description: {
-      en: "Smoked tomato, caramelised bourbon, molasses, roasted onion.",
-      fr: "Tomate fumée, bourbon caramélisé, mélasse, oignon rôti.",
-      ru: "Копчёные томаты, карамелизованный бурбон, патока, печёный лук.",
-      th: "มะเขือเทศรมควัน เบอร์เบินคาราเมล กากน้ำตาล หอมอบ",
-    },
-    price: 60,
-    image: SIDE,
-    category: "sauce",
-  },
-  {
     id: "s-yuzu",
     name: "Yuzu Mayo",
     description: {
@@ -158,19 +145,6 @@ export const menu: MenuItem[] = [
     image: SIDE,
     category: "sauce",
     tag: "New",
-  },
-  {
-    id: "s-miel",
-    name: "Honey Mustard",
-    description: {
-      en: "Wholegrain mustard, chestnut honey, cider vinegar.",
-      fr: "Moutarde à l'ancienne, miel de châtaignier, vinaigre de cidre.",
-      ru: "Зерновая горчица, каштановый мёд, яблочный уксус.",
-      th: "มัสตาร์ดเมล็ดเต็ม น้ำผึ้งเกาลัด น้ำส้มสายชูแอปเปิ้ล",
-    },
-    price: 60,
-    image: SIDE,
-    category: "sauce",
   },
   {
     id: "s-ail",

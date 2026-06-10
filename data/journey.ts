@@ -42,7 +42,7 @@ export const journeyTimeline = [
     title: "The Mix",
     date: "Build",
     content:
-      "Home sauces, fresh toppings, careful mastering. Each burger sealed tight for the road.",
+      "Premium sauces, fresh toppings, careful mastering. Each burger sealed tight for the road.",
     category: "Workshop",
     icon: Layers,
     relatedIds: [3, 5],
