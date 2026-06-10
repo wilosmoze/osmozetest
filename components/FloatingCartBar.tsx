@@ -4,8 +4,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag, ArrowRight } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 export function FloatingCartBar() {
+  const t = useT();
   const count = useCart((s) => s.count());
   const subtotal = useCart((s) => s.subtotal());
   const drawerOpen = useCart((s) => s.drawerOpen);
@@ -46,7 +48,7 @@ export function FloatingCartBar() {
                     </motion.span>
                   </span>
                   <span className="text-sm font-medium">
-                    {count === 1 ? "1 item" : `${count} items`}
+                    {count === 1 ? t("bar.item") : t("bar.items", { n: count })}
                   </span>
                 </span>
 
@@ -56,7 +58,7 @@ export function FloatingCartBar() {
                     {formatPrice(subtotal)}
                   </span>
                   <span className="flex items-center gap-1.5 rounded-full bg-zinc-950/15 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider">
-                    View cart
+                    {t("bar.viewCart")}
                     <ArrowRight
                       size={12}
                       weight="bold"

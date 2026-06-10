@@ -1,11 +1,16 @@
+"use client";
+
+import { useT } from "@/lib/i18n";
+
 export function Marquee() {
+  const t = useT();
   const items = [
-    "Premium burgers",
-    "Black Angus beef",
-    "Closed-bun creations",
-    "Sealed tight",
-    "Home-made sauces",
-    "Tue–Sun · Noon to 11 PM",
+    t("marquee.0"),
+    t("marquee.1"),
+    t("marquee.2"),
+    t("marquee.3"),
+    t("marquee.4"),
+    t("marquee.5"),
   ];
   return (
     <div className="border-y border-white/[0.05] bg-surface/40 py-4 overflow-hidden">

@@ -4,11 +4,20 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
 import { useUI } from "@/lib/store";
+import { useT } from "@/lib/i18n";
 import { SpinningVinyl } from "./SpinningVinyl";
 
 export function Hero() {
-  const { hero } = themeConfig;
+  const t = useT();
   const openMenu = useUI((s) => s.openMenu);
+  // Brand mantra — kept untranslated across locales by design
+  const headline = themeConfig.hero.headline;
+
+  const reassurances = [
+    { label: t("hero.reassure.30min.label"), sub: t("hero.reassure.30min.sub") },
+    { label: t("hero.reassure.100.label"), sub: t("hero.reassure.100.sub") },
+    { label: t("hero.reassure.free.label"), sub: t("hero.reassure.free.sub") },
+  ];
 
   return (
     <section
@@ -34,11 +43,11 @@ export function Hero() {
               className="chip"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-dot" />
-              {hero.eyebrow}
+              {t("hero.eyebrow")}
             </motion.span>
 
             <h1 className="mt-6 font-display text-[clamp(2.75rem,8vw,6.5rem)] font-bold leading-[0.95] tracking-tighter">
-              {hero.headline.map((line, i) => (
+              {headline.map((line, i) => (
                 <motion.span
                   key={i}
                   initial={{ opacity: 0, y: 24 }}
@@ -52,7 +61,7 @@ export function Hero() {
                   }}
                   className="block"
                 >
-                  {i === hero.headline.length - 1 ? (
+                  {i === headline.length - 1 ? (
                     <span className="italic text-accent">{line}</span>
                   ) : (
                     line
@@ -67,7 +76,7 @@ export function Hero() {
               transition={{ delay: 0.5, duration: 0.5 }}
               className="mt-8 max-w-[58ch] text-base leading-relaxed text-zinc-400 md:text-lg"
             >
-              {hero.subline}
+              {t("hero.subline")}
             </motion.p>
 
             <motion.div
@@ -77,11 +86,11 @@ export function Hero() {
               className="mt-10 flex flex-wrap items-center gap-3"
             >
               <a href="#burgers" className="btn-primary">
-                {hero.cta}
+                {t("hero.cta")}
                 <ArrowRight size={18} weight="bold" />
               </a>
               <button onClick={openMenu} className="btn-ghost">
-                {hero.secondaryCta}
+                {t("hero.secondaryCta")}
               </button>
             </motion.div>
           </div>
@@ -104,9 +113,9 @@ export function Hero() {
                 transition={{ delay: 0.7 }}
                 className="grid w-full grid-cols-3 gap-2"
               >
-                {hero.reassurances.map((r, i) => (
+                {reassurances.map((r, i) => (
                   <div
-                    key={r.label}
+                    key={r.label + i}
                     className="rounded-2xl border border-white/[0.06] bg-surface/60 p-3 backdrop-blur-sm"
                     style={{ transitionDelay: `${i * 70}ms` }}
                   >

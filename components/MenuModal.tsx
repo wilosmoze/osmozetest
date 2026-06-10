@@ -5,8 +5,10 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, ArrowRight } from "@phosphor-icons/react";
 import { useUI } from "@/lib/store";
+import { useT } from "@/lib/i18n";
 
 export function MenuModal() {
+  const t = useT();
   const open = useUI((s) => s.menuOpen);
   const close = useUI((s) => s.closeMenu);
 
@@ -42,7 +44,7 @@ export function MenuModal() {
             {/* Close (X) */}
             <button
               onClick={close}
-              aria-label="Close menu"
+              aria-label={t("menumodal.close")}
               className="absolute right-4 top-4 z-10 rounded-full border border-zinc-900/20 bg-white/90 p-2.5 text-zinc-900 backdrop-blur-md transition-colors hover:bg-white active:translate-y-[1px]"
             >
               <X size={18} weight="bold" />
@@ -66,10 +68,10 @@ export function MenuModal() {
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-zinc-950">
                     <ArrowRight size={14} weight="bold" />
                   </span>
-                  <span>Order from this menu</span>
+                  <span>{t("menumodal.order")}</span>
                 </span>
                 <span className="text-xs uppercase tracking-widest text-accent transition-transform group-hover:translate-x-0.5">
-                  Go to burgers →
+                  {t("menumodal.goto")}
                 </span>
               </Link>
             </div>

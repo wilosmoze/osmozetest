@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Check } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
+import { useT, useLocalize } from "@/lib/i18n";
 import type { MenuItem } from "@/data/menu";
 
 type Props = {
@@ -15,6 +16,8 @@ type Props = {
 
 export function ProductCard({ item, index, variant = "hero" }: Props) {
   const add = useCart((s) => s.add);
+  const t = useT();
+  const localize = useLocalize();
   const [justAdded, setJustAdded] = useState(false);
 
   const handleAdd = () => {
@@ -68,7 +71,7 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
 
         {variant === "hero" && (
           <p className="text-sm leading-relaxed text-zinc-400 line-clamp-3">
-            {item.description}
+            {localize(item.description)}
           </p>
         )}
 
@@ -104,7 +107,7 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
                 transition={{ duration: 0.2 }}
                 className="flex w-full items-center justify-between"
               >
-                <span>Added to cart</span>
+                <span>{t("menu.added")}</span>
                 <Check size={16} weight="bold" />
               </motion.span>
             ) : (
@@ -116,7 +119,7 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
                 transition={{ duration: 0.2 }}
                 className="flex w-full items-center justify-between"
               >
-                <span>Add</span>
+                <span>{t("menu.add")}</span>
                 <Plus size={16} weight="bold" />
               </motion.span>
             )}

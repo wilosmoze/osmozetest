@@ -5,12 +5,15 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ShoppingBag } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
+import { useT } from "@/lib/i18n";
 import { themeConfig } from "@/config/theme.config";
 import { cn } from "@/lib/utils";
+import { LangSwitcher } from "./LangSwitcher";
 
 export function Header() {
   const count = useCart((s) => s.count());
   const open = useCart((s) => s.openDrawer);
+  const t = useT();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -18,6 +21,13 @@ export function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const navItems = [
+    { label: t("nav.burgers"), href: "/#burgers" },
+    { label: t("nav.sauces"), href: "/#sauces" },
+    { label: t("nav.desserts"), href: "/#desserts" },
+    { label: t("nav.delivery"), href: "/#delivery" },
+  ];
 
   return (
     <header
@@ -44,12 +54,7 @@ export function Header() {
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
-            {[
-              { label: "Burgers", href: "/#burgers" },
-              { label: "Sauces", href: "/#sauces" },
-              { label: "Desserts", href: "/#desserts" },
-              { label: "Delivery", href: "/#delivery" },
-            ].map((l) => (
+            {navItems.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
@@ -60,21 +65,24 @@ export function Header() {
             ))}
           </nav>
 
-          <button
-            onClick={open}
-            className="group relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm transition-all hover:bg-white/[0.08] active:translate-y-[1px]"
-          >
-            <ShoppingBag size={18} weight="duotone" />
-            <span className="font-mono text-xs tabular-nums">{count}</span>
-            {count > 0 && (
-              <motion.span
-                layoutId="cart-pulse"
-                className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-accent"
-                animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
-                transition={{ duration: 1.6, repeat: Infinity }}
-              />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <LangSwitcher />
+            <button
+              onClick={open}
+              className="group relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm transition-all hover:bg-white/[0.08] active:translate-y-[1px]"
+            >
+              <ShoppingBag size={18} weight="duotone" />
+              <span className="font-mono text-xs tabular-nums">{count}</span>
+              {count > 0 && (
+                <motion.span
+                  layoutId="cart-pulse"
+                  className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-accent"
+                  animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+                  transition={{ duration: 1.6, repeat: Infinity }}
+                />
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </header>

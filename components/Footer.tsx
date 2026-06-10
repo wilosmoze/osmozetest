@@ -1,7 +1,11 @@
-import { InstagramLogo, TiktokLogo } from "@phosphor-icons/react/dist/ssr";
+"use client";
+
+import { InstagramLogo, TiktokLogo } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
+import { useT } from "@/lib/i18n";
 
 export function Footer() {
+  const t = useT();
   const { brand, social } = themeConfig;
   return (
     <footer className="border-t border-white/[0.05] bg-surface/40 py-14">
@@ -36,21 +40,24 @@ export function Footer() {
 
           <div className="md:col-span-3">
             <div className="text-xs uppercase tracking-wider text-zinc-500">
-              Menu
+              {t("footer.menu")}
             </div>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><a href="#burgers" className="hover:text-accent">Burgers</a></li>
-              <li><a href="#sauces" className="hover:text-accent">Sauces</a></li>
-              <li><a href="#desserts" className="hover:text-accent">Desserts</a></li>
-              <li><a href="#delivery" className="hover:text-accent">Delivery</a></li>
+              <li><a href="/#burgers" className="hover:text-accent">{t("nav.burgers")}</a></li>
+              <li><a href="/#sauces" className="hover:text-accent">{t("nav.sauces")}</a></li>
+              <li><a href="/#desserts" className="hover:text-accent">{t("nav.desserts")}</a></li>
+              <li><a href="/#delivery" className="hover:text-accent">{t("nav.delivery")}</a></li>
             </ul>
           </div>
 
           <div className="md:col-span-4">
             <div className="text-xs uppercase tracking-wider text-zinc-500">
-              Contact
+              {t("footer.contact")}
             </div>
             <ul className="mt-4 space-y-2 text-sm">
+              {social.contactPhone && (
+                <li className="font-mono">{social.contactPhone}</li>
+              )}
               <li>
                 <a
                   href={`mailto:${social.contactEmail}`}
@@ -59,20 +66,19 @@ export function Footer() {
                   {social.contactEmail}
                 </a>
               </li>
-              {social.contactPhone && (
-                <li className="font-mono">{social.contactPhone}</li>
-              )}
-              <li className="text-zinc-500">Line ID — coming soon</li>
-              <li className="text-zinc-500">
-                {themeConfig.delivery.cutoffMessage}
-              </li>
+              <li className="text-zinc-500">{t("deliv.cutoff")}</li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/[0.04] pt-6 text-xs text-zinc-600 md:flex-row md:items-center">
-          <span>© {new Date().getFullYear()} {brand.name} — Dark Kitchen</span>
-          <span>Legal · Terms · Privacy</span>
+          <span>
+            {t("footer.copyright", {
+              year: new Date().getFullYear(),
+              brand: brand.name,
+            })}
+          </span>
+          <span>{t("footer.legal")}</span>
         </div>
       </div>
     </footer>

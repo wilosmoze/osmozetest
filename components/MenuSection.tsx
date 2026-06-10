@@ -1,5 +1,8 @@
+"use client";
+
 import { ProductCard } from "./ProductCard";
 import type { MenuItem } from "@/data/menu";
+import { useT } from "@/lib/i18n";
 
 type Props = {
   id: string;
@@ -10,6 +13,7 @@ type Props = {
 };
 
 export function MenuSection({ id, eyebrow, title, items, variant = "hero" }: Props) {
+  const t = useT();
   return (
     <section id={id} className="py-20 md:py-28">
       <div className="container-app">
@@ -22,7 +26,7 @@ export function MenuSection({ id, eyebrow, title, items, variant = "hero" }: Pro
           </div>
           <div className="hidden md:block">
             <span className="font-mono text-xs uppercase tracking-widest text-zinc-500">
-              {items.length} créations
+              {t("menu.creations", { n: items.length })}
             </span>
           </div>
         </div>

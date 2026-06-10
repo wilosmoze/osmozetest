@@ -1,11 +1,20 @@
-import { Scooter, Clock, MapPin } from "@phosphor-icons/react/dist/ssr";
+"use client";
+
+import { Scooter, Clock, MapPin } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
 import { formatPrice } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 export function DeliveryBanner() {
+  const t = useT();
   const { delivery } = themeConfig;
-  const rawai = delivery.zones.find((z) => z.id === "rawai");
   const outside = delivery.zones.find((z) => z.id === "outside");
+
+  const body = t("deliv.body", {
+    fee: outside ? formatPrice(outside.fee) : "",
+    minutes: delivery.estimatedMinutes.max,
+    cutoff: t("deliv.cutoff"),
+  });
 
   return (
     <section id="delivery" className="py-12 md:py-16">
@@ -22,37 +31,31 @@ export function DeliveryBanner() {
 
           <div className="relative grid grid-cols-1 gap-10 md:grid-cols-2 md:items-center">
             <div>
-              <span className="chip">Delivery service</span>
+              <span className="chip">{t("deliv.eyebrow")}</span>
               <h3 className="mt-5 font-display text-3xl font-bold leading-tight tracking-tighter md:text-5xl">
-                Free across Rawai. <br />
-                <span className="text-accent italic">Always.</span>
+                {t("deliv.title.1")} <br />
+                <span className="text-accent italic">{t("deliv.title.2")}</span>
               </h3>
-              <p className="mt-4 max-w-[52ch] text-zinc-400">
-                Our kitchen is based in Rawai and we deliver throughout the
-                whole area at no cost. Outside Rawai? A flat{" "}
-                {outside ? formatPrice(outside.fee) : ""} fee covers the extra
-                ride. Sealed tight, arrives hot in under{" "}
-                {delivery.estimatedMinutes.max} minutes. {delivery.cutoffMessage}.
-              </p>
+              <p className="mt-4 max-w-[52ch] text-zinc-400">{body}</p>
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3">
               <DeliveryStat
                 icon={<MapPin size={22} weight="duotone" />}
-                label="Rawai"
-                value="Free"
-                hint={rawai?.description}
+                label={t("deliv.rawai")}
+                value={t("cart.free")}
+                hint={t("deliv.rawai.hint")}
                 emphasized
               />
               <DeliveryStat
                 icon={<Scooter size={22} weight="duotone" />}
-                label="Outside Rawai"
+                label={t("deliv.outside")}
                 value={outside ? formatPrice(outside.fee) : ""}
-                hint="Flat fee, nearby areas"
+                hint={t("deliv.outside.hint")}
               />
               <DeliveryStat
                 icon={<Clock size={22} weight="duotone" />}
-                label="Avg. time"
+                label={t("deliv.avg")}
                 value={`${delivery.estimatedMinutes.min}–${delivery.estimatedMinutes.max} min`}
               />
             </div>

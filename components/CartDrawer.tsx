@@ -11,9 +11,12 @@ import {
 } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
+import { useT, useLocalize } from "@/lib/i18n";
 
 export function CartDrawer() {
   const router = useRouter();
+  const t = useT();
+  const localize = useLocalize();
   const { lines, drawerOpen, closeDrawer, setQty, remove, subtotal, deliveryFee, total } =
     useCart();
 
@@ -46,10 +49,12 @@ export function CartDrawer() {
             <div className="flex items-center justify-between border-b border-white/[0.06] px-6 py-5">
               <div>
                 <div className="font-display text-lg font-semibold tracking-tight">
-                  Your order
+                  {t("cart.title")}
                 </div>
                 <div className="mt-0.5 text-xs text-zinc-500">
-                  {lines.length} item{lines.length > 1 ? "s" : ""}
+                  {lines.length === 1
+                    ? t("cart.item")
+                    : t("cart.items", { n: lines.length })}
                 </div>
               </div>
               <button
@@ -64,7 +69,7 @@ export function CartDrawer() {
               <div className="border-b border-white/[0.06] px-6 py-3">
                 <div className="flex items-center justify-center gap-2 text-xs text-emerald-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  Free delivery across Rawai
+                  {t("cart.freeAcross")}
                 </div>
               </div>
             )}
@@ -107,7 +112,7 @@ export function CartDrawer() {
                             <button
                               onClick={() => remove(l.item.id)}
                               className="text-zinc-500 transition-colors hover:text-red-400"
-                              aria-label="Remove"
+                              aria-label={t("cart.remove")}
                             >
                               <Trash size={16} weight="duotone" />
                             </button>
@@ -145,14 +150,14 @@ export function CartDrawer() {
 
             {!empty && (
               <div className="border-t border-white/[0.06] px-6 py-5">
-                <Row label="Subtotal" value={formatPrice(sub)} />
+                <Row label={t("cart.subtotal")} value={formatPrice(sub)} />
                 <Row
-                  label="Delivery"
-                  value={fee === 0 ? "Free" : formatPrice(fee)}
+                  label={t("cart.delivery")}
+                  value={fee === 0 ? t("cart.free") : formatPrice(fee)}
                   emphasized={fee === 0}
                 />
                 <div className="my-3 h-px bg-white/[0.06]" />
-                <Row label="Total" value={formatPrice(sum)} bold />
+                <Row label={t("cart.total")} value={formatPrice(sum)} bold />
                 <button
                   onClick={() => {
                     closeDrawer();
@@ -160,7 +165,7 @@ export function CartDrawer() {
                   }}
                   className="mt-5 flex w-full items-center justify-between rounded-full bg-accent px-5 py-4 text-sm font-medium text-zinc-950 transition-all hover:brightness-110 active:translate-y-[1px]"
                 >
-                  <span>Validate order</span>
+                  <span>{t("cart.validate")}</span>
                   <ArrowRight size={18} weight="bold" />
                 </button>
               </div>
@@ -200,17 +205,18 @@ function Row({
 }
 
 function EmptyCart({ onContinue }: { onContinue: () => void }) {
+  const t = useT();
   return (
     <div className="flex h-full flex-col items-center justify-center px-8 text-center">
       <div className="h-16 w-16 rounded-full border border-white/[0.06] bg-white/[0.02]" />
       <div className="mt-6 font-display text-xl font-semibold tracking-tight">
-        Empty cart
+        {t("cart.empty")}
       </div>
       <p className="mt-2 max-w-[28ch] text-sm text-zinc-500">
-        Your burgers are waiting on the menu.
+        {t("cart.emptyHint")}
       </p>
       <button onClick={onContinue} className="btn-ghost mt-6">
-        Browse the menu
+        {t("cart.browseMenu")}
       </button>
     </div>
   );

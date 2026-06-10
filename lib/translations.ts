@@ -1,0 +1,756 @@
+// ============================================================
+//  UI text in 4 languages.
+//  Brand-specific phrases ("bun&bass burgers", "Bun in. Bass on.",
+//  "Le Patron", etc.) intentionally stay in their original form.
+//
+//  Adding a string?
+//   1. Add the key to all four locales below.
+//   2. Use `t("your.key")` in components (via useT hook).
+//   3. For dynamic values, write `{var}` placeholders and pass
+//      `t("cart.items", { n: 3 })`.
+// ============================================================
+
+export type Locale = "en" | "fr" | "ru" | "th";
+
+type Dict = Record<string, string>;
+
+const en: Dict = {
+  // Navigation
+  "nav.burgers": "Burgers",
+  "nav.sauces": "Sauces",
+  "nav.desserts": "Desserts",
+  "nav.delivery": "Delivery",
+
+  // Hero
+  "hero.eyebrow": "Premium burgers — Rawai",
+  "hero.subline":
+    "Six home-made creations, six home sauces, three brioche B-sides. Sealed tight, delivered to Rawai in under 30 minutes.",
+  "hero.cta": "Order now",
+  "hero.secondaryCta": "View the menu",
+  "hero.reassure.30min.label": "30 min",
+  "hero.reassure.30min.sub": "max delivery",
+  "hero.reassure.100.label": "100%",
+  "hero.reassure.100.sub": "home-made",
+  "hero.reassure.free.label": "Free",
+  "hero.reassure.free.sub": "in Rawai",
+
+  // Marquee
+  "marquee.0": "Premium burgers",
+  "marquee.1": "Black Angus beef",
+  "marquee.2": "Closed-bun creations",
+  "marquee.3": "Sealed tight",
+  "marquee.4": "Home-made sauces",
+  "marquee.5": "Tue–Sun · Noon to 11 PM",
+
+  // Menu sections
+  "menu.burgers.eyebrow": "01 — The lineup",
+  "menu.burgers.title": "Six burgers. Sealed tight.",
+  "menu.sauces.eyebrow": "02 — Home sauces",
+  "menu.sauces.title": "Six mixers. Pick your tone.",
+  "menu.desserts.eyebrow": "03 — Brioche B-sides",
+  "menu.desserts.title": "Three B-sides. One rule: indulgence.",
+  "menu.creations": "{n} creations",
+  "menu.add": "Add",
+  "menu.added": "Added to cart",
+
+  // Cart drawer
+  "cart.title": "Your order",
+  "cart.item": "1 item",
+  "cart.items": "{n} items",
+  "cart.empty": "Empty cart",
+  "cart.emptyHint": "Your burgers are waiting on the menu.",
+  "cart.browseMenu": "Browse the menu",
+  "cart.subtotal": "Subtotal",
+  "cart.delivery": "Delivery",
+  "cart.free": "Free",
+  "cart.total": "Total",
+  "cart.validate": "Validate order",
+  "cart.remove": "Remove",
+  "cart.freeAcross": "Free delivery across Rawai",
+
+  // Floating cart bar
+  "bar.item": "1 item",
+  "bar.items": "{n} items",
+  "bar.viewCart": "View cart",
+
+  // Delivery banner
+  "deliv.eyebrow": "Delivery service",
+  "deliv.title.1": "Free across Rawai.",
+  "deliv.title.2": "Always.",
+  "deliv.body":
+    "Our kitchen is based in Rawai and we deliver throughout the whole area at no cost. Outside Rawai? A flat {fee} fee covers the extra ride. Sealed tight, arrives hot in under {minutes} minutes. {cutoff}.",
+  "deliv.rawai": "Rawai",
+  "deliv.rawai.hint": "Free delivery across all of Rawai",
+  "deliv.outside": "Outside Rawai",
+  "deliv.outside.hint": "Flat fee, nearby areas",
+  "deliv.avg": "Avg. time",
+  "deliv.cutoff": "Open Tue–Sun · 12 PM to 11 PM · Closed Mondays",
+
+  // Social block
+  "social.community": "Community & support",
+  "social.waiting": "While you wait for your courier",
+  "social.ctaTitle": "Follow the wave & share your burger",
+  "social.ctaBody":
+    "Behind-the-scenes from the kitchen, new drops first, and DMs that actually reply. We read every comment.",
+
+  // Footer
+  "footer.menu": "Menu",
+  "footer.contact": "Contact",
+  "footer.legal": "Legal · Terms · Privacy",
+  "footer.copyright": "© {year} {brand} — Dark Kitchen",
+
+  // Menu modal
+  "menumodal.order": "Order from this menu",
+  "menumodal.goto": "Go to burgers →",
+  "menumodal.close": "Close menu",
+
+  // Checkout
+  "co.cartEmpty": "Your cart is empty",
+  "co.cartEmptyHint": "Add a few burgers before checking out.",
+  "co.backToMenu": "Back to the menu",
+  "co.finalStep": "Final step",
+  "co.title": "Where are we delivering?",
+  "co.firstName": "First name",
+  "co.firstNameError": "First name required",
+  "co.lastName": "Last name",
+  "co.lastNameError": "Last name required",
+  "co.phone": "Phone",
+  "co.phoneError": "Invalid phone number",
+  "co.locationTitle": "Your delivery location",
+  "co.howto": "How does it work?",
+  "co.hideHelp": "Hide help",
+  "co.helpMobile": "On mobile (the easiest way):",
+  "co.step1": "Open the Google Maps app",
+  "co.step2":
+    "Tap the \"My location\" icon (bottom right) or long-press your exact address",
+  "co.step3": "Tap Share → Copy link",
+  "co.step4": "Paste the link below",
+  "co.openMapsNewTab": "Open Google Maps in a new tab",
+  "co.useMyLocation": "Use my current location",
+  "co.locating": "Locating you…",
+  "co.oneTap": "1 tap",
+  "co.orPaste": "or paste a link",
+  "co.openMapsBtn": "Open Google Maps",
+  "co.openMapsHint": "Find your spot, tap Share → Copy link",
+  "co.linkRequired": "Google Maps link required",
+  "co.linkInvalid":
+    "This doesn't look like a Google Maps URL. Check and paste again.",
+  "co.linkValid":
+    "Valid Maps link — your courier will go to the exact spot.",
+  "co.previewMaps": "Preview on Google Maps",
+  "co.inRawai.youAreIn": "You're in Rawai",
+  "co.inRawai.tail": "— delivery is on us.",
+  "co.outside.youAreOut": "You're outside Rawai",
+  "co.outside.tail": "— {fee} delivery fee added automatically.",
+  "co.tooFar.label": "Beyond our {km} km range",
+  "co.tooFar.tail": "— please use Grab Food instead.",
+  "co.tooFar.useGrab": "Use Grab",
+  "co.notes": "Delivery notes (door code, floor, instructions)",
+  "co.notesPh": "Building B, 3rd floor left, code 4521A",
+  "co.zoneTitle": "Delivery zone",
+  "co.autoDetected": "Auto-detected",
+  "co.shareFirst":
+    "Share your location above — your delivery zone & fee will appear here.",
+  "co.deliveryFee": "Delivery fee",
+  "co.outOfRange": "Out of delivery range",
+  "co.outOfRangeBody":
+    "We can't deliver to your address — but Grab Food can. Tap below to find burgers near you.",
+  "co.openGrabFood": "Open Grab Food",
+  "co.summary": "Order summary",
+  "co.estimatedDelivery": "Estimated delivery:",
+  "co.minAfter": "min after confirmation.",
+  "co.locationOutsideError":
+    "Address is beyond our delivery range. Use Grab Food instead.",
+
+  // Grab modal
+  "gm.title": "You're outside our range",
+  "gm.body1": "We only deliver within {km} km of our Rawai kitchen.",
+  "gm.body1.distance": "Your address is roughly {km} km away.",
+  "gm.body2":
+    "No worries — you can still get great burgers delivered through Grab Food.",
+  "gm.openGrab": "Open Grab Food",
+  "gm.external": "External",
+  "gm.different": "Use a different address",
+
+  // Payment
+  "pay.secure": "Secure payment by Stripe — end-to-end encrypted",
+  "pay.demo": "Demo mode (no card required)",
+  "pay.pay": "Pay {amount}",
+  "pay.checkDetails": "Check your delivery details.",
+  "pay.failed": "Failed to create checkout session",
+
+  // Tracking page
+  "track.order": "Order #{id}",
+  "track.confirmed": "payment confirmed",
+  "track.thankYou": "Thank you.",
+  "track.enjoy": "Enjoy your meal.",
+  "track.subline":
+    "Track your order in real time. Nothing to do — the page updates automatically.",
+  "track.notFound": "Order not found",
+  "track.notFoundBody": "This order doesn't exist or has expired.",
+  "track.liveStatus": "Live status",
+  "track.awaiting": "Awaiting confirmation",
+  "track.confirming": "We're confirming your payment.",
+  "track.nowPlaying": "Now playing — close to resume",
+  "track.tapToView": "Tap to view your order",
+  "track.sideB": "Side B — Track listing",
+  "track.resume": "Resume spinning",
+  "track.intensity": "Intensity",
+
+  // Tracking timeline steps (mapped by id 1/2/3)
+  "track.step.1.title": "Order confirmed",
+  "track.step.1.desc": "Your burgers are being pressed and grilled to order.",
+  "track.step.2.title": "Your order is ready",
+  "track.step.2.desc": "Sealed tight, waiting for the courier.",
+  "track.step.3.title": "Courier on the way",
+  "track.step.3.desc": "Get ready, it's coming.",
+
+  // Common
+  "common.close": "Close",
+};
+
+const fr: Dict = {
+  "nav.burgers": "Burgers",
+  "nav.sauces": "Sauces",
+  "nav.desserts": "Desserts",
+  "nav.delivery": "Livraison",
+
+  "hero.eyebrow": "Burgers premium — Rawaï",
+  "hero.subline":
+    "Six créations maison, six sauces maison, trois desserts brioche. Bien fermés, livrés à Rawaï en moins de 30 minutes.",
+  "hero.cta": "Commander",
+  "hero.secondaryCta": "Voir le menu",
+  "hero.reassure.30min.label": "30 min",
+  "hero.reassure.30min.sub": "livraison max",
+  "hero.reassure.100.label": "100%",
+  "hero.reassure.100.sub": "fait maison",
+  "hero.reassure.free.label": "Gratuit",
+  "hero.reassure.free.sub": "à Rawaï",
+
+  "marquee.0": "Burgers premium",
+  "marquee.1": "Bœuf Black Angus",
+  "marquee.2": "Créations bun fermé",
+  "marquee.3": "Bien scellés",
+  "marquee.4": "Sauces maison",
+  "marquee.5": "Mar.–Dim. · 12h à 23h",
+
+  "menu.burgers.eyebrow": "01 — La sélection",
+  "menu.burgers.title": "Six burgers. Bien scellés.",
+  "menu.sauces.eyebrow": "02 — Sauces maison",
+  "menu.sauces.title": "Six mixeurs. Choisissez votre ton.",
+  "menu.desserts.eyebrow": "03 — Faces B briochées",
+  "menu.desserts.title": "Trois faces B. Une règle : l'indulgence.",
+  "menu.creations": "{n} créations",
+  "menu.add": "Ajouter",
+  "menu.added": "Ajouté au panier",
+
+  "cart.title": "Votre commande",
+  "cart.item": "1 article",
+  "cart.items": "{n} articles",
+  "cart.empty": "Panier vide",
+  "cart.emptyHint": "Vos burgers vous attendent au menu.",
+  "cart.browseMenu": "Parcourir le menu",
+  "cart.subtotal": "Sous-total",
+  "cart.delivery": "Livraison",
+  "cart.free": "Offerte",
+  "cart.total": "Total",
+  "cart.validate": "Valider la commande",
+  "cart.remove": "Retirer",
+  "cart.freeAcross": "Livraison gratuite dans tout Rawaï",
+
+  "bar.item": "1 article",
+  "bar.items": "{n} articles",
+  "bar.viewCart": "Voir le panier",
+
+  "deliv.eyebrow": "Service livraison",
+  "deliv.title.1": "Gratuit dans tout Rawaï.",
+  "deliv.title.2": "Toujours.",
+  "deliv.body":
+    "Notre cuisine est à Rawaï et nous livrons toute la zone sans frais. Hors Rawaï ? Un forfait de {fee} couvre la course. Bien scellés, livrés chauds en moins de {minutes} minutes. {cutoff}.",
+  "deliv.rawai": "Rawaï",
+  "deliv.rawai.hint": "Livraison gratuite dans tout Rawaï",
+  "deliv.outside": "Hors Rawaï",
+  "deliv.outside.hint": "Forfait fixe, zones proches",
+  "deliv.avg": "Temps moyen",
+  "deliv.cutoff": "Ouvert Mar.–Dim. · 12h à 23h · Fermé le lundi",
+
+  "social.community": "Communauté & SAV",
+  "social.waiting": "Pendant que vous attendez votre livreur",
+  "social.ctaTitle": "Suivez l'aventure & partagez votre burger",
+  "social.ctaBody":
+    "Coulisses du labo, nouveautés en avant-première, DMs qui répondent vraiment. On lit chaque commentaire.",
+
+  "footer.menu": "Menu",
+  "footer.contact": "Contact",
+  "footer.legal": "Mentions légales · CGV · Confidentialité",
+  "footer.copyright": "© {year} {brand} — Dark Kitchen",
+
+  "menumodal.order": "Commander depuis ce menu",
+  "menumodal.goto": "Voir les burgers →",
+  "menumodal.close": "Fermer le menu",
+
+  "co.cartEmpty": "Votre panier est vide",
+  "co.cartEmptyHint": "Ajoutez quelques burgers avant de commander.",
+  "co.backToMenu": "Retour au menu",
+  "co.finalStep": "Dernière étape",
+  "co.title": "Où livrons-nous ?",
+  "co.firstName": "Prénom",
+  "co.firstNameError": "Prénom requis",
+  "co.lastName": "Nom",
+  "co.lastNameError": "Nom requis",
+  "co.phone": "Téléphone",
+  "co.phoneError": "Numéro invalide",
+  "co.locationTitle": "Votre adresse de livraison",
+  "co.howto": "Comment faire ?",
+  "co.hideHelp": "Masquer l'aide",
+  "co.helpMobile": "Sur mobile (le plus simple) :",
+  "co.step1": "Ouvrez l'app Google Maps",
+  "co.step2":
+    "Touchez l'icône \"Ma position\" (en bas à droite) ou appuyez longuement sur votre adresse",
+  "co.step3": "Touchez Partager → Copier le lien",
+  "co.step4": "Collez le lien ci-dessous",
+  "co.openMapsNewTab": "Ouvrir Google Maps dans un nouvel onglet",
+  "co.useMyLocation": "Utiliser ma position",
+  "co.locating": "Localisation…",
+  "co.oneTap": "1 tap",
+  "co.orPaste": "ou collez un lien",
+  "co.openMapsBtn": "Ouvrir Google Maps",
+  "co.openMapsHint": "Trouvez votre adresse, Partager → Copier le lien",
+  "co.linkRequired": "Lien Google Maps requis",
+  "co.linkInvalid":
+    "Ceci ne ressemble pas à une URL Google Maps. Vérifiez et recollez.",
+  "co.linkValid":
+    "Lien Maps valide — votre livreur ira au bon endroit.",
+  "co.previewMaps": "Prévisualiser sur Google Maps",
+  "co.inRawai.youAreIn": "Vous êtes à Rawaï",
+  "co.inRawai.tail": " — la livraison est offerte.",
+  "co.outside.youAreOut": "Vous êtes hors Rawaï",
+  "co.outside.tail":
+    " — {fee} de frais de livraison ajoutés automatiquement.",
+  "co.tooFar.label": "Au-delà de notre rayon de {km} km",
+  "co.tooFar.tail": " — utilisez Grab Food à la place.",
+  "co.tooFar.useGrab": "Utiliser Grab",
+  "co.notes": "Notes de livraison (code, étage, instructions)",
+  "co.notesPh": "Bâtiment B, 3e étage gauche, code 4521A",
+  "co.zoneTitle": "Zone de livraison",
+  "co.autoDetected": "Auto-détectée",
+  "co.shareFirst":
+    "Partagez votre position ci-dessus — votre zone et les frais s'afficheront ici.",
+  "co.deliveryFee": "Frais livraison",
+  "co.outOfRange": "Hors zone de livraison",
+  "co.outOfRangeBody":
+    "Nous ne pouvons pas livrer chez vous, mais Grab Food le peut. Touchez ci-dessous pour trouver des burgers près de vous.",
+  "co.openGrabFood": "Ouvrir Grab Food",
+  "co.summary": "Récapitulatif",
+  "co.estimatedDelivery": "Livraison estimée :",
+  "co.minAfter": "min après confirmation.",
+  "co.locationOutsideError":
+    "Adresse hors zone de livraison. Utilisez Grab Food.",
+
+  "gm.title": "Vous êtes hors zone",
+  "gm.body1":
+    "Nous livrons uniquement dans un rayon de {km} km autour de notre cuisine à Rawaï.",
+  "gm.body1.distance": "Votre adresse est à environ {km} km.",
+  "gm.body2":
+    "Pas de souci — vous pouvez quand même vous faire livrer des burgers via Grab Food.",
+  "gm.openGrab": "Ouvrir Grab Food",
+  "gm.external": "Externe",
+  "gm.different": "Utiliser une autre adresse",
+
+  "pay.secure": "Paiement sécurisé par Stripe — chiffré bout-en-bout",
+  "pay.demo": "Mode démo (aucune carte requise)",
+  "pay.pay": "Payer {amount}",
+  "pay.checkDetails": "Vérifiez vos informations de livraison.",
+  "pay.failed": "Impossible de créer la session de paiement",
+
+  "track.order": "Commande #{id}",
+  "track.confirmed": "paiement confirmé",
+  "track.thankYou": "Merci.",
+  "track.enjoy": "Bon appétit.",
+  "track.subline":
+    "Suivez votre commande en temps réel. Rien à faire — la page se met à jour automatiquement.",
+  "track.notFound": "Commande introuvable",
+  "track.notFoundBody": "Cette commande n'existe pas ou a expiré.",
+  "track.liveStatus": "Statut en direct",
+  "track.awaiting": "En attente de confirmation",
+  "track.confirming": "Nous confirmons votre paiement.",
+  "track.nowPlaying": "En lecture — fermer pour reprendre",
+  "track.tapToView": "Touchez pour voir votre commande",
+  "track.sideB": "Face B — Liste des morceaux",
+  "track.resume": "Reprendre la lecture",
+  "track.intensity": "Intensité",
+
+  "track.step.1.title": "Commande confirmée",
+  "track.step.1.desc":
+    "Vos burgers sont en cuisson, scellés à la commande.",
+  "track.step.2.title": "Votre commande est prête",
+  "track.step.2.desc": "Bien scellée, en attente du livreur.",
+  "track.step.3.title": "Le livreur est en route",
+  "track.step.3.desc": "Préparez-vous, ça arrive.",
+
+  "common.close": "Fermer",
+};
+
+const ru: Dict = {
+  "nav.burgers": "Бургеры",
+  "nav.sauces": "Соусы",
+  "nav.desserts": "Десерты",
+  "nav.delivery": "Доставка",
+
+  "hero.eyebrow": "Премиум бургеры — Равай",
+  "hero.subline":
+    "Шесть авторских бургеров, шесть домашних соусов, три десерта из бриоши. Запечатаны плотно, доставка в Равай за 30 минут.",
+  "hero.cta": "Заказать",
+  "hero.secondaryCta": "Открыть меню",
+  "hero.reassure.30min.label": "30 мин",
+  "hero.reassure.30min.sub": "макс. доставка",
+  "hero.reassure.100.label": "100%",
+  "hero.reassure.100.sub": "домашнее",
+  "hero.reassure.free.label": "Бесплатно",
+  "hero.reassure.free.sub": "по Раваю",
+
+  "marquee.0": "Премиум бургеры",
+  "marquee.1": "Говядина Блэк Ангус",
+  "marquee.2": "Запечатанные бургеры",
+  "marquee.3": "Плотно закрытые",
+  "marquee.4": "Домашние соусы",
+  "marquee.5": "Вт–Вс · 12:00 – 23:00",
+
+  "menu.burgers.eyebrow": "01 — Подборка",
+  "menu.burgers.title": "Шесть бургеров. Запечатаны плотно.",
+  "menu.sauces.eyebrow": "02 — Домашние соусы",
+  "menu.sauces.title": "Шесть миксов. Выберите свой тон.",
+  "menu.desserts.eyebrow": "03 — Стороны B на бриоши",
+  "menu.desserts.title": "Три стороны B. Одно правило: удовольствие.",
+  "menu.creations": "{n} творений",
+  "menu.add": "Добавить",
+  "menu.added": "Добавлено в корзину",
+
+  "cart.title": "Ваш заказ",
+  "cart.item": "1 позиция",
+  "cart.items": "{n} позиций",
+  "cart.empty": "Корзина пуста",
+  "cart.emptyHint": "Ваши бургеры ждут вас в меню.",
+  "cart.browseMenu": "Открыть меню",
+  "cart.subtotal": "Промежуточный итог",
+  "cart.delivery": "Доставка",
+  "cart.free": "Бесплатно",
+  "cart.total": "Итого",
+  "cart.validate": "Оформить заказ",
+  "cart.remove": "Удалить",
+  "cart.freeAcross": "Бесплатная доставка по всему Раваю",
+
+  "bar.item": "1 позиция",
+  "bar.items": "{n} позиций",
+  "bar.viewCart": "Открыть корзину",
+
+  "deliv.eyebrow": "Служба доставки",
+  "deliv.title.1": "Бесплатно по всему Раваю.",
+  "deliv.title.2": "Всегда.",
+  "deliv.body":
+    "Наша кухня находится в Равае, и мы доставляем по всему району бесплатно. За пределами Равая? Фиксированный тариф {fee} покрывает дополнительный путь. Запечатанные, горячие, менее чем за {minutes} минут. {cutoff}.",
+  "deliv.rawai": "Равай",
+  "deliv.rawai.hint": "Бесплатная доставка по всему Раваю",
+  "deliv.outside": "Вне Равая",
+  "deliv.outside.hint": "Фиксированный тариф, ближайшие районы",
+  "deliv.avg": "Среднее время",
+  "deliv.cutoff": "Открыто Вт–Вс · 12:00 – 23:00 · Пн выходной",
+
+  "social.community": "Сообщество и поддержка",
+  "social.waiting": "Пока вы ждёте курьера",
+  "social.ctaTitle": "Следите за нами и делитесь бургерами",
+  "social.ctaBody":
+    "Закулисье кухни, первыми о новинках, ответы в директ. Мы читаем каждый комментарий.",
+
+  "footer.menu": "Меню",
+  "footer.contact": "Контакты",
+  "footer.legal": "Юридическая информация · Условия · Конфиденциальность",
+  "footer.copyright": "© {year} {brand} — Dark Kitchen",
+
+  "menumodal.order": "Заказать из этого меню",
+  "menumodal.goto": "К бургерам →",
+  "menumodal.close": "Закрыть меню",
+
+  "co.cartEmpty": "Ваша корзина пуста",
+  "co.cartEmptyHint": "Добавьте несколько бургеров перед оформлением.",
+  "co.backToMenu": "Вернуться в меню",
+  "co.finalStep": "Последний шаг",
+  "co.title": "Куда доставить?",
+  "co.firstName": "Имя",
+  "co.firstNameError": "Имя обязательно",
+  "co.lastName": "Фамилия",
+  "co.lastNameError": "Фамилия обязательна",
+  "co.phone": "Телефон",
+  "co.phoneError": "Некорректный номер",
+  "co.locationTitle": "Адрес доставки",
+  "co.howto": "Как это работает?",
+  "co.hideHelp": "Скрыть подсказку",
+  "co.helpMobile": "На мобильном (самый простой способ):",
+  "co.step1": "Откройте приложение Google Maps",
+  "co.step2":
+    "Нажмите значок \"Моё местоположение\" (внизу справа) или удерживайте палец на точном адресе",
+  "co.step3": "Нажмите Поделиться → Копировать ссылку",
+  "co.step4": "Вставьте ссылку ниже",
+  "co.openMapsNewTab": "Открыть Google Maps в новой вкладке",
+  "co.useMyLocation": "Использовать моё местоположение",
+  "co.locating": "Определяем…",
+  "co.oneTap": "1 нажатие",
+  "co.orPaste": "или вставьте ссылку",
+  "co.openMapsBtn": "Открыть Google Maps",
+  "co.openMapsHint": "Найдите место, Поделиться → Копировать ссылку",
+  "co.linkRequired": "Требуется ссылка Google Maps",
+  "co.linkInvalid":
+    "Это не похоже на ссылку Google Maps. Проверьте и вставьте снова.",
+  "co.linkValid":
+    "Ссылка корректна — курьер приедет точно по адресу.",
+  "co.previewMaps": "Посмотреть на Google Maps",
+  "co.inRawai.youAreIn": "Вы в Равае",
+  "co.inRawai.tail": " — доставка бесплатно.",
+  "co.outside.youAreOut": "Вы за пределами Равая",
+  "co.outside.tail":
+    " — добавлен сбор за доставку {fee}.",
+  "co.tooFar.label": "За пределами радиуса {km} км",
+  "co.tooFar.tail": " — пожалуйста, используйте Grab Food.",
+  "co.tooFar.useGrab": "Открыть Grab",
+  "co.notes": "Заметки курьеру (код двери, этаж, инструкции)",
+  "co.notesPh": "Корпус B, 3-й этаж слева, код 4521A",
+  "co.zoneTitle": "Зона доставки",
+  "co.autoDetected": "Авто-определено",
+  "co.shareFirst":
+    "Укажите местоположение выше — зона и стоимость появятся здесь.",
+  "co.deliveryFee": "Сбор доставки",
+  "co.outOfRange": "Вне зоны доставки",
+  "co.outOfRangeBody":
+    "Мы не сможем доставить по вашему адресу, но Grab Food сможет. Нажмите ниже, чтобы найти бургеры рядом.",
+  "co.openGrabFood": "Открыть Grab Food",
+  "co.summary": "Итого по заказу",
+  "co.estimatedDelivery": "Ориентировочная доставка:",
+  "co.minAfter": "мин после подтверждения.",
+  "co.locationOutsideError":
+    "Адрес вне зоны доставки. Используйте Grab Food.",
+
+  "gm.title": "Вы за пределами зоны",
+  "gm.body1":
+    "Мы доставляем только в радиусе {km} км от нашей кухни в Равае.",
+  "gm.body1.distance": "Ваш адрес примерно в {km} км.",
+  "gm.body2":
+    "Не беда — отличные бургеры можно заказать через Grab Food.",
+  "gm.openGrab": "Открыть Grab Food",
+  "gm.external": "Внешний",
+  "gm.different": "Указать другой адрес",
+
+  "pay.secure": "Защищённая оплата Stripe — сквозное шифрование",
+  "pay.demo": "Демо-режим (карта не требуется)",
+  "pay.pay": "Оплатить {amount}",
+  "pay.checkDetails": "Проверьте данные доставки.",
+  "pay.failed": "Не удалось создать сессию оплаты",
+
+  "track.order": "Заказ #{id}",
+  "track.confirmed": "оплата подтверждена",
+  "track.thankYou": "Спасибо.",
+  "track.enjoy": "Приятного аппетита.",
+  "track.subline":
+    "Отслеживайте заказ в реальном времени. Ничего делать не нужно — страница обновляется автоматически.",
+  "track.notFound": "Заказ не найден",
+  "track.notFoundBody": "Этот заказ не существует или истёк.",
+  "track.liveStatus": "Статус в реальном времени",
+  "track.awaiting": "Ожидание подтверждения",
+  "track.confirming": "Подтверждаем оплату.",
+  "track.nowPlaying": "Играет — закройте, чтобы продолжить",
+  "track.tapToView": "Нажмите, чтобы увидеть заказ",
+  "track.sideB": "Сторона B — Состав",
+  "track.resume": "Запустить вращение",
+  "track.intensity": "Интенсивность",
+
+  "track.step.1.title": "Заказ подтверждён",
+  "track.step.1.desc": "Ваши бургеры собираются и жарятся под заказ.",
+  "track.step.2.title": "Ваш заказ готов",
+  "track.step.2.desc": "Запечатан плотно, ждёт курьера.",
+  "track.step.3.title": "Курьер в пути",
+  "track.step.3.desc": "Готовьтесь, уже едет.",
+
+  "common.close": "Закрыть",
+};
+
+const th: Dict = {
+  "nav.burgers": "เบอร์เกอร์",
+  "nav.sauces": "ซอส",
+  "nav.desserts": "ของหวาน",
+  "nav.delivery": "การจัดส่ง",
+
+  "hero.eyebrow": "พรีเมียมเบอร์เกอร์ — ราไวย์",
+  "hero.subline":
+    "หกเมนูทำสด หกซอสโฮมเมด สามขนมบรียอช ปิดผนึกแน่น ส่งถึงราไวย์ภายใน 30 นาที",
+  "hero.cta": "สั่งเลย",
+  "hero.secondaryCta": "ดูเมนู",
+  "hero.reassure.30min.label": "30 นาที",
+  "hero.reassure.30min.sub": "ส่งสูงสุด",
+  "hero.reassure.100.label": "100%",
+  "hero.reassure.100.sub": "โฮมเมด",
+  "hero.reassure.free.label": "ฟรี",
+  "hero.reassure.free.sub": "ในราไวย์",
+
+  "marquee.0": "พรีเมียมเบอร์เกอร์",
+  "marquee.1": "เนื้อ Black Angus",
+  "marquee.2": "เบอร์เกอร์ปิดผนึก",
+  "marquee.3": "ปิดแน่นทุกชิ้น",
+  "marquee.4": "ซอสโฮมเมด",
+  "marquee.5": "อ.–อา. · 12:00 – 23:00",
+
+  "menu.burgers.eyebrow": "01 — รายการคัดสรร",
+  "menu.burgers.title": "หกเบอร์เกอร์ ปิดผนึกแน่น",
+  "menu.sauces.eyebrow": "02 — ซอสโฮมเมด",
+  "menu.sauces.title": "หกซอส เลือกสไตล์ของคุณ",
+  "menu.desserts.eyebrow": "03 — บรียอช B-sides",
+  "menu.desserts.title": "สาม B-sides กฎเดียว: ตามใจ",
+  "menu.creations": "{n} เมนู",
+  "menu.add": "เพิ่ม",
+  "menu.added": "เพิ่มลงตะกร้าแล้ว",
+
+  "cart.title": "ออเดอร์ของคุณ",
+  "cart.item": "1 รายการ",
+  "cart.items": "{n} รายการ",
+  "cart.empty": "ตะกร้าว่าง",
+  "cart.emptyHint": "เบอร์เกอร์ของคุณรออยู่ในเมนู",
+  "cart.browseMenu": "ดูเมนู",
+  "cart.subtotal": "รวมสินค้า",
+  "cart.delivery": "ค่าจัดส่ง",
+  "cart.free": "ฟรี",
+  "cart.total": "ยอดรวม",
+  "cart.validate": "ยืนยันออเดอร์",
+  "cart.remove": "ลบ",
+  "cart.freeAcross": "จัดส่งฟรีทั่วราไวย์",
+
+  "bar.item": "1 รายการ",
+  "bar.items": "{n} รายการ",
+  "bar.viewCart": "ดูตะกร้า",
+
+  "deliv.eyebrow": "บริการจัดส่ง",
+  "deliv.title.1": "ฟรีทั่วราไวย์",
+  "deliv.title.2": "เสมอ",
+  "deliv.body":
+    "ครัวของเราอยู่ในราไวย์และเราจัดส่งทั่วพื้นที่โดยไม่มีค่าใช้จ่าย นอกราไวย์? ค่าจัดส่งคงที่ {fee} ปิดผนึกแน่น ส่งร้อนๆ ภายใน {minutes} นาที {cutoff}.",
+  "deliv.rawai": "ราไวย์",
+  "deliv.rawai.hint": "จัดส่งฟรีทั่วราไวย์",
+  "deliv.outside": "นอกราไวย์",
+  "deliv.outside.hint": "ค่าจัดส่งคงที่ พื้นที่ใกล้เคียง",
+  "deliv.avg": "เวลาเฉลี่ย",
+  "deliv.cutoff": "เปิด อ.–อา. · 12:00 – 23:00 · ปิดวันจันทร์",
+
+  "social.community": "ชุมชน & ช่วยเหลือ",
+  "social.waiting": "ระหว่างรอคนส่ง",
+  "social.ctaTitle": "ติดตามเรา & แชร์เบอร์เกอร์ของคุณ",
+  "social.ctaBody":
+    "เบื้องหลังครัว เมนูใหม่ก่อนใคร และตอบ DM จริงๆ เราอ่านทุกความคิดเห็น",
+
+  "footer.menu": "เมนู",
+  "footer.contact": "ติดต่อ",
+  "footer.legal": "กฎหมาย · เงื่อนไข · ความเป็นส่วนตัว",
+  "footer.copyright": "© {year} {brand} — Dark Kitchen",
+
+  "menumodal.order": "สั่งจากเมนูนี้",
+  "menumodal.goto": "ไปดูเบอร์เกอร์ →",
+  "menumodal.close": "ปิดเมนู",
+
+  "co.cartEmpty": "ตะกร้าของคุณว่าง",
+  "co.cartEmptyHint": "เพิ่มเบอร์เกอร์ก่อนทำการสั่งซื้อ",
+  "co.backToMenu": "กลับไปที่เมนู",
+  "co.finalStep": "ขั้นตอนสุดท้าย",
+  "co.title": "ส่งไปที่ไหน?",
+  "co.firstName": "ชื่อ",
+  "co.firstNameError": "ต้องระบุชื่อ",
+  "co.lastName": "นามสกุล",
+  "co.lastNameError": "ต้องระบุนามสกุล",
+  "co.phone": "เบอร์โทร",
+  "co.phoneError": "เบอร์ไม่ถูกต้อง",
+  "co.locationTitle": "ตำแหน่งจัดส่งของคุณ",
+  "co.howto": "ทำยังไง?",
+  "co.hideHelp": "ซ่อนคำแนะนำ",
+  "co.helpMobile": "บนมือถือ (วิธีที่ง่ายที่สุด):",
+  "co.step1": "เปิดแอป Google Maps",
+  "co.step2":
+    "แตะไอคอน \"ตำแหน่งของฉัน\" (มุมขวาล่าง) หรือกดค้างที่ตำแหน่งของคุณ",
+  "co.step3": "แตะ แชร์ → คัดลอกลิงก์",
+  "co.step4": "วางลิงก์ด้านล่าง",
+  "co.openMapsNewTab": "เปิด Google Maps ในแท็บใหม่",
+  "co.useMyLocation": "ใช้ตำแหน่งปัจจุบัน",
+  "co.locating": "กำลังหาตำแหน่ง…",
+  "co.oneTap": "1 แตะ",
+  "co.orPaste": "หรือวางลิงก์",
+  "co.openMapsBtn": "เปิด Google Maps",
+  "co.openMapsHint": "หาตำแหน่ง แตะ แชร์ → คัดลอกลิงก์",
+  "co.linkRequired": "ต้องมีลิงก์ Google Maps",
+  "co.linkInvalid":
+    "ลิงก์นี้ไม่เหมือน Google Maps กรุณาตรวจสอบและวางใหม่",
+  "co.linkValid":
+    "ลิงก์ Maps ถูกต้อง — คนส่งจะไปยังตำแหน่งที่ถูกต้อง",
+  "co.previewMaps": "ดูใน Google Maps",
+  "co.inRawai.youAreIn": "คุณอยู่ในราไวย์",
+  "co.inRawai.tail": " — จัดส่งฟรี",
+  "co.outside.youAreOut": "คุณอยู่นอกราไวย์",
+  "co.outside.tail":
+    " — เพิ่มค่าจัดส่ง {fee} อัตโนมัติ",
+  "co.tooFar.label": "เกินรัศมี {km} กม. ของเรา",
+  "co.tooFar.tail": " — กรุณาใช้ Grab Food แทน",
+  "co.tooFar.useGrab": "ใช้ Grab",
+  "co.notes": "หมายเหตุการจัดส่ง (รหัสประตู ชั้น คำแนะนำ)",
+  "co.notesPh": "อาคาร B ชั้น 3 ซ้าย รหัส 4521A",
+  "co.zoneTitle": "เขตจัดส่ง",
+  "co.autoDetected": "ตรวจจับอัตโนมัติ",
+  "co.shareFirst":
+    "แชร์ตำแหน่งด้านบน — เขตและค่าจัดส่งจะแสดงที่นี่",
+  "co.deliveryFee": "ค่าจัดส่ง",
+  "co.outOfRange": "อยู่นอกเขตจัดส่ง",
+  "co.outOfRangeBody":
+    "เราไม่สามารถจัดส่งถึงที่อยู่ของคุณได้ แต่ Grab Food ทำได้ แตะด้านล่างเพื่อค้นหาเบอร์เกอร์ใกล้คุณ",
+  "co.openGrabFood": "เปิด Grab Food",
+  "co.summary": "สรุปออเดอร์",
+  "co.estimatedDelivery": "เวลาส่งโดยประมาณ:",
+  "co.minAfter": "นาที หลังยืนยัน",
+  "co.locationOutsideError":
+    "ที่อยู่อยู่นอกเขตจัดส่ง ใช้ Grab Food แทน",
+
+  "gm.title": "คุณอยู่นอกเขตของเรา",
+  "gm.body1":
+    "เราจัดส่งเฉพาะภายในรัศมี {km} กม. จากครัวของเราในราไวย์",
+  "gm.body1.distance": "ที่อยู่ของคุณอยู่ห่างประมาณ {km} กม.",
+  "gm.body2":
+    "ไม่เป็นไร — คุณยังสั่งเบอร์เกอร์ดีๆ ผ่าน Grab Food ได้",
+  "gm.openGrab": "เปิด Grab Food",
+  "gm.external": "ภายนอก",
+  "gm.different": "ใช้ที่อยู่อื่น",
+
+  "pay.secure": "ชำระเงินปลอดภัยด้วย Stripe — เข้ารหัสตั้งแต่ต้นจนจบ",
+  "pay.demo": "โหมดเดโม (ไม่ต้องใช้บัตร)",
+  "pay.pay": "ชำระ {amount}",
+  "pay.checkDetails": "ตรวจสอบข้อมูลการจัดส่ง",
+  "pay.failed": "สร้างเซสชันชำระเงินไม่สำเร็จ",
+
+  "track.order": "ออเดอร์ #{id}",
+  "track.confirmed": "ยืนยันการชำระเงินแล้ว",
+  "track.thankYou": "ขอบคุณ",
+  "track.enjoy": "ทานให้อร่อย",
+  "track.subline":
+    "ติดตามออเดอร์แบบเรียลไทม์ ไม่ต้องทำอะไร — หน้านี้อัปเดตอัตโนมัติ",
+  "track.notFound": "ไม่พบออเดอร์",
+  "track.notFoundBody": "ออเดอร์นี้ไม่มีอยู่หรือหมดอายุแล้ว",
+  "track.liveStatus": "สถานะเรียลไทม์",
+  "track.awaiting": "รอการยืนยัน",
+  "track.confirming": "กำลังยืนยันการชำระเงิน",
+  "track.nowPlaying": "กำลังเล่น — ปิดเพื่อเล่นต่อ",
+  "track.tapToView": "แตะเพื่อดูออเดอร์",
+  "track.sideB": "Side B — รายการแทร็ก",
+  "track.resume": "เริ่มหมุนต่อ",
+  "track.intensity": "ความเข้ม",
+
+  "track.step.1.title": "ยืนยันออเดอร์แล้ว",
+  "track.step.1.desc": "เบอร์เกอร์ของคุณกำลังประกอบและย่างใหม่",
+  "track.step.2.title": "ออเดอร์พร้อมแล้ว",
+  "track.step.2.desc": "ปิดผนึกแน่น รอคนส่ง",
+  "track.step.3.title": "คนส่งกำลังมา",
+  "track.step.3.desc": "เตรียมตัว กำลังถึงแล้ว",
+
+  "common.close": "ปิด",
+};
+
+export const translations: Record<Locale, Dict> = { en, fr, ru, th };

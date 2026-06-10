@@ -1,11 +1,15 @@
-import { InstagramLogo, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+"use client";
+
+import { InstagramLogo, ArrowUpRight } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
+import { useT } from "@/lib/i18n";
 
 export function SocialBlock({
   variant = "default",
 }: {
   variant?: "default" | "post-purchase";
 }) {
+  const t = useT();
   const { instagram } = themeConfig.social;
 
   return (
@@ -30,14 +34,14 @@ export function SocialBlock({
             <div className="md:col-span-7">
               <span className="chip">
                 {variant === "post-purchase"
-                  ? "While you wait for your courier"
-                  : "Community & support"}
+                  ? t("social.waiting")
+                  : t("social.community")}
               </span>
               <h2 className="mt-5 font-display text-3xl font-bold leading-[0.95] tracking-tighter md:text-5xl">
-                {instagram.ctaTitle}
+                {t("social.ctaTitle")}
               </h2>
               <p className="mt-5 max-w-[54ch] text-zinc-400">
-                {instagram.ctaBody}
+                {t("social.ctaBody")}
               </p>
 
               <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-white/10 bg-zinc-950/40 px-5 py-3 transition-colors group-hover:border-accent/40 group-hover:bg-accent/[0.08]">
