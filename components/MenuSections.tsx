@@ -9,7 +9,7 @@ export function MenuSections() {
   const t = useT();
   const burgers = menu.filter((m) => m.category === "burger");
   const sauces = menu.filter((m) => m.category === "sauce");
-  const desserts = menu.filter((m) => m.category === "dessert");
+  const fries = menu.filter((m) => m.category === "fries");
 
   return (
     <>
@@ -29,11 +29,11 @@ export function MenuSections() {
         variant="compact"
       />
       <MenuSection
-        id="desserts"
-        eyebrow={t("menu.desserts.eyebrow")}
-        title={t("menu.desserts.title")}
-        items={desserts}
-        variant="hero"
+        id="fries"
+        eyebrow={t("menu.fries.eyebrow")}
+        title={t("menu.fries.title")}
+        items={fries}
+        variant="compact"
       />
     </>
   );

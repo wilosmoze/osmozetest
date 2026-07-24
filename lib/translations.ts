@@ -18,13 +18,13 @@ const en: Dict = {
   // Navigation
   "nav.burgers": "Burgers",
   "nav.sauces": "Sauces",
-  "nav.desserts": "Desserts",
+  "nav.fries": "Fries",
   "nav.delivery": "Delivery",
 
   // Hero
   "hero.eyebrow": "Premium burgers — Rawai",
   "hero.subline":
-    "Six premium creations, 4 premium sauces, three brioche B-sides. Sealed tight, delivered to Rawai in under 30 minutes.",
+    "Five signature burgers, nine premium sauces, home-cut fries. Sealed tight, delivered to Rawai in under 30 minutes.",
   "hero.cta": "Order now",
   "hero.secondaryCta": "View the menu",
   "hero.reassure.30min.label": "30 min",
@@ -44,11 +44,11 @@ const en: Dict = {
 
   // Menu sections
   "menu.burgers.eyebrow": "01 — The lineup",
-  "menu.burgers.title": "Six burgers. Sealed tight.",
+  "menu.burgers.title": "Five burgers. Sealed tight.",
   "menu.sauces.eyebrow": "02 — Premium sauces",
-  "menu.sauces.title": "Six mixers. Pick your tone.",
-  "menu.desserts.eyebrow": "03 — Brioche B-sides",
-  "menu.desserts.title": "Three B-sides. One rule: indulgence.",
+  "menu.sauces.title": "Nine mixers. Pick your tone.",
+  "menu.fries.eyebrow": "03 — On the side",
+  "menu.fries.title": "Homemade French fries.",
   "menu.creations": "{n} creations",
   "menu.add": "Add",
   "menu.added": "Added to cart",
@@ -212,12 +212,12 @@ const en: Dict = {
 const fr: Dict = {
   "nav.burgers": "Burgers",
   "nav.sauces": "Sauces",
-  "nav.desserts": "Desserts",
+  "nav.fries": "Frites",
   "nav.delivery": "Livraison",
 
   "hero.eyebrow": "Burgers premium — Rawaï",
   "hero.subline":
-    "Six créations premium, 4 sauces premium, trois desserts brioche. Bien fermés, livrés à Rawaï en moins de 30 minutes.",
+    "Cinq burgers signature, neuf sauces premium, frites maison. Bien fermés, livrés à Rawaï en moins de 30 minutes.",
   "hero.cta": "Commander",
   "hero.secondaryCta": "Voir le menu",
   "hero.reassure.30min.label": "30 min",
@@ -235,11 +235,11 @@ const fr: Dict = {
   "marquee.5": "Mar.–Dim. · 12h à 23h",
 
   "menu.burgers.eyebrow": "01 — La sélection",
-  "menu.burgers.title": "Six burgers. Bien scellés.",
+  "menu.burgers.title": "Cinq burgers. Bien scellés.",
   "menu.sauces.eyebrow": "02 — Sauces premium",
-  "menu.sauces.title": "Six mixeurs. Choisissez votre ton.",
-  "menu.desserts.eyebrow": "03 — Faces B briochées",
-  "menu.desserts.title": "Trois faces B. Une règle : l'indulgence.",
+  "menu.sauces.title": "Neuf mixeurs. Choisissez votre ton.",
+  "menu.fries.eyebrow": "03 — En accompagnement",
+  "menu.fries.title": "Frites maison.",
   "menu.creations": "{n} créations",
   "menu.add": "Ajouter",
   "menu.added": "Ajouté au panier",
@@ -394,12 +394,12 @@ const fr: Dict = {
 const ru: Dict = {
   "nav.burgers": "Бургеры",
   "nav.sauces": "Соусы",
-  "nav.desserts": "Десерты",
+  "nav.fries": "Фри",
   "nav.delivery": "Доставка",
 
   "hero.eyebrow": "Премиум бургеры — Равай",
   "hero.subline":
-    "Шесть премиум бургеров, 4 премиум соуса, три десерта из бриоши. Запечатаны плотно, доставка в Равай за 30 минут.",
+    "Пять фирменных бургеров, девять премиум соусов, картофель фри домашней нарезки. Запечатаны плотно, доставка в Равай за 30 минут.",
   "hero.cta": "Заказать",
   "hero.secondaryCta": "Открыть меню",
   "hero.reassure.30min.label": "30 мин",
@@ -417,11 +417,11 @@ const ru: Dict = {
   "marquee.5": "Вт–Вс · 12:00 – 23:00",
 
   "menu.burgers.eyebrow": "01 — Подборка",
-  "menu.burgers.title": "Шесть бургеров. Запечатаны плотно.",
+  "menu.burgers.title": "Пять бургеров. Запечатаны плотно.",
   "menu.sauces.eyebrow": "02 — Премиум соусы",
-  "menu.sauces.title": "Шесть миксов. Выберите свой тон.",
-  "menu.desserts.eyebrow": "03 — Стороны B на бриоши",
-  "menu.desserts.title": "Три стороны B. Одно правило: удовольствие.",
+  "menu.sauces.title": "Девять миксов. Выберите свой тон.",
+  "menu.fries.eyebrow": "03 — Гарнир",
+  "menu.fries.title": "Домашний картофель фри.",
   "menu.creations": "{n} творений",
   "menu.add": "Добавить",
   "menu.added": "Добавлено в корзину",
@@ -575,12 +575,12 @@ const ru: Dict = {
 const th: Dict = {
   "nav.burgers": "เบอร์เกอร์",
   "nav.sauces": "ซอส",
-  "nav.desserts": "ของหวาน",
+  "nav.fries": "เฟรนช์ฟรายส์",
   "nav.delivery": "การจัดส่ง",
 
   "hero.eyebrow": "พรีเมียมเบอร์เกอร์ — ราไวย์",
   "hero.subline":
-    "หกเมนูพรีเมียม 4 ซอสพรีเมียม สามขนมบรียอช ปิดผนึกแน่น ส่งถึงราไวย์ภายใน 30 นาที",
+    "ห้าเบอร์เกอร์ซิกเนเจอร์ เก้าซอสพรีเมียม เฟรนช์ฟรายส์โฮมเมด ปิดผนึกแน่น ส่งถึงราไวย์ภายใน 30 นาที",
   "hero.cta": "สั่งเลย",
   "hero.secondaryCta": "ดูเมนู",
   "hero.reassure.30min.label": "30 นาที",
@@ -598,11 +598,11 @@ const th: Dict = {
   "marquee.5": "อ.–อา. · 12:00 – 23:00",
 
   "menu.burgers.eyebrow": "01 — รายการคัดสรร",
-  "menu.burgers.title": "หกเบอร์เกอร์ ปิดผนึกแน่น",
+  "menu.burgers.title": "ห้าเบอร์เกอร์ ปิดผนึกแน่น",
   "menu.sauces.eyebrow": "02 — ซอสพรีเมียม",
-  "menu.sauces.title": "หกซอส เลือกสไตล์ของคุณ",
-  "menu.desserts.eyebrow": "03 — บรียอช B-sides",
-  "menu.desserts.title": "สาม B-sides กฎเดียว: ตามใจ",
+  "menu.sauces.title": "เก้าซอส เลือกโทนของคุณ",
+  "menu.fries.eyebrow": "03 — เครื่องเคียง",
+  "menu.fries.title": "เฟรนช์ฟรายส์โฮมเมด",
   "menu.creations": "{n} เมนู",
   "menu.add": "เพิ่ม",
   "menu.added": "เพิ่มลงตะกร้าแล้ว",

@@ -16,7 +16,7 @@ export const themeConfig = {
     shortName: "bun&bass",
     tagline: "Good food · Good vibes · Good bass.",
     description:
-      "Premium closed-bun burgers, hand-crafted in Rawai. Good food, good vibes, good bass — premium buns, premium sauces, delivered to your door.",
+      "Premium closed-bun burgers, hand-crafted in Rawai. Good food, good vibes, good bass — premium buns, premium sauces, home-cut fries, delivered to your door.",
     logoText: "bun&bass burgers",
     logoImage: "/images/hero-logo.png",
     favicon: "/favicon.ico",
@@ -94,7 +94,7 @@ export const themeConfig = {
     eyebrow: "Premium burgers — Rawai",
     headline: ["Bun in.", "Bass on."],
     subline:
-      "Six premium creations, 4 premium sauces, three brioche B-sides. Sealed tight, delivered to Rawai in under 30 minutes.",
+      "Five signature burgers, nine premium sauces, home-cut fries. Sealed tight, delivered to Rawai in under 30 minutes.",
     cta: "Order now",
     secondaryCta: "View the menu",
     reassurances: [

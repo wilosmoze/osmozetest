@@ -25,7 +25,7 @@ export function Header() {
   const navItems = [
     { label: t("nav.burgers"), href: "/#burgers" },
     { label: t("nav.sauces"), href: "/#sauces" },
-    { label: t("nav.desserts"), href: "/#desserts" },
+    { label: t("nav.fries"), href: "/#fries" },
     { label: t("nav.delivery"), href: "/#delivery" },
   ];
 

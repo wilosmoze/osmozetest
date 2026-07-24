@@ -45,7 +45,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2 text-sm">
               <li><a href="/#burgers" className="hover:text-accent">{t("nav.burgers")}</a></li>
               <li><a href="/#sauces" className="hover:text-accent">{t("nav.sauces")}</a></li>
-              <li><a href="/#desserts" className="hover:text-accent">{t("nav.desserts")}</a></li>
+              <li><a href="/#fries" className="hover:text-accent">{t("nav.fries")}</a></li>
               <li><a href="/#delivery" className="hover:text-accent">{t("nav.delivery")}</a></li>
             </ul>
           </div>
