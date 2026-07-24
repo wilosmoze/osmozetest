@@ -8,11 +8,12 @@ type Props = {
   id: string;
   eyebrow: string;
   title: string;
+  subtitle?: string;
   items: MenuItem[];
   variant?: "hero" | "compact";
 };
 
-export function MenuSection({ id, eyebrow, title, items, variant = "hero" }: Props) {
+export function MenuSection({ id, eyebrow, title, subtitle, items, variant = "hero" }: Props) {
   const t = useT();
   return (
     <section id={id} className="py-20 md:py-28">
@@ -23,6 +24,9 @@ export function MenuSection({ id, eyebrow, title, items, variant = "hero" }: Pro
             <h2 className="mt-5 font-display text-4xl font-bold leading-[0.95] tracking-tighter md:text-6xl">
               {title}
             </h2>
+            {subtitle && (
+              <p className="mt-3 text-sm text-zinc-500">{subtitle}</p>
+            )}
           </div>
           <div className="hidden md:block">
             <span className="font-mono text-xs uppercase tracking-widest text-zinc-500">

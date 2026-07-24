@@ -25,6 +25,9 @@ export function SaucesSection({ items }: { items: MenuItem[] }) {
             <h2 className="mt-5 font-display text-4xl font-bold leading-[0.95] tracking-tighter md:text-6xl">
               {t("menu.sauces.title")}
             </h2>
+            <p className="mt-3 text-sm text-zinc-500">
+              {t("menu.sauces.subtitle")}
+            </p>
           </div>
           <div className="hidden md:block">
             <span className="font-mono text-xs uppercase tracking-widest text-zinc-500">

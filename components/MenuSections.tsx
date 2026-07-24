@@ -27,6 +27,7 @@ export function MenuSections() {
         id="fries"
         eyebrow={t("menu.fries.eyebrow")}
         title={t("menu.fries.title")}
+        subtitle={t("menu.fries.subtitle")}
         items={fries}
         variant="compact"
       />
