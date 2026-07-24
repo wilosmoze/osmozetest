@@ -11,8 +11,7 @@ export type MenuItem = {
   ingredients?: string[];
 };
 
-const HERO = "/images/burger-hero.jpg";
-const SIDE = "/images/burger-side.jpg";
+const SIDE = "/images/burger-side.jpg"; // fallback for sauces
 
 export const menu: MenuItem[] = [
   // ---------- BURGERS ----------
@@ -26,7 +25,7 @@ export const menu: MenuItem[] = [
       th: "คลาสสิกไม่มีวันตกยุค เนื้อชาโรเลส์คู่ ชีสเชดดาร์ขาวและส้ม ผักสลัด มะเขือเทศ แตงกวาดอง หอมใหญ่ มัสตาร์ดดิจอง และซอสมะเขือเทศ บนบันสด",
     },
     price: 259,
-    image: HERO,
+    image: "/images/burger-bassline.jpg",
     category: "burger",
     tag: "Signature",
     ingredients: ["Double Charolais", "Cheddar", "Dijon & ketchup"],
@@ -41,7 +40,7 @@ export const menu: MenuItem[] = [
       th: "เข้มข้นและมีรสอูมามิ ชาโรเลส์คู่ กราน่า ปาดาโน่ 25 ก. ชีสเชดดาร์ส้ม เห็ดชิตาเกะทอด สลัดกะหล่ำ กระเทียม หอมแดง มายองเนสกระเทียม",
     },
     price: 299,
-    image: SIDE,
+    image: "/images/burger-deep-groove.jpg",
     category: "burger",
     ingredients: ["Grana Padano", "Shiitake", "Garlic mayo"],
   },
@@ -55,7 +54,7 @@ export const menu: MenuItem[] = [
       th: "เข้มข้นและมีจิตวิญญาณ ชาโรเลส์คู่ ชีสเอมเมนทาล ชีสเชดดาร์ส้ม เบคอนกรอบ ผักสลัด มะเขือเทศ หอมดอง ซอสทาร์ทาร์",
     },
     price: 309,
-    image: HERO,
+    image: "/images/burger-soul.jpg",
     category: "burger",
     tag: "Best-seller",
     ingredients: ["Bacon", "Emmental", "Tartare"],
@@ -70,7 +69,7 @@ export const menu: MenuItem[] = [
       th: "สดใสและมีชีวิตชีวา ไก่ย่าง ชีสฟีต้าแพะ หอมแดง สลัดผัก ซอสเผ็ดและแคสซิส น้ำผึ้งเล็กน้อย",
     },
     price: 289,
-    image: SIDE,
+    image: "/images/burger-electro-bass.jpg",
     category: "burger",
     tag: "Spicy",
     ingredients: ["Grilled chicken", "Goat feta", "Honey"],
@@ -85,7 +84,7 @@ export const menu: MenuItem[] = [
       th: "กล้าและเซอร์ไพรส์ ไก่ย่าง อะโวคาโดบด ไข่ดาว กะหล่ำสไลซ์ กะหล่ำม่วงดอง ซอสชมพู",
     },
     price: 289,
-    image: SIDE,
+    image: "/images/burger-808-smash.jpg",
     category: "burger",
     tag: "New",
     ingredients: ["Chicken", "Avocado", "Fried egg"],
@@ -225,7 +224,7 @@ export const menu: MenuItem[] = [
       th: "มันฝรั่งตัดมือ ทอดสองครั้งจนเป็นสีทองกรอบ โรยเกลือทะเล",
     },
     price: 100,
-    image: SIDE,
+    image: "/images/fries.jpg",
     category: "fries",
   },
 ];
