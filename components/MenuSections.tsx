@@ -1,6 +1,7 @@
 "use client";
 
 import { MenuSection } from "./MenuSection";
+import { SaucesSection } from "./SaucesSection";
 import { DeliveryBanner } from "./DeliveryBanner";
 import { menu } from "@/data/menu";
 import { useT } from "@/lib/i18n";
@@ -21,13 +22,7 @@ export function MenuSections() {
         variant="hero"
       />
       <DeliveryBanner />
-      <MenuSection
-        id="sauces"
-        eyebrow={t("menu.sauces.eyebrow")}
-        title={t("menu.sauces.title")}
-        items={sauces}
-        variant="compact"
-      />
+      <SaucesSection items={sauces} />
       <MenuSection
         id="fries"
         eyebrow={t("menu.fries.eyebrow")}
