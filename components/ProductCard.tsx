@@ -7,6 +7,7 @@ import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { useT, useLocalize } from "@/lib/i18n";
 import type { MenuItem } from "@/data/menu";
+import { DrinkPickerModal } from "./DrinkPickerModal";
 
 type Props = {
   item: MenuItem;
@@ -21,6 +22,7 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
   const t = useT();
   const localize = useLocalize();
   const [justAdded, setJustAdded] = useState<Feedback>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const hasMenu = typeof item.menuPrice === "number";
 
@@ -30,21 +32,28 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
     setTimeout(() => setJustAdded(null), 1200);
   };
 
-  const handleAddMenu = () => {
+  const handleOpenPicker = () => {
     if (!hasMenu) return;
-    // Add the combo as a distinct cart line so it stays separate
-    // from the solo burger and prints as "<Burger> Menu" everywhere.
+    setPickerOpen(true);
+  };
+
+  const handleDrinkSelected = (drink: MenuItem) => {
+    // Add the set as its own cart line. The drink is baked into the
+    // id + name so different drinks make different lines and the
+    // kitchen ticket shows exactly which drink was picked.
     add({
       ...item,
-      id: `${item.id}-menu`,
-      name: `${item.name} ${t("menu.comboLabel")}`,
+      id: `${item.id}-set-${drink.id}`,
+      name: `${item.name} ${t("menu.comboLabel")} + ${drink.name}`,
       price: item.menuPrice!,
     });
+    setPickerOpen(false);
     setJustAdded("menu");
     setTimeout(() => setJustAdded(null), 1200);
   };
 
   return (
+    <>
     <motion.article
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -123,7 +132,7 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
               label={t("menu.combo")}
               price={item.menuPrice!}
               added={justAdded === "menu"}
-              onClick={handleAddMenu}
+              onClick={handleOpenPicker}
               addedLabel={t("menu.added")}
             />
             <p className="text-[11px] text-zinc-500">
@@ -143,7 +152,17 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
           />
         )}
       </div>
+
     </motion.article>
+    {hasMenu && (
+      <DrinkPickerModal
+        open={pickerOpen}
+        burger={item}
+        onSelect={handleDrinkSelected}
+        onClose={() => setPickerOpen(false)}
+      />
+    )}
+    </>
   );
 }
 
