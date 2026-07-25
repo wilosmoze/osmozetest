@@ -4,11 +4,15 @@ export type MenuItem = {
   id: string;
   name: string; // brand name — not translated
   description: LocalizedString;
-  price: number; // THB
+  price: number; // THB — the "solo" price for the item alone
   image: string;
   category: "burger" | "sauce" | "fries" | "drink";
   tag?: string;
   ingredients?: string[];
+  // Combo/menu price: only set on burgers. When defined, the burger
+  // card shows a second "Menu" add button at this price which stands
+  // for burger + fries (2 sauces) + drink.
+  menuPrice?: number;
 };
 
 const SIDE = "/images/burger-side.jpg"; // fallback for sauces
@@ -25,6 +29,7 @@ export const menu: MenuItem[] = [
       th: "คลาสสิกไม่มีวันตกยุค เนื้อชาโรเลส์คู่ ชีสเชดดาร์ขาวและส้ม ผักสลัด มะเขือเทศ แตงกวาดอง หอมใหญ่ มัสตาร์ดดิจอง และซอสมะเขือเทศ บนบันสด",
     },
     price: 259,
+    menuPrice: 359,
     image: "/images/burger-bassline.jpg",
     category: "burger",
     tag: "Signature",
@@ -40,6 +45,7 @@ export const menu: MenuItem[] = [
       th: "เข้มข้นและมีรสอูมามิ ชาโรเลส์คู่ กราน่า ปาดาโน่ 25 ก. ชีสเชดดาร์ส้ม เห็ดชิตาเกะทอด สลัดกะหล่ำ กระเทียม หอมแดง มายองเนสกระเทียม",
     },
     price: 299,
+    menuPrice: 399,
     image: "/images/burger-deep-groove.jpg",
     category: "burger",
     ingredients: ["Grana Padano", "Shiitake", "Garlic mayo"],
@@ -54,6 +60,7 @@ export const menu: MenuItem[] = [
       th: "เข้มข้นและมีจิตวิญญาณ ชาโรเลส์คู่ ชีสเอมเมนทาล ชีสเชดดาร์ส้ม เบคอนกรอบ ผักสลัด มะเขือเทศ หอมดอง ซอสทาร์ทาร์",
     },
     price: 309,
+    menuPrice: 409,
     image: "/images/burger-soul.jpg",
     category: "burger",
     tag: "Best-seller",
@@ -69,6 +76,7 @@ export const menu: MenuItem[] = [
       th: "สดใสและมีชีวิตชีวา ไก่ย่าง ชีสฟีต้าแพะ หอมแดง สลัดผัก ซอสเผ็ดและแคสซิส น้ำผึ้งเล็กน้อย",
     },
     price: 289,
+    menuPrice: 389,
     image: "/images/burger-electro-bass.jpg",
     category: "burger",
     tag: "Spicy",
@@ -84,6 +92,7 @@ export const menu: MenuItem[] = [
       th: "กล้าและเซอร์ไพรส์ ไก่ย่าง อะโวคาโดบด ไข่ดาว กะหล่ำสไลซ์ กะหล่ำม่วงดอง ซอสชมพู",
     },
     price: 289,
+    menuPrice: 389,
     image: "/images/burger-808-smash.jpg",
     category: "burger",
     tag: "New",

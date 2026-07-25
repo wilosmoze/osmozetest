@@ -58,6 +58,10 @@ const en: Dict = {
   "menu.creations": "{n} creations",
   "menu.add": "Add",
   "menu.added": "Added to cart",
+  "menu.solo": "Solo",
+  "menu.combo": "Menu",
+  "menu.comboIncludes": "burger + fries (2 sauces) + drink",
+  "menu.comboLabel": "Menu",
 
   // Cart drawer
   "cart.title": "Your order",
@@ -255,6 +259,10 @@ const fr: Dict = {
   "menu.creations": "{n} créations",
   "menu.add": "Ajouter",
   "menu.added": "Ajouté au panier",
+  "menu.solo": "Seul",
+  "menu.combo": "Menu",
+  "menu.comboIncludes": "burger + frites (2 sauces) + boisson",
+  "menu.comboLabel": "Menu",
 
   "cart.title": "Votre commande",
   "cart.item": "1 article",
@@ -443,6 +451,10 @@ const ru: Dict = {
   "menu.creations": "{n} творений",
   "menu.add": "Добавить",
   "menu.added": "Добавлено в корзину",
+  "menu.solo": "Один",
+  "menu.combo": "Меню",
+  "menu.comboIncludes": "бургер + фри (2 соуса) + напиток",
+  "menu.comboLabel": "Меню",
 
   "cart.title": "Ваш заказ",
   "cart.item": "1 позиция",
@@ -630,6 +642,10 @@ const th: Dict = {
   "menu.creations": "{n} เมนู",
   "menu.add": "เพิ่ม",
   "menu.added": "เพิ่มลงตะกร้าแล้ว",
+  "menu.solo": "เดี่ยว",
+  "menu.combo": "เมนู",
+  "menu.comboIncludes": "เบอร์เกอร์ + เฟรนช์ฟรายส์ (2 ซอส) + เครื่องดื่ม",
+  "menu.comboLabel": "เมนู",
 
   "cart.title": "ออเดอร์ของคุณ",
   "cart.item": "1 รายการ",

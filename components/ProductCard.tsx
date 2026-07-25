@@ -14,16 +14,34 @@ type Props = {
   variant?: "hero" | "compact";
 };
 
+type Feedback = null | "solo" | "menu";
+
 export function ProductCard({ item, index, variant = "hero" }: Props) {
   const add = useCart((s) => s.add);
   const t = useT();
   const localize = useLocalize();
-  const [justAdded, setJustAdded] = useState(false);
+  const [justAdded, setJustAdded] = useState<Feedback>(null);
 
-  const handleAdd = () => {
+  const hasMenu = typeof item.menuPrice === "number";
+
+  const handleAddSolo = () => {
     add(item);
-    setJustAdded(true);
-    setTimeout(() => setJustAdded(false), 1200);
+    setJustAdded("solo");
+    setTimeout(() => setJustAdded(null), 1200);
+  };
+
+  const handleAddMenu = () => {
+    if (!hasMenu) return;
+    // Add the combo as a distinct cart line so it stays separate
+    // from the solo burger and prints as "<Burger> Menu" everywhere.
+    add({
+      ...item,
+      id: `${item.id}-menu`,
+      name: `${item.name} ${t("menu.comboLabel")}`,
+      price: item.menuPrice!,
+    });
+    setJustAdded("menu");
+    setTimeout(() => setJustAdded(null), 1200);
   };
 
   return (
@@ -64,9 +82,11 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
           <h3 className="font-display text-xl font-semibold leading-tight tracking-tight">
             {item.name}
           </h3>
-          <span className="shrink-0 font-mono text-sm tabular-nums text-white">
-            {formatPrice(item.price)}
-          </span>
+          {!hasMenu && (
+            <span className="shrink-0 font-mono text-sm tabular-nums text-white">
+              {formatPrice(item.price)}
+            </span>
+          )}
         </div>
 
         {variant === "hero" && (
@@ -88,44 +108,111 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
           </div>
         )}
 
-        <button
-          onClick={handleAdd}
-          disabled={justAdded}
-          className={`relative mt-auto inline-flex items-center justify-between gap-2 rounded-full px-4 py-3 text-sm font-medium transition-all active:translate-y-[1px] overflow-hidden ${
-            justAdded
-              ? "bg-emerald-500/20 text-emerald-400"
-              : "bg-white/[0.04] hover:bg-accent hover:text-zinc-950"
-          }`}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {justAdded ? (
-              <motion.span
-                key="added"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-                className="flex w-full items-center justify-between"
-              >
-                <span>{t("menu.added")}</span>
-                <Check size={16} weight="bold" />
-              </motion.span>
-            ) : (
-              <motion.span
-                key="add"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-                className="flex w-full items-center justify-between"
-              >
-                <span>{t("menu.add")}</span>
-                <Plus size={16} weight="bold" />
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </button>
+        {hasMenu ? (
+          <div className="mt-auto flex flex-col gap-2">
+            <AddButton
+              tone="solo"
+              label={t("menu.solo")}
+              price={item.price}
+              added={justAdded === "solo"}
+              onClick={handleAddSolo}
+              addedLabel={t("menu.added")}
+            />
+            <AddButton
+              tone="menu"
+              label={t("menu.combo")}
+              price={item.menuPrice!}
+              added={justAdded === "menu"}
+              onClick={handleAddMenu}
+              addedLabel={t("menu.added")}
+            />
+            <p className="text-[11px] text-zinc-500">
+              <span className="text-accent">{t("menu.combo")}</span>{" "}
+              · {t("menu.comboIncludes")}
+            </p>
+          </div>
+        ) : (
+          <AddButton
+            tone="solo"
+            price={item.price}
+            added={justAdded === "solo"}
+            onClick={handleAddSolo}
+            addedLabel={t("menu.added")}
+            addLabel={t("menu.add")}
+            className="mt-auto"
+          />
+        )}
       </div>
     </motion.article>
+  );
+}
+
+// Single add button used for both the solo and menu variants.
+// tone="menu" gives it an accent-outlined look to promote the combo.
+function AddButton({
+  tone,
+  label,
+  price,
+  added,
+  onClick,
+  addedLabel,
+  addLabel,
+  className = "",
+}: {
+  tone: "solo" | "menu";
+  label?: string;
+  price: number;
+  added: boolean;
+  onClick: () => void;
+  addedLabel: string;
+  addLabel?: string;
+  className?: string;
+}) {
+  const isMenu = tone === "menu";
+  return (
+    <button
+      onClick={onClick}
+      disabled={added}
+      className={`relative inline-flex items-center justify-between gap-3 overflow-hidden rounded-full px-4 py-3 text-sm font-medium transition-all active:translate-y-[1px] ${className} ${
+        added
+          ? "bg-emerald-500/20 text-emerald-400"
+          : isMenu
+            ? "border border-accent/50 bg-accent/[0.06] text-accent hover:bg-accent hover:text-zinc-950"
+            : "bg-white/[0.04] text-white hover:bg-accent hover:text-zinc-950"
+      }`}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {added ? (
+          <motion.span
+            key="added"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="flex w-full items-center justify-between"
+          >
+            <span>{addedLabel}</span>
+            <Check size={16} weight="bold" />
+          </motion.span>
+        ) : (
+          <motion.span
+            key="add"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="flex w-full items-center justify-between gap-3"
+          >
+            <span className="flex items-center gap-2">
+              <Plus size={16} weight="bold" />
+              <span>{label ?? addLabel}</span>
+            </span>
+            <span className="font-mono text-xs tabular-nums opacity-90">
+              {formatPrice(price)}
+            </span>
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </button>
   );
 }
