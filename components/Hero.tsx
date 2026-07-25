@@ -32,6 +32,42 @@ export function Hero() {
         }}
       />
 
+      {/* Ambient brand imagery — real bun photos fading into the dark bg. */}
+      {/* Positioned off the left/right edges + heavy radial mask so only  */}
+      {/* the center of each bun peeks in, low opacity for atmosphere.     */}
+      <motion.img
+        src="/images/hero-bun-1.jpg"
+        alt=""
+        aria-hidden="true"
+        initial={{ opacity: 0, scale: 1.06 }}
+        animate={{ opacity: 0.42, scale: 1 }}
+        transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+        className="pointer-events-none absolute -left-32 -top-16 -z-10 hidden h-[440px] w-[440px] rotate-[-8deg] object-cover blur-[1.5px] md:block lg:-left-40 lg:h-[540px] lg:w-[540px]"
+        style={{
+          WebkitMaskImage:
+            "radial-gradient(circle at 50% 50%, black 30%, transparent 70%)",
+          maskImage:
+            "radial-gradient(circle at 50% 50%, black 30%, transparent 70%)",
+          filter: "saturate(1.1) contrast(1.05) brightness(0.85)",
+        }}
+      />
+      <motion.img
+        src="/images/hero-bun-2.jpg"
+        alt=""
+        aria-hidden="true"
+        initial={{ opacity: 0, scale: 1.06 }}
+        animate={{ opacity: 0.36, scale: 1 }}
+        transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+        className="pointer-events-none absolute -bottom-24 -right-28 -z-10 hidden h-[360px] w-[520px] rotate-[6deg] object-cover blur-[2px] md:block lg:-right-32 lg:h-[420px] lg:w-[620px]"
+        style={{
+          WebkitMaskImage:
+            "radial-gradient(ellipse at 50% 50%, black 25%, transparent 70%)",
+          maskImage:
+            "radial-gradient(ellipse at 50% 50%, black 25%, transparent 70%)",
+          filter: "saturate(1.05) contrast(1.05) brightness(0.9)",
+        }}
+      />
+
       <div className="container-app">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
           {/* LEFT — copy + CTAs */}
