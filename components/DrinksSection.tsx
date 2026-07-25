@@ -7,40 +7,93 @@ import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { useT, useLocalize } from "@/lib/i18n";
 import type { MenuItem } from "@/data/menu";
-import { DrinkIcon } from "./DrinkIcons";
 
-// Tint helpers so the 3 Singha variants read at a glance.
-// Falls back to the accent gold for every other drink.
-function iconTint(tag?: string): string {
-  switch (tag?.toLowerCase()) {
-    case "yellow":
-      return "text-amber-300";
-    case "red":
-      return "text-rose-400";
-    case "pink":
-      return "text-pink-400";
-    default:
-      return "text-accent";
-  }
-}
-
+// ── Colored tag chip for the 3 Singha variants ────────────
 function tagStyle(tag?: string): string {
   switch (tag?.toLowerCase()) {
     case "yellow":
-      return "border-amber-400/30 bg-amber-400/10 text-amber-300";
+      return "border-amber-400/40 bg-amber-400/15 text-amber-300";
     case "red":
-      return "border-rose-500/30 bg-rose-500/10 text-rose-300";
+      return "border-rose-500/40 bg-rose-500/15 text-rose-300";
     case "pink":
-      return "border-pink-500/30 bg-pink-500/10 text-pink-300";
+      return "border-pink-500/40 bg-pink-500/15 text-pink-300";
     default:
       return "border-white/10 bg-white/[0.03] text-accent";
   }
 }
 
+// ── Ice cubes SVG — decorative bed under each product photo ──
+function IceBed({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 80 24"
+      preserveAspectRatio="xMidYMax slice"
+      className={className}
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="ice-face" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="rgba(220,240,255,0.55)" />
+          <stop offset="1" stopColor="rgba(150,200,240,0.15)" />
+        </linearGradient>
+      </defs>
+      {[
+        [8, 14],
+        [24, 12],
+        [40, 15],
+        [56, 12],
+        [72, 14],
+      ].map(([cx, cy], i) => (
+        <g key={i}>
+          <path
+            d={`M${cx - 7} ${cy - 3} L${cx} ${cy - 7} L${cx + 7} ${cy - 3} L${cx + 7} ${cy + 4} L${cx} ${cy + 8} L${cx - 7} ${cy + 4} Z`}
+            fill="url(#ice-face)"
+            stroke="rgba(255,255,255,0.55)"
+            strokeWidth="0.45"
+          />
+          <line
+            x1={cx}
+            y1={cy - 7}
+            x2={cx}
+            y2={cy + 8}
+            stroke="rgba(255,255,255,0.4)"
+            strokeWidth="0.35"
+          />
+          <line
+            x1={cx - 7}
+            y1={cy - 3}
+            x2={cx + 7}
+            y2={cy - 3}
+            stroke="rgba(255,255,255,0.4)"
+            strokeWidth="0.35"
+          />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+// ── Product tile: photo on frosty light bg + ice cubes below ─
+function DrinkThumb({ item }: { item: MenuItem }) {
+  return (
+    <div className="relative flex h-16 w-14 shrink-0 items-end justify-center overflow-hidden rounded-xl border border-white/[0.1] bg-gradient-to-b from-white via-sky-50 to-sky-100 shadow-inner">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-5 opacity-95">
+        <IceBed className="h-full w-full" />
+      </div>
+      <img
+        src={item.image}
+        alt={item.name}
+        loading="lazy"
+        className="relative z-10 h-[58px] w-auto object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.18)]"
+      />
+    </div>
+  );
+}
+
 export function DrinksSection({ items }: { items: MenuItem[] }) {
   const t = useT();
-  // Sort by price desc (30 first, then 25) so the more-ordered
-  // softs/beers group above still & soda water.
+  // Sort by price desc (30 first, then 25) so soft drinks / beers
+  // group above still & soda water.
   const sorted = useMemo(
     () =>
       [...items].sort(
@@ -114,11 +167,7 @@ function DrinkRow({ item, index }: { item: MenuItem; index: number }) {
       transition={{ delay: (index % 5) * 0.03, duration: 0.35 }}
       className="flex items-center gap-3 px-3 py-4 md:gap-4 md:px-4 md:py-5"
     >
-      <div
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.02] ${iconTint(item.tag)}`}
-      >
-        <DrinkIcon id={item.id} className="h-6 w-6" />
-      </div>
+      <DrinkThumb item={item} />
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline gap-2">
