@@ -26,6 +26,7 @@ export function Header() {
     { label: t("nav.burgers"), href: "/#burgers" },
     { label: t("nav.sauces"), href: "/#sauces" },
     { label: t("nav.fries"), href: "/#fries" },
+    { label: t("nav.drinks"), href: "/#drinks" },
     { label: t("nav.delivery"), href: "/#delivery" },
   ];
 

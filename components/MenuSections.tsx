@@ -2,6 +2,7 @@
 
 import { MenuSection } from "./MenuSection";
 import { SaucesSection } from "./SaucesSection";
+import { DrinksSection } from "./DrinksSection";
 import { DeliveryBanner } from "./DeliveryBanner";
 import { menu } from "@/data/menu";
 import { useT } from "@/lib/i18n";
@@ -11,6 +12,7 @@ export function MenuSections() {
   const burgers = menu.filter((m) => m.category === "burger");
   const sauces = menu.filter((m) => m.category === "sauce");
   const fries = menu.filter((m) => m.category === "fries");
+  const drinks = menu.filter((m) => m.category === "drink");
 
   return (
     <>
@@ -31,6 +33,7 @@ export function MenuSections() {
         items={fries}
         variant="compact"
       />
+      <DrinksSection items={drinks} />
     </>
   );
 }

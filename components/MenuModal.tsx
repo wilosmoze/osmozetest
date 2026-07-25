@@ -70,7 +70,7 @@ export function MenuModal() {
           >
             <div className="mx-auto flex max-w-2xl flex-col gap-3 px-4 py-4 md:py-5">
               {/* Quick-nav pills */}
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex flex-wrap items-center justify-center gap-2">
                 <QuickLink href="/#burgers" onClick={close}>
                   {t("nav.burgers")}
                 </QuickLink>
@@ -79,6 +79,9 @@ export function MenuModal() {
                 </QuickLink>
                 <QuickLink href="/#fries" onClick={close}>
                   {t("nav.fries")}
+                </QuickLink>
+                <QuickLink href="/#drinks" onClick={close}>
+                  {t("nav.drinks")}
                 </QuickLink>
               </div>
 

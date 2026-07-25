@@ -46,6 +46,7 @@ export function Footer() {
               <li><a href="/#burgers" className="hover:text-accent">{t("nav.burgers")}</a></li>
               <li><a href="/#sauces" className="hover:text-accent">{t("nav.sauces")}</a></li>
               <li><a href="/#fries" className="hover:text-accent">{t("nav.fries")}</a></li>
+              <li><a href="/#drinks" className="hover:text-accent">{t("nav.drinks")}</a></li>
               <li><a href="/#delivery" className="hover:text-accent">{t("nav.delivery")}</a></li>
             </ul>
           </div>

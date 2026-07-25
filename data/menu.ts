@@ -6,7 +6,7 @@ export type MenuItem = {
   description: LocalizedString;
   price: number; // THB
   image: string;
-  category: "burger" | "sauce" | "fries";
+  category: "burger" | "sauce" | "fries" | "drink";
   tag?: string;
   ingredients?: string[];
 };
@@ -226,5 +226,116 @@ export const menu: MenuItem[] = [
     price: 100,
     image: "/images/fries.jpg",
     category: "fries",
+  },
+
+  // ---------- DRINKS ----------
+  //   30 ฿ — Coca, Coca Zero, Sprite, Singha (Yellow / Red / Pink)
+  //   25 ฿ — Still Water, Soda Water
+  {
+    id: "d-coca",
+    name: "Coca-Cola",
+    description: {
+      en: "Classic Coca-Cola, ice-cold.",
+      fr: "Coca-Cola classique, glacé.",
+      ru: "Классическая Coca-Cola, ледяная.",
+      th: "โคคา-โคล่าคลาสสิก เย็นชื่นใจ",
+    },
+    price: 30,
+    image: SIDE,
+    category: "drink",
+  },
+  {
+    id: "d-coca-zero",
+    name: "Coca-Cola Zero",
+    description: {
+      en: "Zero sugar, all fizz.",
+      fr: "Zéro sucre, toutes les bulles.",
+      ru: "Ноль сахара, все пузырьки.",
+      th: "ไม่มีน้ำตาล ซ่าเต็มร้อย",
+    },
+    price: 30,
+    image: SIDE,
+    category: "drink",
+  },
+  {
+    id: "d-sprite",
+    name: "Sprite",
+    description: {
+      en: "Cool lemon-lime, sharp finish.",
+      fr: "Citron-lime frais, finale nette.",
+      ru: "Свежий лимон-лайм, чёткий вкус.",
+      th: "เลม่อน-ไลม์เย็นซ่า จบสะอาด",
+    },
+    price: 30,
+    image: SIDE,
+    category: "drink",
+  },
+  {
+    id: "d-singha-yellow",
+    name: "Singha",
+    description: {
+      en: "Thailand's classic lager, crisp and hoppy.",
+      fr: "Lager classique de Thaïlande, croquante et houblonnée.",
+      ru: "Классический тайский лагер, свежий и хмельной.",
+      th: "ลาเกอร์คลาสสิกของไทย สดชื่นและหอมฮอปส์",
+    },
+    price: 30,
+    image: SIDE,
+    category: "drink",
+    tag: "Yellow",
+  },
+  {
+    id: "d-singha-red",
+    name: "Singha",
+    description: {
+      en: "Bold red-label lager, full-bodied.",
+      fr: "Lager étiquette rouge, corsée.",
+      ru: "Насыщенный лагер с красной этикеткой.",
+      th: "ลาเกอร์ฉลากแดง เข้มข้น",
+    },
+    price: 30,
+    image: SIDE,
+    category: "drink",
+    tag: "Red",
+  },
+  {
+    id: "d-singha-pink",
+    name: "Singha",
+    description: {
+      en: "Lighter, brighter session lager.",
+      fr: "Lager plus légère et fraîche.",
+      ru: "Лёгкий и освежающий сессионный лагер.",
+      th: "ลาเกอร์เบาสดชื่น",
+    },
+    price: 30,
+    image: SIDE,
+    category: "drink",
+    tag: "Pink",
+  },
+  {
+    id: "d-water",
+    name: "Still Water",
+    description: {
+      en: "Chilled bottled water.",
+      fr: "Eau plate en bouteille, fraîche.",
+      ru: "Охлаждённая бутилированная вода.",
+      th: "น้ำเปล่าขวดเย็น",
+    },
+    price: 25,
+    image: SIDE,
+    category: "drink",
+  },
+  {
+    id: "d-soda-water",
+    name: "Soda Water",
+    description: {
+      en: "Sparkling water, all bubbles no sugar.",
+      fr: "Eau pétillante, toutes les bulles zéro sucre.",
+      ru: "Газированная вода, только пузырьки, без сахара.",
+      th: "โซดา น้ำอัดลมไม่มีน้ำตาล",
+    },
+    price: 25,
+    image: SIDE,
+    category: "drink",
   },
 ];
