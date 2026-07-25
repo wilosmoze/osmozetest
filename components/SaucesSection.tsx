@@ -7,6 +7,7 @@ import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { useT, useLocalize } from "@/lib/i18n";
 import type { MenuItem } from "@/data/menu";
+import { SauceIcon } from "./SauceIcons";
 
 export function SaucesSection({ items }: { items: MenuItem[] }) {
   const t = useT();
@@ -15,6 +16,10 @@ export function SaucesSection({ items }: { items: MenuItem[] }) {
     () => [...items].sort((a, b) => a.price - b.price || a.name.localeCompare(b.name)),
     [items],
   );
+  // Split into two columns (ceil for left) while preserving sort order.
+  const half = Math.ceil(sorted.length / 2);
+  const left = sorted.slice(0, half);
+  const right = sorted.slice(half);
 
   return (
     <section id="sauces" className="py-20 md:py-28">
@@ -37,14 +42,21 @@ export function SaucesSection({ items }: { items: MenuItem[] }) {
         </div>
 
         <div
-          className="mx-auto max-w-3xl rounded-3xl border border-white/[0.06] bg-surface/40 backdrop-blur-sm"
+          className="mx-auto max-w-5xl rounded-3xl border border-white/[0.06] bg-surface/40 p-2 backdrop-blur-sm md:p-4"
           style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)" }}
         >
-          <ul className="divide-y divide-white/[0.05]">
-            {sorted.map((sauce, i) => (
-              <SauceRow key={sauce.id} item={sauce} index={i} />
-            ))}
-          </ul>
+          <div className="grid gap-x-4 md:grid-cols-2 md:gap-x-10">
+            <ul className="divide-y divide-white/[0.05]">
+              {left.map((sauce, i) => (
+                <SauceRow key={sauce.id} item={sauce} index={i} />
+              ))}
+            </ul>
+            <ul className="divide-y divide-white/[0.05] border-t border-white/[0.05] md:border-t-0">
+              {right.map((sauce, i) => (
+                <SauceRow key={sauce.id} item={sauce} index={half + i} />
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -68,12 +80,17 @@ function SauceRow({ item, index }: { item: MenuItem; index: number }) {
       initial={{ opacity: 0, x: -6 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ delay: index * 0.03, duration: 0.35 }}
-      className="flex items-center gap-4 px-5 py-4 md:px-8 md:py-5"
+      transition={{ delay: (index % 5) * 0.03, duration: 0.35 }}
+      className="flex items-center gap-3 px-3 py-4 md:gap-4 md:px-4 md:py-5"
     >
+      {/* Vintage line-art icon echoing the menu photo */}
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.02] text-accent">
+        <SauceIcon id={item.id} className="h-6 w-6" />
+      </div>
+
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-baseline gap-2.5">
-          <span className="font-display text-lg font-semibold text-white">
+        <div className="flex flex-wrap items-baseline gap-2">
+          <span className="font-display text-base font-semibold text-white md:text-lg">
             {item.name}
           </span>
           {item.tag && (
@@ -82,12 +99,12 @@ function SauceRow({ item, index }: { item: MenuItem; index: number }) {
             </span>
           )}
         </div>
-        <div className="mt-1 text-xs text-zinc-500 line-clamp-1">
+        <div className="mt-0.5 text-xs text-zinc-500 line-clamp-1">
           {localize(item.description)}
         </div>
       </div>
 
-      <div className="flex shrink-0 items-center gap-3 md:gap-4">
+      <div className="flex shrink-0 items-center gap-2.5 md:gap-3">
         <div className="font-mono text-sm font-medium tabular-nums text-white">
           {formatPrice(item.price)}
         </div>
