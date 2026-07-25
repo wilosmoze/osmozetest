@@ -174,8 +174,14 @@ export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
   }, [orders, filter]);
 
   const stats = useMemo(() => {
+    // Only paid & non-cancelled orders count as revenue for the day.
+    // Demo-mode orders are auto-marked 'paid' + 'preparing' at checkout,
+    // so a later cancel would otherwise inflate the revenue tile.
     const today = orders.filter(
-      (o) => o.createdAt > Date.now() - 86400_000 && o.paymentStatus === "paid",
+      (o) =>
+        o.createdAt > Date.now() - 86400_000 &&
+        o.paymentStatus === "paid" &&
+        o.status !== "cancelled",
     );
     return {
       active: orders.filter((o) =>
