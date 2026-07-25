@@ -9,6 +9,59 @@ import { isSameOrigin, signOrderToken } from "@/lib/security";
 
 export const runtime = "nodejs";
 
+/**
+ * Resolves any cart itemId (canonical, set-with-drink, or legacy
+ * menu) to the authoritative name + price the server will use.
+ * Returns null when the id can't be mapped to a known item.
+ */
+type ResolvedLine = { id: string; name: string; price: number };
+
+function resolveMenuItem(itemId: string): ResolvedLine | null {
+  // 1. Direct match — sauce, fries, drink, or a plain burger
+  const direct = menu.find((m) => m.id === itemId);
+  if (direct) {
+    return { id: direct.id, name: direct.name, price: direct.price };
+  }
+
+  // 2. Modern set format: "<burger-id>-set-<drink-id>"
+  const setSep = "-set-";
+  const setIdx = itemId.indexOf(setSep);
+  if (setIdx > 0) {
+    const burgerId = itemId.slice(0, setIdx);
+    const drinkId = itemId.slice(setIdx + setSep.length);
+    const burger = menu.find(
+      (m) => m.id === burgerId && m.category === "burger",
+    );
+    const drink = menu.find(
+      (m) => m.id === drinkId && m.category === "drink",
+    );
+    if (burger && drink && typeof burger.menuPrice === "number") {
+      return {
+        id: itemId,
+        name: `${burger.name} Set + ${drink.name}`,
+        price: burger.menuPrice,
+      };
+    }
+  }
+
+  // 3. Legacy pre-picker format: "<burger-id>-menu" (no drink chosen)
+  if (itemId.endsWith("-menu")) {
+    const burgerId = itemId.slice(0, -"-menu".length);
+    const burger = menu.find(
+      (m) => m.id === burgerId && m.category === "burger",
+    );
+    if (burger && typeof burger.menuPrice === "number") {
+      return {
+        id: itemId,
+        name: `${burger.name} Set`,
+        price: burger.menuPrice,
+      };
+    }
+  }
+
+  return null;
+}
+
 /** What we ACCEPT from the client: only ids + quantities.
  *  We deliberately ignore client-supplied name & price — those are
  *  re-resolved server-side from data/menu.ts.                       */
@@ -75,34 +128,30 @@ export async function POST(req: Request) {
       );
     }
 
-    // Look up the canonical menu entry by id
-    const menuItem = menu.find((m) => m.id === clientLine.itemId);
-    if (!menuItem) {
+    // Resolve the id — handles plain items, sets with drink, and
+    // legacy '<burger>-menu' entries left in old client carts.
+    const resolved = resolveMenuItem(clientLine.itemId);
+    if (!resolved) {
       return NextResponse.json(
         { error: `Unknown item: ${clientLine.itemId}` },
         { status: 400 },
       );
     }
 
-    // Telemetry: detect tampering attempts on price/name
+    // Telemetry: detect tampering attempts on price
     if (
       typeof clientLine.price === "number" &&
-      Math.abs(clientLine.price - menuItem.price) > 0.01
+      Math.abs(clientLine.price - resolved.price) > 0.01
     ) {
       console.warn(
-        `[checkout] price mismatch on ${menuItem.id}: client=${clientLine.price} ฿, server=${menuItem.price} ฿`,
-      );
-    }
-    if (clientLine.name && clientLine.name !== menuItem.name) {
-      console.warn(
-        `[checkout] name mismatch on ${menuItem.id}: client="${clientLine.name}", server="${menuItem.name}"`,
+        `[checkout] price mismatch on ${resolved.id}: client=${clientLine.price} ฿, server=${resolved.price} ฿`,
       );
     }
 
     serverLines.push({
-      itemId: menuItem.id,
-      name: menuItem.name,
-      price: menuItem.price,
+      itemId: resolved.id,
+      name: resolved.name,
+      price: resolved.price,
       quantity: qty,
     });
   }
