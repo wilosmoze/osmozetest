@@ -6,7 +6,7 @@ import {
   Flame, Package, Motorcycle, Check,
 } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
-import { useOrder } from "@/lib/store";
+import { useOrder, useCart } from "@/lib/store";
 import { OrderVinyl } from "./OrderVinyl";
 
 const ICONS = { flame: Flame, package: Package, scooter: Motorcycle };
@@ -38,6 +38,25 @@ export function OrderTracker({
   const [notFound, setNotFound] = useState(false);
   const mockStep = useOrder((s) => s.step);
   const lastOrder = useOrder((s) => s.lastOrder);
+  const clearCart = useCart((s) => s.clear);
+  const resetOrder = useOrder((s) => s.reset);
+
+  // Reaching the tracker page means checkout succeeded (Stripe redirected
+  // us here on return_url, or demo mode routed straight in). Clear the
+  // cart so the header badge/floating bar no longer show the just-ordered
+  // items. Safe to call more than once — it's a no-op on an empty cart.
+  useEffect(() => {
+    clearCart();
+  }, [clearCart]);
+
+  // Once the SSE stream reports 'delivered', reset the useOrder store so
+  // the mock ticker stops and any OrderVinyl on subsequent pages doesn't
+  // stick around after the customer has been served.
+  useEffect(() => {
+    if (order?.status === "delivered" || order?.status === "cancelled") {
+      resetOrder();
+    }
+  }, [order?.status, resetOrder]);
 
   useEffect(() => {
     // Mode démo : pas de SSE, on utilise le store mock
