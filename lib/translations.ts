@@ -208,6 +208,7 @@ const en: Dict = {
   "track.sideB": "Side B — Track listing",
   "track.resume": "Resume spinning",
   "track.intensity": "Intensity",
+  "track.chip": "Track order",
 
   // Tracking timeline steps (mapped by id 1/2/3)
   "track.step.1.title": "Order confirmed",
@@ -403,6 +404,7 @@ const fr: Dict = {
   "track.sideB": "Face B — Liste des morceaux",
   "track.resume": "Reprendre la lecture",
   "track.intensity": "Intensité",
+  "track.chip": "Suivre ma commande",
 
   "track.step.1.title": "Commande confirmée",
   "track.step.1.desc":
@@ -597,6 +599,7 @@ const ru: Dict = {
   "track.sideB": "Сторона B — Состав",
   "track.resume": "Запустить вращение",
   "track.intensity": "Интенсивность",
+  "track.chip": "Отследить заказ",
 
   "track.step.1.title": "Заказ подтверждён",
   "track.step.1.desc": "Ваши бургеры собираются и жарятся под заказ.",
@@ -790,6 +793,7 @@ const th: Dict = {
   "track.sideB": "Side B — รายการแทร็ก",
   "track.resume": "เริ่มหมุนต่อ",
   "track.intensity": "ความเข้ม",
+  "track.chip": "ติดตามออเดอร์",
 
   "track.step.1.title": "ยืนยันออเดอร์แล้ว",
   "track.step.1.desc": "เบอร์เกอร์ของคุณกำลังประกอบและย่างใหม่",

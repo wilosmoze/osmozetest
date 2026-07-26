@@ -9,6 +9,7 @@ import { useT } from "@/lib/i18n";
 import { themeConfig } from "@/config/theme.config";
 import { cn } from "@/lib/utils";
 import { LangSwitcher } from "./LangSwitcher";
+import { TrackOrderChip } from "./TrackOrderChip";
 
 export function Header() {
   const count = useCart((s) => s.count());
@@ -67,6 +68,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <TrackOrderChip />
             <LangSwitcher />
             <button
               onClick={open}

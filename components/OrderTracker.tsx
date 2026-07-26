@@ -40,6 +40,7 @@ export function OrderTracker({
   const lastOrder = useOrder((s) => s.lastOrder);
   const clearCart = useCart((s) => s.clear);
   const resetOrder = useOrder((s) => s.reset);
+  const setLastOrder = useOrder((s) => s.setLastOrder);
 
   // Reaching the tracker page means checkout succeeded (Stripe redirected
   // us here on return_url, or demo mode routed straight in). Clear the
@@ -48,6 +49,24 @@ export function OrderTracker({
   useEffect(() => {
     clearCart();
   }, [clearCart]);
+
+  // Save orderId + tracking token to the persisted useOrder store so the
+  // "Track order" chip in the header can bring the customer back here
+  // from any page, even after they close and reopen the tab.
+  useEffect(() => {
+    if (!token) return;
+    const current = useOrder.getState().lastOrder;
+    if (current?.id === orderId && current.trackingToken === token) return;
+    setLastOrder({
+      id: orderId,
+      lines: current?.id === orderId ? current.lines : [],
+      subtotal: current?.id === orderId ? current.subtotal : 0,
+      deliveryFee: current?.id === orderId ? current.deliveryFee : 0,
+      total: current?.id === orderId ? current.total : 0,
+      createdAt: current?.id === orderId ? current.createdAt : Date.now(),
+      trackingToken: token,
+    });
+  }, [orderId, token, setLastOrder]);
 
   // Once the SSE stream reports 'delivered', reset the useOrder store so
   // the mock ticker stops and any OrderVinyl on subsequent pages doesn't
@@ -109,7 +128,9 @@ export function OrderTracker({
       </header>
 
       {/* ---------- SPINNING VINYL — tap to reveal order details ---------- */}
-      {lastOrder && lastOrder.id === orderId && (
+      {/* Only show when we have real line details (demo path has them; a  */}
+      {/* Stripe order restored from persistence only has id + token).     */}
+      {lastOrder && lastOrder.id === orderId && lastOrder.lines.length > 0 && (
         <div className="mb-20">
           <OrderVinyl order={lastOrder} />
         </div>

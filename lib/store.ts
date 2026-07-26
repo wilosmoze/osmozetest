@@ -87,12 +87,17 @@ export type OrderSnapshot = {
   deliveryFee: number;
   total: number;
   createdAt: number;
+  // HMAC token from the checkout response — lets us rebuild the
+  // tracker URL from any page so the "Track order" chip in the
+  // header works after the customer closes the tracker tab.
+  trackingToken?: string;
 };
 
 type OrderState = {
   step: 0 | 1 | 2 | 3;
   lastOrder: OrderSnapshot | null;
   start: (snapshot: OrderSnapshot) => void;
+  setLastOrder: (snapshot: OrderSnapshot) => void;
   reset: () => void;
 };
 
@@ -109,15 +114,26 @@ export const useUI = create<UIState>((set) => ({
   closeMenu: () => set({ menuOpen: false }),
 }));
 
-export const useOrder = create<OrderState>((set) => ({
-  step: 0,
-  lastOrder: null,
-  start: (snapshot) => {
-    set({ step: 1, lastOrder: snapshot });
-    const [a, b, c] = themeConfig.tracking.mockDurationsMs;
-    setTimeout(() => set({ step: 2 }), a);
-    setTimeout(() => set({ step: 3 }), a + b);
-    setTimeout(() => set({ step: 3 }), a + b + c);
-  },
-  reset: () => set({ step: 0, lastOrder: null }),
-}));
+export const useOrder = create<OrderState>()(
+  persist(
+    (set) => ({
+      step: 0,
+      lastOrder: null,
+      start: (snapshot) => {
+        set({ step: 1, lastOrder: snapshot });
+        const [a, b, c] = themeConfig.tracking.mockDurationsMs;
+        setTimeout(() => set({ step: 2 }), a);
+        setTimeout(() => set({ step: 3 }), a + b);
+        setTimeout(() => set({ step: 3 }), a + b + c);
+      },
+      setLastOrder: (snapshot) => set({ lastOrder: snapshot }),
+      reset: () => set({ step: 0, lastOrder: null }),
+    }),
+    {
+      name: "braise-order",
+      // Only persist lastOrder — step comes from mock timers or SSE,
+      // both re-established at runtime.
+      partialize: (state) => ({ lastOrder: state.lastOrder }),
+    },
+  ),
+);

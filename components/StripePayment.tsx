@@ -71,6 +71,7 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
           deliveryFee: data.fee,
           total: subtotal + data.fee,
           createdAt: Date.now(),
+          trackingToken: data.trackingToken,
         });
         clearCart();
         router.push(`/tracking/${data.orderId}?t=${data.trackingToken}`);
