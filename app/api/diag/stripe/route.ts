@@ -27,14 +27,20 @@ export async function GET() {
       STRIPE_WEBHOOK_SECRET: describe("STRIPE_WEBHOOK_SECRET"),
       NEXT_PUBLIC_STRIPE_PUBLIC_KEY: describe("NEXT_PUBLIC_STRIPE_PUBLIC_KEY"),
     },
-    hint: [
-      "If all three show set:true → env vars ARE injected at runtime.",
-      "If STRIPE_SECRET_KEY.set is true → server will use real Stripe (not demo).",
-      "If NEXT_PUBLIC_STRIPE_PUBLIC_KEY.set is true here but the browser",
-      "  still shows 'Demo mode', the client JS bundle was built BEFORE",
-      "  the var was set. Trigger a rebuild WITHOUT build cache.",
-      "Prefix 'pk_test_' / 'sk_test_' = test mode, 'pk_live_' / 'sk_live_' = live.",
-    ],
-    build_time: new Date().toISOString(),
+    // Vercel injects these automatically on every deployment — they
+    // tell us WHICH project + WHICH env is actually running.
+    // If VERCEL_ENV != 'production', the domain isn't hitting the
+    // production runtime (which is where the Prod env vars apply).
+    vercel_deployment: {
+      VERCEL: process.env.VERCEL ?? null,
+      VERCEL_ENV: process.env.VERCEL_ENV ?? null,
+      VERCEL_URL: process.env.VERCEL_URL ?? null,
+      VERCEL_GIT_REPO_SLUG: process.env.VERCEL_GIT_REPO_SLUG ?? null,
+      VERCEL_GIT_REPO_OWNER: process.env.VERCEL_GIT_REPO_OWNER ?? null,
+      VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 8) ?? null,
+      VERCEL_GIT_COMMIT_REF: process.env.VERCEL_GIT_COMMIT_REF ?? null,
+      NODE_ENV: process.env.NODE_ENV ?? null,
+    },
+    request_time: new Date().toISOString(),
   });
 }
