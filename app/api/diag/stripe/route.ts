@@ -26,6 +26,8 @@ export async function GET() {
       STRIPE_SECRET_KEY: describe("STRIPE_SECRET_KEY"),
       STRIPE_WEBHOOK_SECRET: describe("STRIPE_WEBHOOK_SECRET"),
       NEXT_PUBLIC_STRIPE_PUBLIC_KEY: describe("NEXT_PUBLIC_STRIPE_PUBLIC_KEY"),
+      NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL ?? "NOT_SET",
+      AUTH_SECRET: describe("AUTH_SECRET"),
     },
     // Vercel injects these automatically on every deployment — they
     // tell us WHICH project + WHICH env is actually running.
