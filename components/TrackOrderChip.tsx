@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Motorcycle, ArrowRight } from "@phosphor-icons/react";
@@ -8,11 +9,45 @@ import { useT } from "@/lib/i18n";
 
 // Small pill shown in the header when the customer has an active
 // order — clicking it takes them back to the tracker even if they
-// closed the tracker tab. Auto-vanishes once the SSE hook in
-// OrderTracker calls useOrder.reset() on delivered/cancelled.
+// closed the tracker tab. Watches the order status via SSE from
+// wherever it's mounted, so the chip vanishes the moment admin
+// marks the order delivered / cancelled — no need for the
+// customer to be on the tracker page.
 export function TrackOrderChip() {
   const lastOrder = useOrder((s) => s.lastOrder);
+  const resetOrder = useOrder((s) => s.reset);
   const t = useT();
+
+  const orderId = lastOrder?.id;
+  const trackingToken = lastOrder?.trackingToken;
+
+  useEffect(() => {
+    if (!orderId || !trackingToken) return;
+    // Demo orders never hit the backend — nothing to stream.
+    if (orderId.startsWith("BR-DEMO-")) return;
+
+    const q = new URLSearchParams({ orderId, t: trackingToken });
+    const es = new EventSource(`/api/orders/stream?${q.toString()}`);
+
+    const handle = (e: MessageEvent) => {
+      try {
+        const o = JSON.parse(e.data);
+        if (o.status === "delivered" || o.status === "cancelled") {
+          resetOrder();
+        }
+      } catch {
+        /* ignore malformed events */
+      }
+    };
+
+    es.addEventListener("snapshot", handle);
+    es.addEventListener("update", handle);
+    // If the server no longer knows this order (TTL expired,
+    // wrong token), forget it locally too.
+    es.addEventListener("not_found", () => resetOrder());
+
+    return () => es.close();
+  }, [orderId, trackingToken, resetOrder]);
 
   if (!lastOrder || !lastOrder.trackingToken) return null;
 
