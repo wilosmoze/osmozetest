@@ -4,6 +4,10 @@ import { verifyOrderToken, safeExternalUrl } from "@/lib/security";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Allow the SSE connection to stay open longer than the default 10s.
+// EventSource will auto-reconnect and re-hydrate from the DB anyway
+// when the connection times out.
+export const maxDuration = 60;
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -65,6 +69,39 @@ export async function GET(req: Request) {
       };
       orderStore.emitter.on("update", handler);
 
+      // Cross-instance fallback poll. The in-process emitter only fires
+      // updates written on the SAME Lambda instance — on Vercel, admin
+      // and courier writes routinely land on a different instance than
+      // the customer's SSE stream, so the emitter alone misses them.
+      // We poll the DB every 3s (2s for admin list stream) and re-send
+      // when the underlying status changed. Duplicates are harmless —
+      // React state dedupes.
+      let lastKey = "";
+      const poll = setInterval(async () => {
+        try {
+          if (orderId) {
+            const o = await getOrder(orderId);
+            if (!o) return;
+            const key = `${o.status}|${o.paymentStatus}|${o.updatedAt}`;
+            if (key !== lastKey) {
+              lastKey = key;
+              send("update", project(o));
+            }
+          } else {
+            const all = await listOrders();
+            const key = all
+              .map((o) => `${o.id}:${o.status}:${o.updatedAt}`)
+              .join(",");
+            if (key !== lastKey) {
+              lastKey = key;
+              send("snapshot", all);
+            }
+          }
+        } catch {
+          /* swallow — poll will retry */
+        }
+      }, orderId ? 3000 : 5000);
+
       const heartbeat = setInterval(() => {
         controller.enqueue(encoder.encode(": ping\n\n"));
       }, 15000);
@@ -72,6 +109,7 @@ export async function GET(req: Request) {
       const abort = () => {
         orderStore.emitter.off("update", handler);
         clearInterval(heartbeat);
+        clearInterval(poll);
         try { controller.close(); } catch {}
       };
       req.signal.addEventListener("abort", abort);
