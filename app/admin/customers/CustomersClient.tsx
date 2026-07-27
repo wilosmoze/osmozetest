@@ -13,7 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import { formatPrice } from "@/lib/utils";
 import { themeConfig } from "@/config/theme.config";
-import type { Customer } from "@/app/api/admin/customers/route";
+import type { Customer } from "@/lib/customer-types";
 
 export function CustomersClient() {
   const [customers, setCustomers] = useState<Customer[] | null>(null);

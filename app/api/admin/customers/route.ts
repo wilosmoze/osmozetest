@@ -1,35 +1,9 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { listOrders, type Order } from "@/lib/orders";
+import { milestoneFor, type Customer } from "@/lib/customer-types";
 
 export const runtime = "nodejs";
-
-export type Customer = {
-  phone: string;
-  name: string;
-  email: string | null;
-  orderCount: number;
-  totalSpent: number;
-  firstOrderAt: number;
-  lastOrderAt: number;
-  cancelledCount: number;
-  // Convenience precomputed on the server so the client doesn't
-  // have to recompute every render (and stays consistent with any
-  // future rule change).
-  milestone: "vip" | "loyal" | null;
-};
-
-/**
- * Milestone rule (matches the admin request):
- *   - Order count multiple of 30 → 'vip' (red alert)
- *   - Order count multiple of 10 (but not 30) → 'loyal' (blue alert)
- *   - Otherwise → null
- */
-function milestoneFor(count: number): Customer["milestone"] {
-  if (count > 0 && count % 30 === 0) return "vip";
-  if (count > 0 && count % 10 === 0) return "loyal";
-  return null;
-}
 
 export async function GET() {
   const auth = await requireAdmin();
