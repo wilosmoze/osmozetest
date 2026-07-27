@@ -74,8 +74,13 @@ if (!g.__braiseStore) {
 export const orderStore = g.__braiseStore;
 
 // -------- TTL config --------
-const ORDER_TTL_MS = 48 * 60 * 60 * 1000;
-const ORDER_HARD_CAP = 1000;
+// Orders are kept 10 days so admin can reprint receipts, look up a
+// customer's recent order, or reconcile with card statements before
+// pruning. Hard cap 2000 sized to comfortably hold that window at
+// ~200 orders/day; kicks in only for the in-memory fallback since
+// Postgres does its own DELETE opportunistically after each insert.
+const ORDER_TTL_MS = 10 * 24 * 60 * 60 * 1000;
+const ORDER_HARD_CAP = 2000;
 
 export function generateOrderId() {
   return `BR-${randomBytes(4).toString("hex").toUpperCase()}`;
