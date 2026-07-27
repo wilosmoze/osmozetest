@@ -23,30 +23,44 @@ export function TrackOrderChip() {
 
   useEffect(() => {
     if (!orderId || !trackingToken) return;
-    // Demo orders never hit the backend — nothing to stream.
+    // Demo orders never hit the backend.
     if (orderId.startsWith("BR-DEMO-")) return;
 
-    const q = new URLSearchParams({ orderId, t: trackingToken });
-    const es = new EventSource(`/api/orders/stream?${q.toString()}`);
+    let alive = true;
 
-    const handle = (e: MessageEvent) => {
+    // REST polling — reliable across Vercel Lambda instances.
+    // Vanishes the chip when admin marks the order delivered / cancelled
+    // or the server has forgotten it (TTL expired, wrong token).
+    const check = async () => {
       try {
-        const o = JSON.parse(e.data);
-        if (o.status === "delivered" || o.status === "cancelled") {
+        const res = await fetch(
+          `/api/orders/${orderId}?t=${encodeURIComponent(trackingToken)}`,
+          { cache: "no-store" },
+        );
+        if (!alive) return;
+        if (res.status === 404) {
+          resetOrder();
+          return;
+        }
+        if (!res.ok) return;
+        const data = (await res.json()) as { order: { status: string } };
+        if (
+          data.order.status === "delivered" ||
+          data.order.status === "cancelled"
+        ) {
           resetOrder();
         }
       } catch {
-        /* ignore malformed events */
+        /* transient — retry next tick */
       }
     };
 
-    es.addEventListener("snapshot", handle);
-    es.addEventListener("update", handle);
-    // If the server no longer knows this order (TTL expired,
-    // wrong token), forget it locally too.
-    es.addEventListener("not_found", () => resetOrder());
-
-    return () => es.close();
+    check();
+    const id = setInterval(check, 5000);
+    return () => {
+      alive = false;
+      clearInterval(id);
+    };
   }, [orderId, trackingToken, resetOrder]);
 
   if (!lastOrder || !lastOrder.trackingToken) return null;

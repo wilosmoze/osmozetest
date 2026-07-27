@@ -78,18 +78,41 @@ export function OrderTracker({
   }, [order?.status, resetOrder]);
 
   useEffect(() => {
-    // Mode démo : pas de SSE, on utilise le store mock
-    if (orderId.startsWith("BR-DEMO-")) {
-      return;
-    }
+    // Demo mode: no server order, we drive the timeline from the mock store.
+    if (orderId.startsWith("BR-DEMO-")) return;
 
-    const q = new URLSearchParams({ orderId });
-    if (token) q.set("t", token);
-    const es = new EventSource(`/api/orders/stream?${q.toString()}`);
-    es.addEventListener("snapshot", (e) => setOrder(JSON.parse((e as MessageEvent).data)));
-    es.addEventListener("update", (e) => setOrder(JSON.parse((e as MessageEvent).data)));
-    es.addEventListener("not_found", () => setNotFound(true));
-    return () => es.close();
+    let alive = true;
+
+    // Simple REST polling — replaces the previous SSE stream because
+    // Vercel routes requests to different Lambda instances and the
+    // in-process EventEmitter never propagates updates across them.
+    // Polling hits the DB directly on every tick so any admin/courier
+    // change lands here within one interval.
+    const fetchOnce = async () => {
+      try {
+        const q = token ? `?t=${encodeURIComponent(token)}` : "";
+        const res = await fetch(`/api/orders/${orderId}${q}`, {
+          cache: "no-store",
+        });
+        if (!alive) return;
+        if (res.status === 404) {
+          setNotFound(true);
+          return;
+        }
+        if (!res.ok) return;
+        const data = (await res.json()) as { order: PublicOrder };
+        setOrder(data.order);
+      } catch {
+        /* transient network hiccup — next tick will retry */
+      }
+    };
+
+    fetchOnce();
+    const id = setInterval(fetchOnce, 3000);
+    return () => {
+      alive = false;
+      clearInterval(id);
+    };
   }, [orderId, token]);
 
   const isDemo = orderId.startsWith("BR-DEMO-");
