@@ -6,6 +6,7 @@ import { Plus, Check } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { useT, useLocalize } from "@/lib/i18n";
+import { isGrabOnly } from "@/lib/ordering";
 import type { MenuItem } from "@/data/menu";
 import { DrinkPickerModal } from "./DrinkPickerModal";
 
@@ -25,6 +26,7 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const hasMenu = typeof item.menuPrice === "number";
+  const grabOnly = isGrabOnly();
 
   const handleAddSolo = () => {
     add(item);
@@ -91,9 +93,17 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
           <h3 className="font-display text-xl font-semibold leading-tight tracking-tight">
             {item.name}
           </h3>
-          {!hasMenu && (
+          {/* In grab_only mode we still show the price in the header       */}
+          {/* since the Add buttons (which normally carry the price) are    */}
+          {/* hidden.                                                        */}
+          {(!hasMenu || grabOnly) && (
             <span className="shrink-0 font-mono text-sm tabular-nums text-white">
               {formatPrice(item.price)}
+              {grabOnly && hasMenu && (
+                <span className="ml-1 text-xs text-zinc-500">
+                  / {formatPrice(item.menuPrice!)} {t("menu.combo").toLowerCase()}
+                </span>
+              )}
             </span>
           )}
         </div>
@@ -117,7 +127,16 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
           </div>
         )}
 
-        {hasMenu ? (
+        {grabOnly ? (
+          // Grab-only mode: no per-card add buttons — a single sticky
+          // floating bar (GrabFloatingBar) handles ordering site-wide.
+          hasMenu && (
+            <p className="mt-auto text-[11px] text-zinc-500">
+              <span className="text-accent">{t("menu.combo")}</span>{" "}
+              · {t("menu.comboIncludes")}
+            </p>
+          )
+        ) : hasMenu ? (
           <div className="mt-auto flex flex-col gap-2">
             <AddButton
               tone="solo"
@@ -154,7 +173,7 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
       </div>
 
     </motion.article>
-    {hasMenu && (
+    {hasMenu && !grabOnly && (
       <DrinkPickerModal
         open={pickerOpen}
         burger={item}

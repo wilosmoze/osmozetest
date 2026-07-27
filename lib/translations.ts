@@ -25,11 +25,12 @@ const en: Dict = {
   // Hero
   "hero.eyebrow": "Premium burgers — Rawai",
   "hero.subline":
-    "Five signature burgers, nine premium sauces, home-cut fries. Sealed tight, delivered to Rawai in under 30 minutes.",
+    "Five signature burgers, nine premium sauces, home-cut fries. Sealed tight — free delivery across Rawai.",
   "hero.cta": "Order now",
+  "hero.ctaGrab": "Order on Grab Food",
   "hero.secondaryCta": "View the menu",
-  "hero.reassure.30min.label": "30 min",
-  "hero.reassure.30min.sub": "max delivery",
+  "hero.reassure.30min.label": "Sealed",
+  "hero.reassure.30min.sub": "signature bun",
   "hero.reassure.100.label": "100%",
   "hero.reassure.100.sub": "premium",
   "hero.reassure.free.label": "Free",
@@ -41,7 +42,7 @@ const en: Dict = {
   "marquee.2": "Closed-bun creations",
   "marquee.3": "Sealed tight",
   "marquee.4": "100% delicious",
-  "marquee.5": "Tue–Sun · Noon to 11 PM",
+  "marquee.5": "Every day · 6 PM to 11 PM",
 
   // Menu sections
   "menu.burgers.eyebrow": "01 — The lineup",
@@ -90,13 +91,13 @@ const en: Dict = {
   "deliv.title.1": "Free across Rawai.",
   "deliv.title.2": "Always.",
   "deliv.body":
-    "Our kitchen is based in Rawai and we deliver throughout the whole area at no cost. Outside Rawai? A flat {fee} fee covers the extra ride. Sealed tight, arrives hot in under {minutes} minutes. {cutoff}.",
+    "Our kitchen is based in Rawai and we deliver throughout the whole area at no cost. Outside Rawai? A flat {fee} fee covers the extra ride. Sealed tight, always. {cutoff}.",
   "deliv.rawai": "Rawai",
   "deliv.rawai.hint": "Free delivery across all of Rawai",
   "deliv.outside": "Outside Rawai",
   "deliv.outside.hint": "Flat fee, nearby areas",
   "deliv.avg": "Avg. time",
-  "deliv.cutoff": "Open Tue–Sun · 12 PM to 11 PM · Closed Mondays",
+  "deliv.cutoff": "Open every day · 6 PM to 11 PM",
 
   // Social block
   "social.community": "Community & support",
@@ -248,11 +249,12 @@ const fr: Dict = {
 
   "hero.eyebrow": "Burgers premium — Rawaï",
   "hero.subline":
-    "Cinq burgers signature, neuf sauces premium, frites maison. Bien fermés, livrés à Rawaï en moins de 30 minutes.",
+    "Cinq burgers signature, neuf sauces premium, frites maison. Bien scellés — livraison gratuite dans tout Rawaï.",
   "hero.cta": "Commander",
+  "hero.ctaGrab": "Commander sur Grab Food",
   "hero.secondaryCta": "Voir le menu",
-  "hero.reassure.30min.label": "30 min",
-  "hero.reassure.30min.sub": "livraison max",
+  "hero.reassure.30min.label": "Scellé",
+  "hero.reassure.30min.sub": "bun signature",
   "hero.reassure.100.label": "100%",
   "hero.reassure.100.sub": "premium",
   "hero.reassure.free.label": "Gratuit",
@@ -263,7 +265,7 @@ const fr: Dict = {
   "marquee.2": "Créations bun fermé",
   "marquee.3": "Bien scellés",
   "marquee.4": "100% délicieux",
-  "marquee.5": "Mar.–Dim. · 12h à 23h",
+  "marquee.5": "Tous les jours · 18h à 23h",
 
   "menu.burgers.eyebrow": "01 — La sélection",
   "menu.burgers.title": "Cinq burgers. Bien scellés.",
@@ -308,13 +310,13 @@ const fr: Dict = {
   "deliv.title.1": "Gratuit dans tout Rawaï.",
   "deliv.title.2": "Toujours.",
   "deliv.body":
-    "Notre cuisine est à Rawaï et nous livrons toute la zone sans frais. Hors Rawaï ? Un forfait de {fee} couvre la course. Bien scellés, livrés chauds en moins de {minutes} minutes. {cutoff}.",
+    "Notre cuisine est à Rawaï et nous livrons toute la zone sans frais. Hors Rawaï ? Un forfait de {fee} couvre la course. Bien scellés, toujours chauds. {cutoff}.",
   "deliv.rawai": "Rawaï",
   "deliv.rawai.hint": "Livraison gratuite dans tout Rawaï",
   "deliv.outside": "Hors Rawaï",
   "deliv.outside.hint": "Forfait fixe, zones proches",
   "deliv.avg": "Temps moyen",
-  "deliv.cutoff": "Ouvert Mar.–Dim. · 12h à 23h · Fermé le lundi",
+  "deliv.cutoff": "Ouvert tous les jours · 18h à 23h",
 
   "social.community": "Communauté & SAV",
   "social.waiting": "Pendant que vous attendez votre livreur",
@@ -460,11 +462,12 @@ const ru: Dict = {
 
   "hero.eyebrow": "Премиум бургеры — Равай",
   "hero.subline":
-    "Пять фирменных бургеров, девять премиум соусов, картофель фри домашней нарезки. Запечатаны плотно, доставка в Равай за 30 минут.",
+    "Пять фирменных бургеров, девять премиум соусов, картофель фри домашней нарезки. Запечатаны плотно — бесплатная доставка по всему Раваю.",
   "hero.cta": "Заказать",
+  "hero.ctaGrab": "Заказать через Grab Food",
   "hero.secondaryCta": "Открыть меню",
-  "hero.reassure.30min.label": "30 мин",
-  "hero.reassure.30min.sub": "макс. доставка",
+  "hero.reassure.30min.label": "Запечатан",
+  "hero.reassure.30min.sub": "фирменный бун",
   "hero.reassure.100.label": "100%",
   "hero.reassure.100.sub": "премиум",
   "hero.reassure.free.label": "Бесплатно",
@@ -475,7 +478,7 @@ const ru: Dict = {
   "marquee.2": "Запечатанные бургеры",
   "marquee.3": "Плотно закрытые",
   "marquee.4": "100% вкусно",
-  "marquee.5": "Вт–Вс · 12:00 – 23:00",
+  "marquee.5": "Каждый день · 18:00 – 23:00",
 
   "menu.burgers.eyebrow": "01 — Подборка",
   "menu.burgers.title": "Пять бургеров. Запечатаны плотно.",
@@ -520,13 +523,13 @@ const ru: Dict = {
   "deliv.title.1": "Бесплатно по всему Раваю.",
   "deliv.title.2": "Всегда.",
   "deliv.body":
-    "Наша кухня находится в Равае, и мы доставляем по всему району бесплатно. За пределами Равая? Фиксированный тариф {fee} покрывает дополнительный путь. Запечатанные, горячие, менее чем за {minutes} минут. {cutoff}.",
+    "Наша кухня находится в Равае, и мы доставляем по всему району бесплатно. За пределами Равая? Фиксированный тариф {fee} покрывает дополнительный путь. Запечатанные, всегда горячие. {cutoff}.",
   "deliv.rawai": "Равай",
   "deliv.rawai.hint": "Бесплатная доставка по всему Раваю",
   "deliv.outside": "Вне Равая",
   "deliv.outside.hint": "Фиксированный тариф, ближайшие районы",
   "deliv.avg": "Среднее время",
-  "deliv.cutoff": "Открыто Вт–Вс · 12:00 – 23:00 · Пн выходной",
+  "deliv.cutoff": "Открыто каждый день · 18:00 – 23:00",
 
   "social.community": "Сообщество и поддержка",
   "social.waiting": "Пока вы ждёте курьера",
@@ -671,11 +674,12 @@ const th: Dict = {
 
   "hero.eyebrow": "พรีเมียมเบอร์เกอร์ — ราไวย์",
   "hero.subline":
-    "ห้าเบอร์เกอร์ซิกเนเจอร์ เก้าซอสพรีเมียม เฟรนช์ฟรายส์โฮมเมด ปิดผนึกแน่น ส่งถึงราไวย์ภายใน 30 นาที",
+    "ห้าเบอร์เกอร์ซิกเนเจอร์ เก้าซอสพรีเมียม เฟรนช์ฟรายส์โฮมเมด ปิดผนึกแน่น — จัดส่งฟรีทั่วราไวย์",
   "hero.cta": "สั่งเลย",
+  "hero.ctaGrab": "สั่งผ่าน Grab Food",
   "hero.secondaryCta": "ดูเมนู",
-  "hero.reassure.30min.label": "30 นาที",
-  "hero.reassure.30min.sub": "ส่งสูงสุด",
+  "hero.reassure.30min.label": "ปิดผนึก",
+  "hero.reassure.30min.sub": "บันซิกเนเจอร์",
   "hero.reassure.100.label": "100%",
   "hero.reassure.100.sub": "พรีเมียม",
   "hero.reassure.free.label": "ฟรี",
@@ -686,7 +690,7 @@ const th: Dict = {
   "marquee.2": "เบอร์เกอร์ปิดผนึก",
   "marquee.3": "ปิดแน่นทุกชิ้น",
   "marquee.4": "100% อร่อย",
-  "marquee.5": "อ.–อา. · 12:00 – 23:00",
+  "marquee.5": "ทุกวัน · 18:00 – 23:00",
 
   "menu.burgers.eyebrow": "01 — รายการคัดสรร",
   "menu.burgers.title": "ห้าเบอร์เกอร์ ปิดผนึกแน่น",
@@ -731,13 +735,13 @@ const th: Dict = {
   "deliv.title.1": "ฟรีทั่วราไวย์",
   "deliv.title.2": "เสมอ",
   "deliv.body":
-    "ครัวของเราอยู่ในราไวย์และเราจัดส่งทั่วพื้นที่โดยไม่มีค่าใช้จ่าย นอกราไวย์? ค่าจัดส่งคงที่ {fee} ปิดผนึกแน่น ส่งร้อนๆ ภายใน {minutes} นาที {cutoff}.",
+    "ครัวของเราอยู่ในราไวย์และเราจัดส่งทั่วพื้นที่โดยไม่มีค่าใช้จ่าย นอกราไวย์? ค่าจัดส่งคงที่ {fee} ปิดผนึกแน่น ส่งร้อนเสมอ {cutoff}.",
   "deliv.rawai": "ราไวย์",
   "deliv.rawai.hint": "จัดส่งฟรีทั่วราไวย์",
   "deliv.outside": "นอกราไวย์",
   "deliv.outside.hint": "ค่าจัดส่งคงที่ พื้นที่ใกล้เคียง",
   "deliv.avg": "เวลาเฉลี่ย",
-  "deliv.cutoff": "เปิด อ.–อา. · 12:00 – 23:00 · ปิดวันจันทร์",
+  "deliv.cutoff": "เปิดทุกวัน · 18:00 – 23:00",
 
   "social.community": "ชุมชน & ช่วยเหลือ",
   "social.waiting": "ระหว่างรอคนส่ง",

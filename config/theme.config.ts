@@ -11,6 +11,20 @@ export type DeliveryZone = {
 };
 
 export const themeConfig = {
+  /**
+   * Ordering mode.
+   *  - "grab_only": every order CTA on the site redirects to Grab
+   *    Food (see delivery.grabUrl). The in-site cart, checkout and
+   *    order-tracking flow are hidden. Use during soft-launch when
+   *    the kitchen is only listed on Grab, not taking direct orders.
+   *  - "own_site": normal cart + Stripe checkout + tracker.
+   *
+   * Flip the string when Grab launches or when in-site orders open.
+   */
+  ordering: {
+    mode: "grab_only" as "grab_only" | "own_site",
+  },
+
   brand: {
     name: "bun&bass burgers",
     shortName: "bun&bass",
@@ -63,8 +77,10 @@ export const themeConfig = {
     maxDistanceKm: 6,
     /** Where to send the customer when they're out of range. */
     grabUrl: "https://food.grab.com/th/en",
-    estimatedMinutes: { min: 25, max: 35 },
-    cutoffMessage: "Open Tue–Sun · 12 PM to 11 PM · Closed Mondays",
+    // Kept for internal reference; the site no longer advertises a
+    // delivery ETA — we only insist on the free-in-Rawai promise.
+    estimatedMinutes: { min: 25, max: 45 },
+    cutoffMessage: "Open every day · 6 PM to 11 PM",
   },
 
   social: {
@@ -94,13 +110,13 @@ export const themeConfig = {
     eyebrow: "Premium burgers — Rawai",
     headline: ["Bun in.", "Bass on."],
     subline:
-      "Five signature burgers, nine premium sauces, home-cut fries. Sealed tight, delivered to Rawai in under 30 minutes.",
+      "Five signature burgers, nine premium sauces, home-cut fries. Sealed tight — free delivery across Rawai.",
     cta: "Order now",
     secondaryCta: "View the menu",
     reassurances: [
-      { label: "30 min", sub: "max delivery" },
-      { label: "100%", sub: "premium" },
       { label: "Free", sub: "in Rawai" },
+      { label: "100%", sub: "premium" },
+      { label: "Sealed", sub: "signature bun" },
     ],
   },
 

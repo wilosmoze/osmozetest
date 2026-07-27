@@ -6,6 +6,7 @@ import { Plus, Check } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { useT, useLocalize } from "@/lib/i18n";
+import { isGrabOnly } from "@/lib/ordering";
 import type { MenuItem } from "@/data/menu";
 import { SauceIcon } from "./SauceIcons";
 
@@ -68,6 +69,7 @@ function SauceRow({ item, index }: { item: MenuItem; index: number }) {
   const t = useT();
   const add = useCart((s) => s.add);
   const [justAdded, setJustAdded] = useState(false);
+  const grabOnly = isGrabOnly();
 
   const handleAdd = () => {
     add(item);
@@ -108,42 +110,44 @@ function SauceRow({ item, index }: { item: MenuItem; index: number }) {
         <div className="font-mono text-sm font-medium tabular-nums text-white">
           {formatPrice(item.price)}
         </div>
-        <button
-          onClick={handleAdd}
-          disabled={justAdded}
-          aria-label={`${t("menu.add")} ${item.name}`}
-          className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all active:translate-y-[1px] ${
-            justAdded
-              ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-400"
-              : "border-white/10 bg-white/[0.04] text-zinc-300 hover:border-accent hover:bg-accent hover:text-zinc-950"
-          }`}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {justAdded ? (
-              <motion.span
-                key="check"
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.5, opacity: 0 }}
-                transition={{ duration: 0.15 }}
-                className="flex"
-              >
-                <Check size={14} weight="bold" />
-              </motion.span>
-            ) : (
-              <motion.span
-                key="plus"
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.5, opacity: 0 }}
-                transition={{ duration: 0.15 }}
-                className="flex"
-              >
-                <Plus size={14} weight="bold" />
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </button>
+        {!grabOnly && (
+          <button
+            onClick={handleAdd}
+            disabled={justAdded}
+            aria-label={`${t("menu.add")} ${item.name}`}
+            className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all active:translate-y-[1px] ${
+              justAdded
+                ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-400"
+                : "border-white/10 bg-white/[0.04] text-zinc-300 hover:border-accent hover:bg-accent hover:text-zinc-950"
+            }`}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {justAdded ? (
+                <motion.span
+                  key="check"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.5, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex"
+                >
+                  <Check size={14} weight="bold" />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="plus"
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.5, opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex"
+                >
+                  <Plus size={14} weight="bold" />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        )}
       </div>
     </motion.li>
   );

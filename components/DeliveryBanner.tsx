@@ -1,6 +1,6 @@
 "use client";
 
-import { Scooter, Clock, MapPin } from "@phosphor-icons/react";
+import { Scooter, ShieldCheck, MapPin } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
 import { formatPrice } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
@@ -12,7 +12,6 @@ export function DeliveryBanner() {
 
   const body = t("deliv.body", {
     fee: outside ? formatPrice(outside.fee) : "",
-    minutes: delivery.estimatedMinutes.max,
     cutoff: t("deliv.cutoff"),
   });
 
@@ -54,9 +53,10 @@ export function DeliveryBanner() {
                 hint={t("deliv.outside.hint")}
               />
               <DeliveryStat
-                icon={<Clock size={22} weight="duotone" />}
-                label={t("deliv.avg")}
-                value={`${delivery.estimatedMinutes.min}–${delivery.estimatedMinutes.max} min`}
+                icon={<ShieldCheck size={22} weight="duotone" />}
+                label={t("deliv.rawai")}
+                value={t("cart.free")}
+                hint={t("deliv.rawai.hint")}
               />
             </div>
           </div>

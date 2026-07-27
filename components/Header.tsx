@@ -8,6 +8,7 @@ import { useCart } from "@/lib/store";
 import { useT } from "@/lib/i18n";
 import { themeConfig } from "@/config/theme.config";
 import { cn } from "@/lib/utils";
+import { isGrabOnly } from "@/lib/ordering";
 import { LangSwitcher } from "./LangSwitcher";
 import { TrackOrderChip } from "./TrackOrderChip";
 
@@ -16,6 +17,7 @@ export function Header() {
   const open = useCart((s) => s.openDrawer);
   const t = useT();
   const [scrolled, setScrolled] = useState(false);
+  const grabOnly = isGrabOnly();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -68,23 +70,25 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <TrackOrderChip />
+            {!grabOnly && <TrackOrderChip />}
             <LangSwitcher />
-            <button
-              onClick={open}
-              className="group relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm transition-all hover:bg-white/[0.08] active:translate-y-[1px]"
-            >
-              <ShoppingBag size={18} weight="duotone" />
-              <span className="font-mono text-xs tabular-nums">{count}</span>
-              {count > 0 && (
-                <motion.span
-                  layoutId="cart-pulse"
-                  className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-accent"
-                  animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
-                  transition={{ duration: 1.6, repeat: Infinity }}
-                />
-              )}
-            </button>
+            {!grabOnly && (
+              <button
+                onClick={open}
+                className="group relative inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm transition-all hover:bg-white/[0.08] active:translate-y-[1px]"
+              >
+                <ShoppingBag size={18} weight="duotone" />
+                <span className="font-mono text-xs tabular-nums">{count}</span>
+                {count > 0 && (
+                  <motion.span
+                    layoutId="cart-pulse"
+                    className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-accent"
+                    animate={{ scale: [1, 1.3, 1], opacity: [1, 0.7, 1] }}
+                    transition={{ duration: 1.6, repeat: Infinity }}
+                  />
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>

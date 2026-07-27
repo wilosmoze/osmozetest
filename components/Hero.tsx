@@ -1,15 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "@phosphor-icons/react";
+import { ArrowRight, ArrowSquareOut } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
 import { useUI } from "@/lib/store";
 import { useT } from "@/lib/i18n";
+import { isGrabOnly, grabUrl } from "@/lib/ordering";
 import { SpinningVinyl } from "./SpinningVinyl";
 
 export function Hero() {
   const t = useT();
   const openMenu = useUI((s) => s.openMenu);
+  const grabOnly = isGrabOnly();
   // Brand mantra — kept untranslated across locales by design
   const headline = themeConfig.hero.headline;
 
@@ -121,10 +123,22 @@ export function Hero() {
               transition={{ delay: 0.65, duration: 0.5 }}
               className="mt-10 flex flex-wrap items-center gap-3"
             >
-              <a href="#burgers" className="btn-primary">
-                {t("hero.cta")}
-                <ArrowRight size={18} weight="bold" />
-              </a>
+              {grabOnly ? (
+                <a
+                  href={grabUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                >
+                  {t("hero.ctaGrab")}
+                  <ArrowSquareOut size={18} weight="bold" />
+                </a>
+              ) : (
+                <a href="#burgers" className="btn-primary">
+                  {t("hero.cta")}
+                  <ArrowRight size={18} weight="bold" />
+                </a>
+              )}
               <button onClick={openMenu} className="btn-ghost">
                 {t("hero.secondaryCta")}
               </button>

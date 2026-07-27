@@ -3,14 +3,16 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, ArrowRight } from "@phosphor-icons/react";
+import { X, ArrowRight, ArrowSquareOut } from "@phosphor-icons/react";
 import { useUI } from "@/lib/store";
 import { useT } from "@/lib/i18n";
+import { isGrabOnly, grabUrl } from "@/lib/ordering";
 
 export function MenuModal() {
   const t = useT();
   const open = useUI((s) => s.menuOpen);
   const close = useUI((s) => s.closeMenu);
+  const grabOnly = isGrabOnly();
 
   // Close on Escape + lock body scroll while open
   useEffect(() => {
@@ -85,22 +87,41 @@ export function MenuModal() {
                 </QuickLink>
               </div>
 
-              {/* Main order CTA */}
-              <Link
-                href="/#burgers"
-                onClick={close}
-                className="group flex w-full items-center justify-between gap-4 rounded-full bg-white px-5 py-3.5 text-sm font-medium text-zinc-950 transition-all hover:bg-zinc-100 active:translate-y-[1px]"
-              >
-                <span className="flex items-center gap-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-zinc-950">
-                    <ArrowRight size={14} weight="bold" />
+              {/* Main order CTA — Grab in grab_only mode, in-site otherwise */}
+              {grabOnly ? (
+                <a
+                  href={grabUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex w-full items-center justify-between gap-4 rounded-full bg-accent px-5 py-3.5 text-sm font-medium text-zinc-950 transition-all hover:brightness-110 active:translate-y-[1px]"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-950/10">
+                      <ArrowSquareOut size={14} weight="bold" />
+                    </span>
+                    <span>{t("hero.ctaGrab")}</span>
                   </span>
-                  <span>{t("menumodal.order")}</span>
-                </span>
-                <span className="hidden text-xs uppercase tracking-widest text-accent transition-transform group-hover:translate-x-0.5 sm:inline">
-                  {t("menumodal.goto")}
-                </span>
-              </Link>
+                  <span className="hidden text-[10px] uppercase tracking-widest opacity-70 sm:inline">
+                    {t("gm.external")}
+                  </span>
+                </a>
+              ) : (
+                <Link
+                  href="/#burgers"
+                  onClick={close}
+                  className="group flex w-full items-center justify-between gap-4 rounded-full bg-white px-5 py-3.5 text-sm font-medium text-zinc-950 transition-all hover:bg-zinc-100 active:translate-y-[1px]"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-zinc-950">
+                      <ArrowRight size={14} weight="bold" />
+                    </span>
+                    <span>{t("menumodal.order")}</span>
+                  </span>
+                  <span className="hidden text-xs uppercase tracking-widest text-accent transition-transform group-hover:translate-x-0.5 sm:inline">
+                    {t("menumodal.goto")}
+                  </span>
+                </Link>
+              )}
             </div>
           </div>
         </motion.div>

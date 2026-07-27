@@ -6,6 +6,7 @@ import { Plus, Check } from "@phosphor-icons/react";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { useT, useLocalize } from "@/lib/i18n";
+import { isGrabOnly } from "@/lib/ordering";
 import type { MenuItem } from "@/data/menu";
 
 // ── Colored tag chip for the 3 Singha variants ────────────
@@ -152,6 +153,7 @@ function DrinkRow({ item, index }: { item: MenuItem; index: number }) {
   const t = useT();
   const add = useCart((s) => s.add);
   const [justAdded, setJustAdded] = useState(false);
+  const grabOnly = isGrabOnly();
 
   const handleAdd = () => {
     add(item);
@@ -191,6 +193,7 @@ function DrinkRow({ item, index }: { item: MenuItem; index: number }) {
         <div className="font-mono text-sm font-medium tabular-nums text-white">
           {formatPrice(item.price)}
         </div>
+        {!grabOnly && (
         <button
           onClick={handleAdd}
           disabled={justAdded}
@@ -227,6 +230,7 @@ function DrinkRow({ item, index }: { item: MenuItem; index: number }) {
             )}
           </AnimatePresence>
         </button>
+        )}
       </div>
     </motion.li>
   );
