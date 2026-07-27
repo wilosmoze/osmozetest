@@ -206,6 +206,14 @@ export function AdminClient({ initialOrders }: { initialOrders: Order[] }) {
           </div>
           <div className="flex items-center gap-2">
             <LiveDot />
+            <a
+              href="/admin/customers"
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/[0.05]"
+              title="Customers"
+            >
+              <span className="hidden sm:inline">Customers</span>
+              <span className="sm:hidden">👥</span>
+            </a>
             <button
               onClick={() => {
                 setSoundOn((v) => !v);

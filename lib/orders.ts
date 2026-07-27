@@ -32,6 +32,7 @@ export type OrderCustomer = {
   firstName: string;
   lastName: string;
   phone: string;
+  email?: string;
   locationUrl: string;
   notes?: string;
 };

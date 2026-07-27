@@ -28,6 +28,7 @@ type FormState = {
   firstName: string;
   lastName: string;
   phone: string;
+  email: string;
   locationUrl: string;
   notes: string;
 };
@@ -36,6 +37,7 @@ const empty: FormState = {
   firstName: "",
   lastName: "",
   phone: "",
+  email: "",
   locationUrl: "",
   notes: "",
 };
@@ -220,6 +222,10 @@ export function CheckoutForm() {
     if (!form.firstName) e.firstName = "First name required";
     if (!form.lastName) e.lastName = "Last name required";
     if (!/^[\d\s+()-]{8,}$/.test(form.phone)) e.phone = "Invalid phone number";
+    // Email is optional — only validate format when provided.
+    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      e.email = "Invalid email";
+    }
     if (!form.locationUrl.trim()) {
       e.locationUrl = "Google Maps link required";
     } else if (!GMAPS_REGEX.test(form.locationUrl.trim())) {
@@ -269,6 +275,15 @@ export function CheckoutForm() {
             onChange={(v) => update("phone", v)}
             error={errors.phone}
             inputMode="tel"
+          />
+          <Field
+            className="md:col-span-2"
+            label="Email (optional)"
+            placeholder="you@email.com"
+            value={form.email}
+            onChange={(v) => update("email", v)}
+            error={errors.email}
+            inputMode="email"
           />
 
           {/* ---------- BLOC LIEN GOOGLE MAPS ---------- */}
