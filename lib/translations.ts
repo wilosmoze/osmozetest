@@ -173,6 +173,23 @@ const en: Dict = {
   "co.minAfter": "min after confirmation.",
   "co.locationOutsideError":
     "Address is beyond our delivery range. Use Grab Food instead.",
+  "co.email": "Email (optional)",
+  "co.emailPh": "you@email.com",
+  "co.emailError": "Invalid email",
+  "co.phonePh": "+66 8X XXX XXXX",
+  "co.modify": "Modify",
+  "co.free": "Free",
+  "co.subtotal": "Subtotal",
+  "co.delivery": "Delivery",
+  "co.total": "Total",
+  "co.geoUnsupported": "Your browser doesn't support geolocation.",
+  "co.geoDenied":
+    "Location permission denied. Enable it in your browser settings, or paste a Google Maps link instead.",
+  "co.geoTimeout": "Location request timed out. Try again or paste a Maps link.",
+  "co.geoGeneric": "Couldn't get your location.",
+  "co.shortLinkFail":
+    "Couldn't auto-detect zone from short link — the fee will be confirmed at checkout.",
+  "co.zoneOnlyKm": "we only deliver within {km} km",
 
   // Grab modal
   "gm.title": "You're outside our range",
@@ -371,6 +388,23 @@ const fr: Dict = {
   "co.minAfter": "min après confirmation.",
   "co.locationOutsideError":
     "Adresse hors zone de livraison. Utilisez Grab Food.",
+  "co.email": "Email (optionnel)",
+  "co.emailPh": "vous@email.com",
+  "co.emailError": "Email invalide",
+  "co.phonePh": "+66 8X XXX XXXX",
+  "co.modify": "Modifier",
+  "co.free": "Gratuit",
+  "co.subtotal": "Sous-total",
+  "co.delivery": "Livraison",
+  "co.total": "Total",
+  "co.geoUnsupported": "Votre navigateur ne supporte pas la géolocalisation.",
+  "co.geoDenied":
+    "Autorisation refusée. Activez-la dans les paramètres du navigateur, ou collez un lien Google Maps.",
+  "co.geoTimeout": "Délai dépassé. Réessayez ou collez un lien Maps.",
+  "co.geoGeneric": "Impossible de récupérer votre position.",
+  "co.shortLinkFail":
+    "Zone non détectée depuis le lien court — les frais seront confirmés au paiement.",
+  "co.zoneOnlyKm": "nous livrons uniquement dans un rayon de {km} km",
 
   "gm.title": "Vous êtes hors zone",
   "gm.body1":
@@ -566,6 +600,23 @@ const ru: Dict = {
   "co.minAfter": "мин после подтверждения.",
   "co.locationOutsideError":
     "Адрес вне зоны доставки. Используйте Grab Food.",
+  "co.email": "Email (необязательно)",
+  "co.emailPh": "you@email.com",
+  "co.emailError": "Неверный email",
+  "co.phonePh": "+66 8X XXX XXXX",
+  "co.modify": "Изменить",
+  "co.free": "Бесплатно",
+  "co.subtotal": "Промежуточный итог",
+  "co.delivery": "Доставка",
+  "co.total": "Итого",
+  "co.geoUnsupported": "Ваш браузер не поддерживает геолокацию.",
+  "co.geoDenied":
+    "Доступ к местоположению запрещён. Разрешите в настройках браузера или вставьте ссылку Google Maps.",
+  "co.geoTimeout": "Время ожидания истекло. Попробуйте снова или вставьте ссылку Maps.",
+  "co.geoGeneric": "Не удалось получить ваше местоположение.",
+  "co.shortLinkFail":
+    "Не удалось определить зону по короткой ссылке — стоимость будет подтверждена при оплате.",
+  "co.zoneOnlyKm": "мы доставляем только в радиусе {km} км",
 
   "gm.title": "Вы за пределами зоны",
   "gm.body1":
@@ -760,6 +811,23 @@ const th: Dict = {
   "co.minAfter": "นาที หลังยืนยัน",
   "co.locationOutsideError":
     "ที่อยู่อยู่นอกเขตจัดส่ง ใช้ Grab Food แทน",
+  "co.email": "อีเมล (ไม่บังคับ)",
+  "co.emailPh": "you@email.com",
+  "co.emailError": "อีเมลไม่ถูกต้อง",
+  "co.phonePh": "+66 8X XXX XXXX",
+  "co.modify": "แก้ไข",
+  "co.free": "ฟรี",
+  "co.subtotal": "ยอดรวมย่อย",
+  "co.delivery": "จัดส่ง",
+  "co.total": "รวม",
+  "co.geoUnsupported": "เบราว์เซอร์ของคุณไม่รองรับตำแหน่ง",
+  "co.geoDenied":
+    "ไม่อนุญาตให้เข้าถึงตำแหน่ง เปิดในตั้งค่าเบราว์เซอร์ หรือวางลิงก์ Google Maps",
+  "co.geoTimeout": "หมดเวลารอตำแหน่ง ลองใหม่หรือวางลิงก์ Maps",
+  "co.geoGeneric": "ไม่สามารถระบุตำแหน่งของคุณได้",
+  "co.shortLinkFail":
+    "ไม่สามารถตรวจจับเขตจากลิงก์สั้นได้ — จะยืนยันค่าจัดส่งตอนชำระเงิน",
+  "co.zoneOnlyKm": "เราจัดส่งเฉพาะในรัศมี {km} กม.",
 
   "gm.title": "คุณอยู่นอกเขตของเรา",
   "gm.body1":

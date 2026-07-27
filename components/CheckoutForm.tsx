@@ -18,6 +18,7 @@ import { AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { themeConfig } from "@/config/theme.config";
+import { useT } from "@/lib/i18n";
 import {
   extractCoords,
   isShortMapsUrl,
@@ -48,6 +49,7 @@ const GMAPS_REGEX =
   /^https?:\/\/(?:[\w.-]+\.)?(?:google\.[a-z.]+\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)/i;
 
 export function CheckoutForm() {
+  const t = useT();
   const router = useRouter();
   const [form, setForm] = useState<FormState>(empty);
   const [errors, setErrors] = useState<Partial<FormState>>({});
@@ -142,8 +144,7 @@ export function CheckoutForm() {
             } else {
               setGeoStatus({
                 loading: false,
-                error:
-                  "Couldn't auto-detect zone from short link — the fee will be confirmed at checkout.",
+                error: t("co.shortLinkFail"),
                 zoneDetected: null,
                 distanceKm: null,
               });
@@ -168,7 +169,7 @@ export function CheckoutForm() {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
       setGeoStatus((s) => ({
         ...s,
-        error: "Your browser doesn't support geolocation.",
+        error: t("co.geoUnsupported"),
       }));
       return;
     }
@@ -185,12 +186,11 @@ export function CheckoutForm() {
         if (zone === "too_far") setShowGrabModal(true);
       },
       (err) => {
-        let msg = "Couldn't get your location.";
+        let msg = t("co.geoGeneric");
         if (err.code === err.PERMISSION_DENIED) {
-          msg =
-            "Location permission denied. Enable it in your browser settings, or paste a Google Maps link instead.";
+          msg = t("co.geoDenied");
         } else if (err.code === err.TIMEOUT) {
-          msg = "Location request timed out. Try again or paste a Maps link.";
+          msg = t("co.geoTimeout");
         }
         setGeoStatus({ loading: false, error: msg, zoneDetected: null, distanceKm: null });
       },
@@ -202,13 +202,11 @@ export function CheckoutForm() {
     return (
       <div className="rounded-3xl border border-white/[0.06] bg-surface p-12 text-center">
         <h2 className="font-display text-2xl font-semibold">
-          Your cart is empty
+          {t("co.cartEmpty")}
         </h2>
-        <p className="mt-2 text-zinc-400">
-          Add a few burgers before checking out.
-        </p>
+        <p className="mt-2 text-zinc-400">{t("co.cartEmptyHint")}</p>
         <button onClick={() => router.push("/")} className="btn-ghost mt-6">
-          Back to the menu
+          {t("co.backToMenu")}
         </button>
       </div>
     );
@@ -221,23 +219,21 @@ export function CheckoutForm() {
 
   const validate = () => {
     const e: Partial<FormState> = {};
-    if (!form.firstName) e.firstName = "First name required";
-    if (!form.lastName) e.lastName = "Last name required";
-    if (!/^[\d\s+()-]{8,}$/.test(form.phone)) e.phone = "Invalid phone number";
+    if (!form.firstName) e.firstName = t("co.firstNameError");
+    if (!form.lastName) e.lastName = t("co.lastNameError");
+    if (!/^[\d\s+()-]{8,}$/.test(form.phone)) e.phone = t("co.phoneError");
     // Email is optional — only validate format when provided.
     if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      e.email = "Invalid email";
+      e.email = t("co.emailError");
     }
     if (!form.locationUrl.trim()) {
-      e.locationUrl = "Google Maps link required";
+      e.locationUrl = t("co.linkRequired");
     } else if (!GMAPS_REGEX.test(form.locationUrl.trim())) {
-      e.locationUrl =
-        "This doesn't look like a Google Maps URL. Check and paste again.";
+      e.locationUrl = t("co.linkInvalid");
     }
     // Hard block: too far from kitchen
     if (geoStatus.zoneDetected === "too_far") {
-      e.locationUrl =
-        "Address is beyond our delivery range. Use Grab Food instead.";
+      e.locationUrl = t("co.locationOutsideError");
       setShowGrabModal(true);
     }
     setErrors(e);
@@ -257,9 +253,9 @@ export function CheckoutForm() {
         className="lg:col-span-3"
       >
         <header className="mb-8">
-          <span className="chip">Final step</span>
+          <span className="chip">{t("co.finalStep")}</span>
           <h1 className="mt-4 font-display text-4xl font-bold tracking-tighter md:text-5xl">
-            Where are we delivering?
+            {t("co.title")}
           </h1>
         </header>
 
@@ -267,12 +263,12 @@ export function CheckoutForm() {
           onSubmit={(e) => e.preventDefault()}
           className="grid grid-cols-1 gap-5 md:grid-cols-2"
         >
-          <Field label="First name" value={form.firstName} onChange={(v) => update("firstName", v)} error={errors.firstName} />
-          <Field label="Last name" value={form.lastName} onChange={(v) => update("lastName", v)} error={errors.lastName} />
+          <Field label={t("co.firstName")} value={form.firstName} onChange={(v) => update("firstName", v)} error={errors.firstName} />
+          <Field label={t("co.lastName")} value={form.lastName} onChange={(v) => update("lastName", v)} error={errors.lastName} />
           <Field
             className="md:col-span-2"
-            label="Phone"
-            placeholder="+33 6 XX XX XX XX"
+            label={t("co.phone")}
+            placeholder={t("co.phonePh")}
             value={form.phone}
             onChange={(v) => update("phone", v)}
             error={errors.phone}
@@ -280,8 +276,8 @@ export function CheckoutForm() {
           />
           <Field
             className="md:col-span-2"
-            label="Email (optional)"
-            placeholder="you@email.com"
+            label={t("co.email")}
+            placeholder={t("co.emailPh")}
             value={form.email}
             onChange={(v) => update("email", v)}
             error={errors.email}
@@ -293,7 +289,7 @@ export function CheckoutForm() {
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-xs uppercase tracking-wider text-zinc-500">
                 <MapPin size={14} weight="duotone" />
-                Your delivery location
+                {t("co.locationTitle")}
               </span>
               <button
                 type="button"
@@ -301,7 +297,7 @@ export function CheckoutForm() {
                 className="inline-flex items-center gap-1 text-xs text-zinc-500 transition-colors hover:text-accent"
               >
                 <Info size={13} weight="duotone" />
-                {showHelp ? "Hide help" : "How does it work?"}
+                {showHelp ? t("co.hideHelp") : t("co.howto")}
               </button>
             </div>
 
@@ -327,17 +323,15 @@ export function CheckoutForm() {
                   <Crosshair size={18} weight="duotone" />
                 )}
                 <span className="font-medium">
-                  {geoStatus.loading
-                    ? "Locating you…"
-                    : "Use my current location"}
+                  {geoStatus.loading ? t("co.locating") : t("co.useMyLocation")}
                 </span>
               </span>
-              <span className="text-xs opacity-70">1 tap</span>
+              <span className="text-xs opacity-70">{t("co.oneTap")}</span>
             </button>
 
             <div className="flex items-center gap-3 py-1 text-[10px] uppercase tracking-widest text-zinc-600">
               <span className="h-px flex-1 bg-white/[0.04]" />
-              or paste a link
+              {t("co.orPaste")}
               <span className="h-px flex-1 bg-white/[0.04]" />
             </div>
 
@@ -353,9 +347,9 @@ export function CheckoutForm() {
                   <MapPin size={16} weight="duotone" className="text-accent" />
                 </span>
                 <span>
-                  <span className="block font-medium">Open Google Maps</span>
+                  <span className="block font-medium">{t("co.openMapsBtn")}</span>
                   <span className="block text-[11px] text-zinc-500">
-                    Find your spot, tap Share → Copy link
+                    {t("co.openMapsHint")}
                   </span>
                 </span>
               </span>
@@ -374,19 +368,13 @@ export function CheckoutForm() {
                 className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 text-xs text-zinc-400"
               >
                 <p className="text-zinc-300 font-medium mb-2">
-                  On mobile (the easiest way):
+                  {t("co.helpMobile")}
                 </p>
                 <ol className="space-y-1.5 list-decimal list-inside marker:text-accent">
-                  <li>Open the Google Maps app</li>
-                  <li>
-                    Tap the <span className="text-zinc-300">"My location"</span>{" "}
-                    icon (bottom right) or long-press your exact address
-                  </li>
-                  <li>
-                    Tap <span className="text-zinc-300">Share</span>{" "}
-                    → <span className="text-zinc-300">Copy link</span>
-                  </li>
-                  <li>Paste the link below</li>
+                  <li>{t("co.step1")}</li>
+                  <li>{t("co.step2")}</li>
+                  <li>{t("co.step3")}</li>
+                  <li>{t("co.step4")}</li>
                 </ol>
                 <a
                   href="https://www.google.com/maps"
@@ -394,7 +382,7 @@ export function CheckoutForm() {
                   rel="noopener noreferrer"
                   className="mt-3 inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
                 >
-                  Open Google Maps in a new tab
+                  {t("co.openMapsNewTab")}
                   <ArrowSquareOut size={12} weight="bold" />
                 </a>
               </motion.div>
@@ -432,7 +420,7 @@ export function CheckoutForm() {
             )}
             {locationOk && !errors.locationUrl && !geoStatus.zoneDetected && (
               <span className="flex items-center gap-1.5 text-xs text-emerald-400">
-                Valid Maps link — your courier will go to the exact spot.
+                {t("co.linkValid")}
               </span>
             )}
 
@@ -456,27 +444,27 @@ export function CheckoutForm() {
                 )}
                 {geoStatus.zoneDetected === "rawai" && (
                   <span>
-                    <span className="font-medium">You're in Rawai</span> —
-                    delivery is on us.
+                    <span className="font-medium">{t("co.inRawai.youAreIn")}</span>{" "}
+                    {t("co.inRawai.tail")}
                   </span>
                 )}
                 {geoStatus.zoneDetected === "outside" && (
                   <span>
-                    <span className="font-medium">You're outside Rawai</span>{" "}
-                    — {formatPrice(20)} delivery fee added automatically.
+                    <span className="font-medium">{t("co.outside.youAreOut")}</span>{" "}
+                    {t("co.outside.tail", { fee: formatPrice(20) })}
                   </span>
                 )}
                 {geoStatus.zoneDetected === "too_far" && (
                   <span>
                     <span className="font-medium">
-                      Beyond our {themeConfig.delivery.maxDistanceKm} km range
+                      {t("co.tooFar.label", { km: themeConfig.delivery.maxDistanceKm })}
                     </span>
                     {geoStatus.distanceKm !== null && (
                       <span className="ml-1 text-red-200/80">
-                        ({geoStatus.distanceKm.toFixed(1)} km away)
+                        ({geoStatus.distanceKm.toFixed(1)} km)
                       </span>
                     )}{" "}
-                    — please use Grab Food instead.
+                    {t("co.tooFar.tail")}
                   </span>
                 )}
               </motion.div>
@@ -489,7 +477,7 @@ export function CheckoutForm() {
                 rel="noopener noreferrer"
                 className="inline-flex w-fit items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-400 transition-colors hover:border-accent/40 hover:text-white"
               >
-                Preview on Google Maps
+                {t("co.previewMaps")}
                 <ArrowSquareOut size={12} weight="bold" />
               </a>
             )}
@@ -498,8 +486,8 @@ export function CheckoutForm() {
 
           <Field
             className="md:col-span-2"
-            label="Delivery notes (door code, floor, instructions)"
-            placeholder="Building B, 3rd floor left, code 4521A"
+            label={t("co.notes")}
+            placeholder={t("co.notesPh")}
             value={form.notes}
             onChange={(v) => update("notes", v)}
             multiline
@@ -509,11 +497,11 @@ export function CheckoutForm() {
           <div className="md:col-span-2 flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span className="text-xs uppercase tracking-wider text-zinc-500">
-                Delivery zone
+                {t("co.zoneTitle")}
               </span>
               <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-zinc-600">
                 <ShieldCheck size={11} weight="duotone" />
-                Auto-detected
+                {t("co.autoDetected")}
               </span>
             </div>
 
@@ -530,10 +518,7 @@ export function CheckoutForm() {
                 return (
                   <div className="flex items-center gap-3 rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.01] px-4 py-4 text-sm text-zinc-500">
                     <MapPin size={18} weight="duotone" className="opacity-50" />
-                    <span>
-                      Share your location above — your delivery zone &amp; fee
-                      will appear here.
-                    </span>
+                    <span>{t("co.shareFirst")}</span>
                   </div>
                 );
               }
@@ -553,13 +538,13 @@ export function CheckoutForm() {
                       </div>
                       <div>
                         <div className="text-sm font-medium text-red-300">
-                          Outside delivery range
+                          {t("co.outOfRange")}
                         </div>
                         <div className="mt-0.5 text-[11px] text-red-200/70">
                           {geoStatus.distanceKm !== null
-                            ? `${geoStatus.distanceKm.toFixed(1)} km from us — `
+                            ? `${geoStatus.distanceKm.toFixed(1)} km — `
                             : ""}
-                          we only deliver within {themeConfig.delivery.maxDistanceKm} km
+                          {t("co.zoneOnlyKm", { km: themeConfig.delivery.maxDistanceKm })}
                         </div>
                       </div>
                     </div>
@@ -568,7 +553,7 @@ export function CheckoutForm() {
                       onClick={() => setShowGrabModal(true)}
                       className="rounded-full border border-red-500/40 bg-red-500/10 px-4 py-2 text-xs font-medium text-red-200 transition-colors hover:bg-red-500/20"
                     >
-                      Use Grab
+                      {t("co.tooFar.useGrab")}
                     </button>
                   </motion.div>
                 );
@@ -626,11 +611,11 @@ export function CheckoutForm() {
                   >
                     <div className="font-display text-xl font-semibold tracking-tight">
                       {activeZone && activeZone.fee === 0
-                        ? "Free"
+                        ? t("co.free")
                         : `+${formatPrice(activeZone?.fee ?? 0)}`}
                     </div>
                     <div className="mt-0.5 text-[10px] uppercase tracking-widest opacity-70">
-                      Delivery fee
+                      {t("co.deliveryFee")}
                     </div>
                   </div>
                 </motion.div>
@@ -649,11 +634,10 @@ export function CheckoutForm() {
                 className="mx-auto text-red-400"
               />
               <h3 className="mt-3 font-display text-xl font-semibold tracking-tight text-red-200">
-                Out of delivery range
+                {t("co.outOfRange")}
               </h3>
               <p className="mt-2 mx-auto max-w-[42ch] text-sm text-red-200/70">
-                We can't deliver to your address — but Grab Food can. Tap
-                below to find burgers near you.
+                {t("co.outOfRangeBody")}
               </p>
               <button
                 type="button"
@@ -661,7 +645,7 @@ export function CheckoutForm() {
                 className="mt-5 inline-flex items-center gap-2 rounded-full bg-red-500/15 px-5 py-3 text-sm font-medium text-red-200 transition-colors hover:bg-red-500/25"
               >
                 <ArrowSquareOut size={16} weight="bold" />
-                Open Grab Food
+                {t("co.openGrabFood")}
               </button>
             </div>
           ) : (
@@ -685,7 +669,7 @@ export function CheckoutForm() {
         <div className="sticky top-28 rounded-3xl border border-white/[0.06] bg-surface p-6">
           <div className="flex items-center justify-between gap-3">
             <div className="font-display text-lg font-semibold tracking-tight">
-              Order summary
+              {t("co.summary")}
             </div>
             <button
               type="button"
@@ -693,7 +677,7 @@ export function CheckoutForm() {
               className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-zinc-300 transition-colors hover:border-accent/40 hover:bg-accent/10 hover:text-accent active:translate-y-[1px]"
             >
               <PencilSimple size={12} weight="bold" />
-              Modify
+              {t("co.modify")}
             </button>
           </div>
           <ul className="mt-4 divide-y divide-white/[0.04]">
@@ -711,24 +695,24 @@ export function CheckoutForm() {
             ))}
           </ul>
           <div className="my-4 h-px bg-white/[0.06]" />
-          <Row label="Subtotal" value={formatPrice(subtotal())} />
+          <Row label={t("co.subtotal")} value={formatPrice(subtotal())} />
           <Row
-            label="Delivery"
-            value={deliveryFee() === 0 ? "Free" : formatPrice(deliveryFee())}
+            label={t("co.delivery")}
+            value={deliveryFee() === 0 ? t("co.free") : formatPrice(deliveryFee())}
             highlight={deliveryFee() === 0}
           />
           <div className="my-3 h-px bg-white/[0.06]" />
           <div className="flex items-center justify-between font-display text-lg font-semibold">
-            <span>Total</span>
+            <span>{t("co.total")}</span>
             <span className="font-mono tabular-nums">{formatPrice(total())}</span>
           </div>
 
           <div className="mt-6 flex items-start gap-2 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 text-xs text-zinc-400">
             <ShieldCheck size={18} weight="duotone" className="mt-0.5 text-emerald-400" />
             <div>
-              <span className="text-white">Estimated delivery:</span>{" "}
+              <span className="text-white">{t("co.estimatedDelivery")}</span>{" "}
               {themeConfig.delivery.estimatedMinutes.min}–
-              {themeConfig.delivery.estimatedMinutes.max} min after confirmation.
+              {themeConfig.delivery.estimatedMinutes.max} {t("co.minAfter")}
             </div>
           </div>
         </div>
@@ -756,7 +740,7 @@ export function CheckoutForm() {
             <button
               type="button"
               onClick={() => setShowGrabModal(false)}
-              aria-label="Close"
+              aria-label={t("common.close")}
               className="absolute right-4 top-4 rounded-full border border-white/10 p-2 text-zinc-400 hover:bg-white/[0.05] hover:text-white"
             >
               <X size={16} weight="bold" />
@@ -767,28 +751,18 @@ export function CheckoutForm() {
             </div>
 
             <h2 className="mt-5 font-display text-2xl font-bold tracking-tight">
-              You're outside our range
+              {t("gm.title")}
             </h2>
             <p className="mt-3 text-sm text-zinc-400">
-              We only deliver within{" "}
-              <span className="text-white">
-                {themeConfig.delivery.maxDistanceKm} km
-              </span>{" "}
-              of our Rawai kitchen.
+              {t("gm.body1", { km: themeConfig.delivery.maxDistanceKm })}
               {geoStatus.distanceKm !== null && (
                 <>
-                  {" "}Your address is roughly{" "}
-                  <span className="text-white">
-                    {geoStatus.distanceKm.toFixed(1)} km
-                  </span>{" "}
-                  away.
+                  {" "}
+                  {t("gm.body1.distance", { km: geoStatus.distanceKm.toFixed(1) })}
                 </>
               )}
             </p>
-            <p className="mt-3 text-sm text-zinc-400">
-              No worries — you can still get great burgers delivered through
-              Grab Food.
-            </p>
+            <p className="mt-3 text-sm text-zinc-400">{t("gm.body2")}</p>
 
             <a
               href={themeConfig.delivery.grabUrl}
@@ -798,10 +772,10 @@ export function CheckoutForm() {
             >
               <span className="flex items-center gap-2">
                 <ArrowSquareOut size={18} weight="bold" />
-                Open Grab Food
+                {t("gm.openGrab")}
               </span>
               <span className="text-xs uppercase tracking-widest opacity-70">
-                External
+                {t("gm.external")}
               </span>
             </a>
 
@@ -810,7 +784,7 @@ export function CheckoutForm() {
               onClick={() => setShowGrabModal(false)}
               className="mt-3 w-full rounded-full border border-white/10 px-5 py-3 text-xs uppercase tracking-wider text-zinc-400 hover:bg-white/[0.05] hover:text-white"
             >
-              Use a different address
+              {t("gm.different")}
             </button>
           </motion.div>
         </motion.div>

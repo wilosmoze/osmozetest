@@ -7,6 +7,7 @@ import { LockKey } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useCart, useOrder } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 import type { OrderCustomer, OrderLine } from "@/lib/orders";
 
 const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export function StripePayment({ customer, lines, deliveryFee, amount, onValidate }: Props) {
+  const t = useT();
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const checkoutRef = useRef<StripeEmbeddedCheckout | null>(null);
@@ -33,7 +35,7 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
   const launch = useCallback(async () => {
     setError(null);
     if (!onValidate()) {
-      setError("Check your delivery details.");
+      setError(t("pay.checkDetails"));
       return;
     }
     setLoading(true);
@@ -48,7 +50,7 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? "Failed to create checkout session");
+        throw new Error(data.error ?? t("pay.failed"));
       }
 
       const data = (await res.json()) as {
@@ -106,11 +108,7 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-sm text-zinc-400">
         <LockKey size={16} weight="duotone" />
-        <span>
-          {stripePromise
-            ? "Secure payment by Stripe — end-to-end encrypted"
-            : "Demo mode (no card required)"}
-        </span>
+        <span>{stripePromise ? t("pay.secure") : t("pay.demo")}</span>
       </div>
 
       {!mounted && (
@@ -126,7 +124,7 @@ export function StripePayment({ customer, lines, deliveryFee, amount, onValidate
               className="block h-4 w-4 rounded-full border-2 border-zinc-950 border-t-transparent"
             />
           ) : (
-            `Pay ${formatPrice(amount)}`
+            t("pay.pay", { amount: formatPrice(amount) })
           )}
         </button>
       )}
