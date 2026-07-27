@@ -12,6 +12,7 @@ import {
   CheckCircle,
   WarningCircle,
   X,
+  PencilSimple,
 } from "@phosphor-icons/react";
 import { AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/store";
@@ -65,6 +66,7 @@ export function CheckoutForm() {
     total,
     deliveryZoneId,
     setDeliveryZone,
+    openDrawer: openCartDrawer,
   } = useCart();
 
   /** Classify a coords pair locally — mirrors lib/delivery.ts logic. */
@@ -681,8 +683,18 @@ export function CheckoutForm() {
 
       <aside className="lg:col-span-2">
         <div className="sticky top-28 rounded-3xl border border-white/[0.06] bg-surface p-6">
-          <div className="font-display text-lg font-semibold tracking-tight">
-            Order summary
+          <div className="flex items-center justify-between gap-3">
+            <div className="font-display text-lg font-semibold tracking-tight">
+              Order summary
+            </div>
+            <button
+              type="button"
+              onClick={openCartDrawer}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-zinc-300 transition-colors hover:border-accent/40 hover:bg-accent/10 hover:text-accent active:translate-y-[1px]"
+            >
+              <PencilSimple size={12} weight="bold" />
+              Modify
+            </button>
           </div>
           <ul className="mt-4 divide-y divide-white/[0.04]">
             {lines.map((l) => (

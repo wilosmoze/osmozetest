@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { CheckoutForm } from "@/components/CheckoutForm";
+import { CartDrawer } from "@/components/CartDrawer";
 
 export default function CheckoutPage() {
   return (
@@ -8,6 +9,10 @@ export default function CheckoutPage() {
       <div className="container-app">
         <CheckoutForm />
       </div>
+      {/* Mount the cart drawer here so the header cart button + the */}
+      {/* 'Modify cart' link inside the form both open the same panel */}
+      {/* where quantities can be tweaked or lines removed.           */}
+      <CartDrawer />
     </main>
   );
 }
