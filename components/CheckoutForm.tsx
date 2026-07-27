@@ -825,7 +825,7 @@ function Field({
   placeholder?: string;
   className?: string;
   multiline?: boolean;
-  inputMode?: "tel" | "numeric" | "text";
+  inputMode?: "tel" | "numeric" | "text" | "email";
 }) {
   const baseInput =
     "w-full rounded-2xl border bg-white/[0.02] px-4 py-3.5 text-sm placeholder:text-zinc-600 transition-colors focus:outline-none focus:border-accent/60";
