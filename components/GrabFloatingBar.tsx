@@ -20,10 +20,11 @@ export function GrabFloatingBar() {
       transition={{ delay: 1.2, type: "spring", stiffness: 220, damping: 26 }}
       className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 md:bottom-6"
     >
+      {/* Same-tab navigation — see Hero.tsx comment for the iOS deeplink */}
+      {/* reason. Grab short-links only hand off to the installed app when  */}
+      {/* the anchor navigates the current tab.                            */}
       <a
         href={grabUrl}
-        target="_blank"
-        rel="noopener noreferrer"
         className="pointer-events-auto group flex w-full max-w-md items-center justify-between gap-4 rounded-full bg-accent px-5 py-3.5 text-sm font-medium text-zinc-950 shadow-[0_16px_60px_-12px_rgba(201,163,92,0.5)] transition-all hover:brightness-110 active:translate-y-[1px] md:py-4"
       >
         <span className="flex items-center gap-3">

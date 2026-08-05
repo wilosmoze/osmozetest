@@ -124,12 +124,11 @@ export function Hero() {
               className="mt-10 flex flex-wrap items-center gap-3"
             >
               {grabOnly ? (
-                <a
-                  href={grabUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary"
-                >
+                // Same-tab navigation on purpose: iOS Safari only honours
+                // Grab's universal link (deeplink to the installed app)
+                // when the anchor navigates in the same tab. target=_blank
+                // + noopener/noreferrer prevents the app hand-off on mobile.
+                <a href={grabUrl} className="btn-primary">
                   {t("hero.ctaGrab")}
                   <ArrowSquareOut size={18} weight="bold" />
                 </a>

@@ -89,10 +89,9 @@ export function MenuModal() {
 
               {/* Main order CTA — Grab in grab_only mode, in-site otherwise */}
               {grabOnly ? (
+                // Same-tab: see Hero.tsx / GrabFloatingBar comments.
                 <a
                   href={grabUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="group flex w-full items-center justify-between gap-4 rounded-full bg-accent px-5 py-3.5 text-sm font-medium text-zinc-950 transition-all hover:brightness-110 active:translate-y-[1px]"
                 >
                   <span className="flex items-center gap-3">
