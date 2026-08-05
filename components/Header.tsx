@@ -30,7 +30,9 @@ export function Header() {
     { label: t("nav.sauces"), href: "/#sauces" },
     { label: t("nav.fries"), href: "/#fries" },
     { label: t("nav.drinks"), href: "/#drinks" },
-    { label: t("nav.delivery"), href: "/#delivery" },
+    // Delivery link points at the DeliveryBanner section which is hidden
+    // in grab_only mode — skip the nav entry so we don't scroll into a void.
+    ...(grabOnly ? [] : [{ label: t("nav.delivery"), href: "/#delivery" }]),
   ];
 
   return (

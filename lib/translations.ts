@@ -26,6 +26,8 @@ const en: Dict = {
   "hero.eyebrow": "Premium burgers — Rawai",
   "hero.subline":
     "Five signature burgers, nine premium sauces, home-cut fries. Sealed tight — free delivery across Rawai.",
+  "hero.sublineGrab":
+    "Five signature burgers, nine premium sauces, home-cut fries. Sealed tight — now on Grab Food.",
   "hero.cta": "Order now",
   "hero.ctaGrab": "Order on Grab Food",
   "hero.secondaryCta": "View the menu",
@@ -250,6 +252,8 @@ const fr: Dict = {
   "hero.eyebrow": "Burgers premium — Rawaï",
   "hero.subline":
     "Cinq burgers signature, neuf sauces premium, frites maison. Bien scellés — livraison gratuite dans tout Rawaï.",
+  "hero.sublineGrab":
+    "Cinq burgers signature, neuf sauces premium, frites maison. Bien scellés — désormais sur Grab Food.",
   "hero.cta": "Commander",
   "hero.ctaGrab": "Commander sur Grab Food",
   "hero.secondaryCta": "Voir le menu",
@@ -463,6 +467,8 @@ const ru: Dict = {
   "hero.eyebrow": "Премиум бургеры — Равай",
   "hero.subline":
     "Пять фирменных бургеров, девять премиум соусов, картофель фри домашней нарезки. Запечатаны плотно — бесплатная доставка по всему Раваю.",
+  "hero.sublineGrab":
+    "Пять фирменных бургеров, девять премиум соусов, картофель фри домашней нарезки. Запечатаны плотно — теперь на Grab Food.",
   "hero.cta": "Заказать",
   "hero.ctaGrab": "Заказать через Grab Food",
   "hero.secondaryCta": "Открыть меню",
@@ -675,6 +681,8 @@ const th: Dict = {
   "hero.eyebrow": "พรีเมียมเบอร์เกอร์ — ราไวย์",
   "hero.subline":
     "ห้าเบอร์เกอร์ซิกเนเจอร์ เก้าซอสพรีเมียม เฟรนช์ฟรายส์โฮมเมด ปิดผนึกแน่น — จัดส่งฟรีทั่วราไวย์",
+  "hero.sublineGrab":
+    "ห้าเบอร์เกอร์ซิกเนเจอร์ เก้าซอสพรีเมียม เฟรนช์ฟรายส์โฮมเมด ปิดผนึกแน่น — ตอนนี้บน Grab Food",
   "hero.cta": "สั่งเลย",
   "hero.ctaGrab": "สั่งผ่าน Grab Food",
   "hero.secondaryCta": "ดูเมนู",

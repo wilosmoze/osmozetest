@@ -93,17 +93,12 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
           <h3 className="font-display text-xl font-semibold leading-tight tracking-tight">
             {item.name}
           </h3>
-          {/* In grab_only mode we still show the price in the header       */}
-          {/* since the Add buttons (which normally carry the price) are    */}
-          {/* hidden.                                                        */}
-          {(!hasMenu || grabOnly) && (
+          {/* Prices are hidden entirely in grab_only mode — Grab shows */}
+          {/* its own tariffs. In own_site the header price is only     */}
+          {/* rendered for items without a Solo/Set toggle (fries etc). */}
+          {!grabOnly && !hasMenu && (
             <span className="shrink-0 font-mono text-sm tabular-nums text-white">
               {formatPrice(item.price)}
-              {grabOnly && hasMenu && (
-                <span className="ml-1 text-xs text-zinc-500">
-                  / {formatPrice(item.menuPrice!)} {t("menu.combo").toLowerCase()}
-                </span>
-              )}
             </span>
           )}
         </div>
@@ -128,14 +123,10 @@ export function ProductCard({ item, index, variant = "hero" }: Props) {
         )}
 
         {grabOnly ? (
-          // Grab-only mode: no per-card add buttons — a single sticky
-          // floating bar (GrabFloatingBar) handles ordering site-wide.
-          hasMenu && (
-            <p className="mt-auto text-[11px] text-zinc-500">
-              <span className="text-accent">{t("menu.combo")}</span>{" "}
-              · {t("menu.comboIncludes")}
-            </p>
-          )
+          // Grab-only mode: no per-card add buttons, no combo hint —
+          // a single sticky floating bar (GrabFloatingBar) handles all
+          // ordering site-wide and Grab shows its own tariffs/combos.
+          null
         ) : hasMenu ? (
           <div className="mt-auto flex flex-col gap-2">
             <AddButton

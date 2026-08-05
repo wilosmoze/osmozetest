@@ -15,11 +15,18 @@ export function Hero() {
   // Brand mantra — kept untranslated across locales by design
   const headline = themeConfig.hero.headline;
 
-  const reassurances = [
-    { label: t("hero.reassure.30min.label"), sub: t("hero.reassure.30min.sub") },
-    { label: t("hero.reassure.100.label"), sub: t("hero.reassure.100.sub") },
-    { label: t("hero.reassure.free.label"), sub: t("hero.reassure.free.sub") },
-  ];
+  // In grab_only mode we hide the delivery-focused 'Free / in Rawai' tile
+  // since Grab handles delivery + pricing itself.
+  const reassurances = grabOnly
+    ? [
+        { label: t("hero.reassure.30min.label"), sub: t("hero.reassure.30min.sub") },
+        { label: t("hero.reassure.100.label"), sub: t("hero.reassure.100.sub") },
+      ]
+    : [
+        { label: t("hero.reassure.30min.label"), sub: t("hero.reassure.30min.sub") },
+        { label: t("hero.reassure.100.label"), sub: t("hero.reassure.100.sub") },
+        { label: t("hero.reassure.free.label"), sub: t("hero.reassure.free.sub") },
+      ];
 
   return (
     <section
@@ -114,7 +121,7 @@ export function Hero() {
               transition={{ delay: 0.5, duration: 0.5 }}
               className="mt-8 max-w-[58ch] text-base leading-relaxed text-zinc-400 md:text-lg"
             >
-              {t("hero.subline")}
+              {t(grabOnly ? "hero.sublineGrab" : "hero.subline")}
             </motion.p>
 
             <motion.div
@@ -160,7 +167,7 @@ export function Hero() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
-                className="grid w-full grid-cols-3 gap-2"
+                className={`grid w-full gap-2 ${grabOnly ? "grid-cols-2" : "grid-cols-3"}`}
               >
                 {reassurances.map((r, i) => (
                   <div

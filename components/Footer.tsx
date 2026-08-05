@@ -3,10 +3,12 @@
 import { InstagramLogo, TiktokLogo } from "@phosphor-icons/react";
 import { themeConfig } from "@/config/theme.config";
 import { useT } from "@/lib/i18n";
+import { isGrabOnly } from "@/lib/ordering";
 
 export function Footer() {
   const t = useT();
   const { brand, social } = themeConfig;
+  const grabOnly = isGrabOnly();
   return (
     <footer className="border-t border-white/[0.05] bg-surface/40 py-14">
       <div className="container-app">
@@ -47,7 +49,9 @@ export function Footer() {
               <li><a href="/#sauces" className="hover:text-accent">{t("nav.sauces")}</a></li>
               <li><a href="/#fries" className="hover:text-accent">{t("nav.fries")}</a></li>
               <li><a href="/#drinks" className="hover:text-accent">{t("nav.drinks")}</a></li>
-              <li><a href="/#delivery" className="hover:text-accent">{t("nav.delivery")}</a></li>
+              {!grabOnly && (
+                <li><a href="/#delivery" className="hover:text-accent">{t("nav.delivery")}</a></li>
+              )}
             </ul>
           </div>
 

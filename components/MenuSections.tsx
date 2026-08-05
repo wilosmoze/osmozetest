@@ -6,9 +6,11 @@ import { DrinksSection } from "./DrinksSection";
 import { DeliveryBanner } from "./DeliveryBanner";
 import { menu } from "@/data/menu";
 import { useT } from "@/lib/i18n";
+import { isGrabOnly } from "@/lib/ordering";
 
 export function MenuSections() {
   const t = useT();
+  const grabOnly = isGrabOnly();
   const burgers = menu.filter((m) => m.category === "burger");
   const sauces = menu.filter((m) => m.category === "sauce");
   const fries = menu.filter((m) => m.category === "fries");
@@ -23,7 +25,7 @@ export function MenuSections() {
         items={burgers}
         variant="hero"
       />
-      <DeliveryBanner />
+      {!grabOnly && <DeliveryBanner />}
       <SaucesSection items={sauces} />
       <MenuSection
         id="fries"

@@ -107,9 +107,11 @@ function SauceRow({ item, index }: { item: MenuItem; index: number }) {
       </div>
 
       <div className="flex shrink-0 items-center gap-2.5 md:gap-3">
-        <div className="font-mono text-sm font-medium tabular-nums text-white">
-          {formatPrice(item.price)}
-        </div>
+        {!grabOnly && (
+          <div className="font-mono text-sm font-medium tabular-nums text-white">
+            {formatPrice(item.price)}
+          </div>
+        )}
         {!grabOnly && (
           <button
             onClick={handleAdd}
