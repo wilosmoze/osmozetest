@@ -76,7 +76,7 @@ export const themeConfig = {
     /** Hard limit: refuse delivery beyond this many km from the kitchen. */
     maxDistanceKm: 6,
     /** Where to send the customer when they're out of range. */
-    grabUrl: "https://food.grab.com/th/en",
+    grabUrl: "https://r.grab.com/o/vy6fM7zy",
     // Kept for internal reference; the site no longer advertises a
     // delivery ETA — we only insist on the free-in-Rawai promise.
     estimatedMinutes: { min: 25, max: 45 },
