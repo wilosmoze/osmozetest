@@ -67,13 +67,10 @@ export function SocialBlock({
                   { src: "/images/social/ig-hands-bun.jpg", alt: "Hands holding a sealed bun" },
                   { src: "/images/social/ig-bbb-logo.jpg", alt: "BBB circular logo teaser" },
                   { src: "/images/social/ig-bun-in-bass-on.png", alt: "Bun in. Bass on. reel" },
-                ].map((post, i) => (
+                ].map((post) => (
                   <div
                     key={post.src}
                     className="aspect-square overflow-hidden rounded-xl border border-white/[0.06] bg-zinc-950"
-                    style={{
-                      transform: `translateY(${i % 2 === 0 ? "0" : "8px"})`,
-                    }}
                   >
                     <img
                       src={post.src}
