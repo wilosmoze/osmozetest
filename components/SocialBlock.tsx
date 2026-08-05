@@ -54,26 +54,30 @@ export function SocialBlock({
             </div>
 
             <div className="md:col-span-5">
-              <div className="grid grid-cols-3 gap-2">
+              {/* Preview of the actual Instagram/TikTok content — 4 tiles */}
+              {/* in a 2×2 grid mimicking an IG profile grid. The two feed  */}
+              {/* posts (1080×1080) sit natively; the two Reels (1080×1920) */}
+              {/* are cropped square via object-cover but their central     */}
+              {/* text stays visible.                                       */}
+              <div className="grid grid-cols-2 gap-2.5">
                 {[
-                  "ig-burger-1",
-                  "ig-kitchen-2",
-                  "ig-customer-3",
-                  "ig-sauce-4",
-                  "ig-team-5",
-                  "ig-dessert-6",
-                ].map((seed, i) => (
+                  { src: "/images/social/ig-sauces-wheel.png", alt: "Sauces wheel post" },
+                  { src: "/images/social/ig-nine-mixers.png", alt: "Nine mixers post" },
+                  { src: "/images/social/ig-48h.png", alt: "48 hours countdown reel" },
+                  { src: "/images/social/ig-bun-in-bass-on.png", alt: "Bun in. Bass on. reel" },
+                ].map((post, i) => (
                   <div
-                    key={seed}
-                    className="aspect-square overflow-hidden rounded-xl"
+                    key={post.src}
+                    className="aspect-square overflow-hidden rounded-xl border border-white/[0.06] bg-zinc-950"
                     style={{
-                      transform: `translateY(${i % 2 === 0 ? "0" : "8px"})`,
+                      transform: `translateY(${i % 2 === 0 ? "0" : "10px"})`,
                     }}
                   >
                     <img
-                      src={`https://picsum.photos/seed/${seed}/300/300`}
-                      alt=""
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      src={post.src}
+                      alt={post.alt}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
                 ))}
