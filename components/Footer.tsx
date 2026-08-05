@@ -83,7 +83,19 @@ export function Footer() {
               brand: brand.name,
             })}
           </span>
-          <span>{t("footer.legal")}</span>
+          <div className="flex items-center gap-4">
+            <a href="/legal" className="transition-colors hover:text-accent">
+              {t("footer.legalLink")}
+            </a>
+            <span className="text-zinc-800">·</span>
+            <a href="/terms" className="transition-colors hover:text-accent">
+              {t("footer.termsLink")}
+            </a>
+            <span className="text-zinc-800">·</span>
+            <a href="/privacy" className="transition-colors hover:text-accent">
+              {t("footer.privacyLink")}
+            </a>
+          </div>
         </div>
       </div>
     </footer>

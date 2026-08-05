@@ -112,6 +112,9 @@ const en: Dict = {
   "footer.menu": "Menu",
   "footer.contact": "Contact",
   "footer.legal": "Legal · Terms · Privacy",
+  "footer.legalLink": "Legal",
+  "footer.termsLink": "Terms",
+  "footer.privacyLink": "Privacy",
   "footer.copyright": "© {year} {brand} — Dark Kitchen",
 
   // Menu modal
@@ -331,6 +334,9 @@ const fr: Dict = {
   "footer.menu": "Menu",
   "footer.contact": "Contact",
   "footer.legal": "Mentions légales · CGV · Confidentialité",
+  "footer.legalLink": "Mentions légales",
+  "footer.termsLink": "CGV",
+  "footer.privacyLink": "Confidentialité",
   "footer.copyright": "© {year} {brand} — Dark Kitchen",
 
   "menumodal.order": "Commander depuis ce menu",
@@ -546,6 +552,9 @@ const ru: Dict = {
   "footer.menu": "Меню",
   "footer.contact": "Контакты",
   "footer.legal": "Юридическая информация · Условия · Конфиденциальность",
+  "footer.legalLink": "Юридическая",
+  "footer.termsLink": "Условия",
+  "footer.privacyLink": "Конфиденциальность",
   "footer.copyright": "© {year} {brand} — Dark Kitchen",
 
   "menumodal.order": "Заказать из этого меню",
@@ -760,6 +769,9 @@ const th: Dict = {
   "footer.menu": "เมนู",
   "footer.contact": "ติดต่อ",
   "footer.legal": "กฎหมาย · เงื่อนไข · ความเป็นส่วนตัว",
+  "footer.legalLink": "กฎหมาย",
+  "footer.termsLink": "เงื่อนไข",
+  "footer.privacyLink": "ความเป็นส่วนตัว",
   "footer.copyright": "© {year} {brand} — Dark Kitchen",
 
   "menumodal.order": "สั่งจากเมนูนี้",
