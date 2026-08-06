@@ -24,10 +24,11 @@ export default function PrivacyPage() {
         <div className="mt-10 space-y-8 text-sm leading-relaxed text-zinc-300">
           <Block title="1. Short version">
             <p>
-              This site does <strong>not</strong> collect any personal data.
-              We do not have accounts, we do not run analytics, and we do not
-              show ads. If you order from us, your data is handled by Grab Food,
-              not by us.
+              This site does <strong>not</strong> collect any personal data
+              and does <strong>not</strong> use tracking cookies. We use
+              cookie-less analytics that count anonymous page views only
+              (details in section 4). If you order from us, your data is
+              handled by Grab Food, not by us.
             </p>
           </Block>
 
@@ -66,13 +67,25 @@ export default function PrivacyPage() {
 
           <Block title="4. Cookies & analytics">
             <p>
-              We do not set advertising or analytics cookies. The only
-              browser-side storage is the local preferences described in
-              section 2.
+              We do not set advertising or tracking cookies, and we never
+              share data with third-party marketing platforms.
             </p>
             <p>
-              Our hosting provider (Vercel) may collect basic technical logs
-              (IP address, requested page, timestamp) for infrastructure
+              We use <strong>Vercel Web Analytics</strong> — a privacy-first,
+              cookie-less analytics tool built into our hosting platform.
+              It counts anonymous page views, referrers (which site linked
+              you to us) and rough country-level geography, so we can tell
+              how many people are visiting and where they come from. It does
+              <strong> not</strong> store your IP address, does <strong>not</strong> set
+              any cookie, and does <strong>not</strong> follow you across other
+              sites. See{" "}
+              <a href="https://vercel.com/docs/analytics/privacy-policy" className="text-accent hover:underline" target="_blank" rel="noopener noreferrer">
+                Vercel Analytics privacy details
+              </a>.
+            </p>
+            <p>
+              Our hosting provider (Vercel) also collects basic technical
+              logs (IP address, requested page, timestamp) for infrastructure
               purposes, per{" "}
               <a href="https://vercel.com/legal/privacy-policy" className="text-accent hover:underline" target="_blank" rel="noopener noreferrer">
                 Vercel's privacy policy

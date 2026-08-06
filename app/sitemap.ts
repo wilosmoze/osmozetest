@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://osmozetest.vercel.app";
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://bunbassburgers.com";
 
 // Sitemap for public-facing pages only. Private pages (admin, courier,
 // tracking, checkout, legal/terms/privacy) are noindex + already excluded

@@ -1,8 +1,9 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { themeConfig } from "@/config/theme.config";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://osmozetest.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://bunbassburgers.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -59,7 +60,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="grain-overlay">{children}</body>
+      <body className="grain-overlay">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
