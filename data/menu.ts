@@ -84,7 +84,7 @@ export const menu: MenuItem[] = [
   },
   {
     id: "b-808-smash",
-    name: "808 Smash",
+    name: "808 Chicken",
     description: {
       en: "Bold and unexpected. Grilled chicken, smashed avocado, fried egg, cabbage slices, red cabbage pickles, pink sauce.",
       fr: "Audacieux et inattendu. Poulet grillé, avocat écrasé, œuf au plat, tranches de chou, chou rouge pickles, sauce pink.",
