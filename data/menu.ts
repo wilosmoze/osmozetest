@@ -210,12 +210,12 @@ export const menu: MenuItem[] = [
   },
   {
     id: "s-algerienne",
-    name: "Algérienne",
+    name: "Spicy Chef",
     description: {
-      en: "Bell pepper, tomato, harissa, garlic — Algerian heat.",
-      fr: "Poivron, tomate, harissa, ail — chaleur algérienne.",
-      ru: "Перец, томат, хариса, чеснок — алжирская острота.",
-      th: "พริกยักษ์ มะเขือเทศ ฮาริสซ่า กระเทียม — เผ็ดสไตล์แอลจีเรีย",
+      en: "Bell pepper, tomato, harissa, garlic — the chef's fiery side.",
+      fr: "Poivron, tomate, harissa, ail — le côté brûlant du chef.",
+      ru: "Перец, томат, хариса, чеснок — огненная сторона шефа.",
+      th: "พริกยักษ์ มะเขือเทศ ฮาริสซ่า กระเทียม — ด้านเผ็ดร้อนของเชฟ",
     },
     price: 25,
     image: SIDE,

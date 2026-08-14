@@ -121,7 +121,7 @@ function TartareIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-// ── Leaf / herb (Algérienne) ─────────────────────────────
+// ── Leaf / herb (Spicy Chef) ─────────────────────────────
 function LeafIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg {...stroke} {...props}>
